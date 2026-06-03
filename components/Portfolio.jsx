@@ -919,19 +919,10 @@ function ProjectDetailView({ project }) {
           </div>
         ) : (
           <div style={{
-            border: '1.5px solid var(--ink)',
-            borderRadius: 6,
             height: 'clamp(240px, 36vw, 420px)',
-            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            background: 'var(--ink)',
             marginBottom: 80,
-            background: 'var(--paper-deep)',
-            boxShadow: '6px 8px 0 var(--ink)',
-            overflow: 'hidden'
-          }}>
-            <div style={{ width: 320, height: 240 }}>
-              <Doodle kind={project.doodle} />
-            </div>
-          </div>
+          }} />
         )}
 
         {/* ── My Role ── */}
@@ -1058,55 +1049,53 @@ function ProjectDetailView({ project }) {
         {project.findings && project.findings.length > 0 && (
           <div style={{ marginBottom: 80 }}>
             <div style={eyebrow}>Key Findings</div>
-            <div>
+            <div style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))',
+              gap: 20,
+            }}>
               {project.findings.map((f, i) => (
                 <div key={i} style={{
-                  display: 'grid',
-                  gridTemplateColumns: '48px 1fr',
-                  gap: 24,
-                  padding: '28px 0',
-                  borderBottom: '1px solid var(--hairline)'
+                  border: '1px solid var(--hairline)',
+                  padding: '28px 28px',
+                  background: 'var(--paper-deep)',
+                  display: 'flex',
+                  flexDirection: 'column',
                 }}>
-                  {/* Number */}
                   <div style={{
                     fontFamily: 'Archivo, sans-serif', fontWeight: 700,
-                    fontSize: 13, letterSpacing: '0.08em',
-                    color: 'var(--fg-4)', paddingTop: 4
+                    fontSize: 11, letterSpacing: '0.14em', textTransform: 'uppercase',
+                    color: 'var(--fg-4)', marginBottom: 16
                   }}>0{i + 1}</div>
-                  {/* Content */}
-                  <div>
+                  <div style={{
+                    fontFamily: 'Archivo, sans-serif',
+                    fontWeight: 700, fontSize: 17,
+                    color: 'var(--fg-1)', lineHeight: 1.35,
+                    marginBottom: 12
+                  }}>{f.title}</div>
+                  <p style={{
+                    fontFamily: 'Archivo, sans-serif',
+                    fontSize: 15, lineHeight: 1.65,
+                    color: 'var(--fg-2)', margin: 0,
+                    flexGrow: 1,
+                  }}>{f.description}</p>
+                  {f.design && (
                     <div style={{
-                      fontFamily: "Archivo, sans-serif",
-                      fontWeight: 700, fontSize: 18,
-                      color: 'var(--fg-1)', lineHeight: 1.3,
-                      marginBottom: 10
-                    }}>{f.title}</div>
-                    <p style={{
-                      fontFamily: "Archivo, sans-serif",
-                      fontSize: 16, lineHeight: 1.6,
-                      color: 'var(--fg-2)', margin: 0
-                    }}>{f.description}</p>
-                    {f.design && (
-                      <div style={{
-                        marginTop: 14,
-                        display: 'flex', gap: 12,
-                        padding: '12px 16px',
-                        background: 'var(--paper-deep)',
-                        borderRadius: 6,
-                        borderLeft: '3px solid var(--ink)'
-                      }}>
-                        <span style={{
-                          fontFamily: 'Archivo, sans-serif', fontSize: 11, fontWeight: 700,
-                          letterSpacing: '0.1em', textTransform: 'uppercase',
-                          color: 'var(--ink)', whiteSpace: 'nowrap', paddingTop: 3
-                        }}>Design →</span>
-                        <span style={{
-                          fontFamily: 'Archivo, sans-serif', fontSize: 15, lineHeight: 1.55,
-                          color: 'var(--fg-1)'
-                        }}>{f.design}</span>
-                      </div>
-                    )}
-                  </div>
+                      marginTop: 20,
+                      paddingTop: 16,
+                      borderTop: '1px solid var(--hairline)',
+                    }}>
+                      <span style={{
+                        fontFamily: 'Archivo, sans-serif', fontSize: 11, fontWeight: 700,
+                        letterSpacing: '0.1em', textTransform: 'uppercase',
+                        color: 'var(--ink)',
+                      }}>Design → </span>
+                      <span style={{
+                        fontFamily: 'Archivo, sans-serif', fontSize: 14, lineHeight: 1.55,
+                        color: 'var(--fg-2)'
+                      }}>{f.design}</span>
+                    </div>
+                  )}
                 </div>
               ))}
             </div>
