@@ -164,7 +164,7 @@ function PortfolioNav({ dark, onToggleDark }) {
         fontFamily: "'Big Shoulders Display', Helvetica, sans-serif",
         fontWeight: 900, fontSize: 22, letterSpacing: '-0.01em',
         color: 'var(--ink)', textDecoration: 'none'
-      }}>dvdrod</a>
+      }}>NL</a>
 
       <div style={{ display: 'flex', alignItems: 'center', gap: 28 }}>
         {items.map((it) =>

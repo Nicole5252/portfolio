@@ -3,7 +3,7 @@
 ## Overview
 A single-page portfolio website for **Yu Ching Lin**, an HCI master's student & UX researcher/designer based in Munich / Augsburg, Germany. The page covers five sections — nav, hero, work, about, contact — and a hidden "Tweaks" panel that re-skins the design at runtime.
 
-The visual reference is **dvdrod.com**: minimal, high whitespace, data-forward, typography-led, no decorative gradients or stock icons.
+The visual reference is **the original reference**: minimal, high whitespace, data-forward, typography-led, no decorative gradients or stock icons.
 
 ## About the Design Files
 The files in this bundle are **design references created in HTML** — a prototype showing the intended look and behavior, not production code to copy line-for-line. Your task is to **recreate these designs in your target codebase's environment** (Next.js, Astro, SvelteKit, Vue, whatever you prefer) using its established patterns. If no environment exists yet, choose what's most appropriate — for a static portfolio I'd suggest **Next.js (app router)** or **Astro**, both deployable to Vercel/Netlify with zero config.
@@ -54,7 +54,7 @@ All defined in `design-system/colors_and_type.css` as CSS custom properties on `
 | Token | Hex | Use |
 |---|---|---|
 | `--accent-green` | `#1F8A4C` | "Available for work" status dot |
-| `--accent-red` | `#E04E2A` | Cursor "Guest" indicator (in dvdrod ref) |
+| `--accent-red` | `#E04E2A` | Cursor "Guest" indicator (in Nicole Lin ref) |
 
 ### Typography
 | Token | Family | Notes |
@@ -109,7 +109,7 @@ The page is a single scrolling document with 5 sections, smooth-scroll anchored 
 **Layout:** fixed pill at `top: 20px`, full-width minus gutter (`left: var(--gutter); right: var(--gutter)`), backdrop-blur `20px saturate(160%)`, background `rgba(255,255,255,0.75)` (light) / `rgba(14,14,12,0.7)` (dark), border `1px solid var(--capsule-border)`, border-radius `9999px`, box-shadow `var(--shadow-float)`, `display: flex; justify-content: space-between; align-items: center; padding: 12px 22px`.
 
 **Content:**
-- Left: wordmark `"dvdrod"` — Big Shoulders Display 900, 22px, letter-spacing `-0.01em`, `var(--ink)`. **Replace with `"Yu Ching Lin"` or her chosen mark in the final implementation.**
+- Left: wordmark `"Nicole Lin"` — Big Shoulders Display 900, 22px, letter-spacing `-0.01em`, `var(--ink)`. **Replace with `"Yu Ching Lin"` or her chosen mark in the final implementation.**
 - Right: three links (`Work`, `About`, `Contact`) — Archivo 600, 11px, uppercase, letter-spacing `0.14em`, gap 28px between them; then a "Dark" toggle pill with theme-toggle SVG glyph.
 
 ### 2. Hero
@@ -283,7 +283,7 @@ The toggle button in nav flips `data-theme="dark"` on `<html>`, which swaps all 
 - `target` and `pos` for the springy `GuestCursor` follower (RAF-driven lerp)
 - That's it. No data fetching, no routing, no forms.
 
-In a real implementation you can drop the GuestCursor entirely — it's a nostalgic nod to the dvdrod reference and may feel out of place once the design ships.
+In a real implementation you can drop the GuestCursor entirely — it's a nostalgic nod to the Nicole Lin reference and may feel out of place once the design ships.
 
 ---
 
@@ -298,7 +298,7 @@ If you want to add real project imagery later, the obvious slot is **replacing e
 1. **Hero name font size** is currently inlined as `fontSize: "270px"` (with `whiteSpace: nowrap`) which overflows the viewport on narrow screens. Restore the original `fontSize: 'clamp(56px, 11vw, 168px)'` for responsive behavior, or allow a 2-line layout below ~700px.
 2. **Big email link** under "Let's work together." was removed at the user's request. Consider putting it back for accessibility — the social list is small and easy to miss.
 3. **Social row URLs** are in the data array but not rendered. Either delete the `value` field or render them as a third grid column.
-4. **Wordmark** in nav still reads `"dvdrod"` — update to Yu Ching Lin's mark.
+4. **Wordmark** in nav still reads `"Nicole Lin"` — update to Yu Ching Lin's mark.
 5. **Tweaks panel** should not ship to production. Strip the `<TweaksPanel>` JSX and `useTweaks` hook from the root component.
 
 ---
@@ -307,7 +307,7 @@ If you want to add real project imagery later, the obvious slot is **replacing e
 1. Scaffold a Next.js / Astro project. Copy `colors_and_type.css` into `src/styles/` (or convert tokens to a Tailwind theme).
 2. Split `components/Portfolio.jsx` into one file per section. Each is straightforward — mostly inline styles + a couple of small data arrays at the top.
 3. Drop the Tweaks panel, dark-mode toggle (optional), GuestCursor (optional), and scroll indicator.
-4. Replace `"dvdrod"` wordmark and stale copy.
+4. Replace `"Nicole Lin"` wordmark and stale copy.
 5. Verify the four Google Fonts load (consider `next/font` for SSR-safe font-loading).
 6. Test responsive — the hero name and Work grid need explicit mobile handling (`@media (max-width: 720px) { grid-template-columns: 1fr; }`).
 7. Add real `<a href>` URLs for LinkedIn / Behance / Email.
