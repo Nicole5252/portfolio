@@ -153,12 +153,14 @@ function PortfolioNav({ dark, onToggleDark }) {
       position: 'fixed', top: 20, left: 'var(--gutter)', right: 'var(--gutter)',
       zIndex: 50, display: 'flex', alignItems: 'center', justifyContent: 'space-between',
       padding: '12px 22px',
-      background: dark ? 'rgba(14,14,12,0.7)' : 'rgba(255,255,255,0.75)',
-      backdropFilter: 'blur(20px) saturate(160%)',
-      WebkitBackdropFilter: 'blur(20px) saturate(160%)',
+      background: dark ? 'rgba(10,10,10,0.55)' : 'rgba(255,255,255,0.55)',
+      backdropFilter: 'blur(36px) saturate(200%)',
+      WebkitBackdropFilter: 'blur(36px) saturate(200%)',
       borderRadius: 9999,
-      boxShadow: '0 8px 24px rgba(14,14,12,.06), 0 2px 6px rgba(14,14,12,.04)',
-      border: '1px solid var(--capsule-border)'
+      boxShadow: dark
+        ? 'inset 0 1px 0 rgba(255,255,255,0.12), 0 4px 14px rgba(0,0,0,0.30)'
+        : 'inset 0 1px 0 rgba(255,255,255,0.75), 0 4px 14px rgba(14,14,12,0.04), 0 1px 2px rgba(14,14,12,0.03)',
+      border: dark ? '1px solid rgba(255,255,255,0.10)' : '1px solid rgba(255,255,255,0.45)'
     }}>
       <a href="#top" style={{
         fontFamily: "'Big Shoulders Display', Helvetica, sans-serif",
@@ -1822,10 +1824,10 @@ const TWEAK_CSS = `
 /* MOOD ─ palette presets ────────────────────────────── */
 html.tw-mood-cream { /* default — already in design system */ }
 html.tw-mood-noir {
-  --paper:#0E0E0C; --paper-deep:#1A1916;
-  --ink:#EFE9DD; --ink-2:#C9C3B7; --ink-3:#8C8A82; --ink-4:#5C5B55;
-  --hairline:rgba(239,233,221,0.16); --capsule-border:rgba(239,233,221,0.28);
-  --accent-green:#E04E2A;
+  --paper:#0A0A0A; --paper-deep:#1A1A1A;
+  --ink:#F0F0F0; --ink-2:#C8C8C8; --ink-3:#8C8C8C; --ink-4:#5C5C5C;
+  --hairline:rgba(240,240,240,0.14); --capsule-border:rgba(240,240,240,0.25);
+  --accent-green:#8C8C8C;
 }
 html.tw-mood-lab {
   --paper:#F4F3EE; --paper-deep:#E9E7DE;
