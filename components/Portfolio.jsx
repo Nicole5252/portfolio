@@ -431,6 +431,44 @@ const PROJECTS = [
     { label: '3D render', note: 'Product render / construction breakdown.' },
   ],
   reflection: 'Testing surfaced that physical ergonomics — zipper range, dial sensitivity, control placement — mattered as much as the core thermal function, and were only visible once mothers used the product unaided. With more time I would run a second iteration addressing these issues and expand scope to the cooling and EMS needs we deprioritized.',
+  designDirection: {
+    intro: 'Research and behavioral observation revealed four moments in the care routine with strong potential for embodied interaction. Under project time and technical constraints, we focused on thermal care.',
+    opportunities: [
+      {
+        title: 'Pressure Guidance',
+        signal: 'Incorrect massage force is a key cause of physical pain',
+        opportunity: 'Textile pressure sensors could provide real-time force feedback on force and direction',
+      },
+      {
+        title: 'Thermal Feedback',
+        signal: 'Sudden heat indicates inflammation risk',
+        opportunity: 'Distributed thermal sensing can detect abnormal temperature rise early',
+      },
+      {
+        title: 'Procedural Support',
+        signal: 'Care is often performed alone and under stress',
+        opportunity: 'Step-by-step guidance can lead mothers through the correct sequence',
+      },
+      {
+        title: 'Embodied Interaction',
+        signal: 'The care process happens directly on the body',
+        opportunity: 'The bra itself becomes a natural interface, reducing reliance on external tools',
+      },
+    ],
+    focus: {
+      title: 'Why Thermal Care',
+      reasons: [
+        {
+          title: 'User Needs & Reliability',
+          text: 'Thermal regulation is the most immediate and high-impact need during engorgement — mothers need a solution that works reliably without calibration.',
+        },
+        {
+          title: 'Technical Feasibility',
+          text: 'Pressure sensing and EMS massage had strong potential but required calibration cycles that exceeded the project timeline. Thermal care was buildable, testable, and demonstrable.',
+        },
+      ],
+    },
+  },
 },
 {
   idx: '02',
@@ -1124,6 +1162,76 @@ function ProjectDetailView({ project }) {
         )}
 
         <hr className="rule" />
+
+        {/* ── Design Direction ── */}
+        {project.designDirection && (
+          <div>
+            <div style={{ marginBottom: 80 }}>
+              <div style={eyebrow}>Design Direction</div>
+              {project.designDirection.intro && (
+                <p style={{ ...bodyText, marginBottom: 32 }}>{project.designDirection.intro}</p>
+              )}
+              <div style={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))',
+                gap: 16,
+                marginBottom: project.designDirection.focus ? 28 : 0,
+              }}>
+                {project.designDirection.opportunities.map((opp, i) => (
+                  <div key={i} style={{
+                    border: '1px solid var(--hairline)',
+                    padding: '22px 24px',
+                    background: 'var(--paper-deep)',
+                  }}>
+                    <div style={{
+                      fontFamily: 'Archivo, sans-serif', fontWeight: 700,
+                      fontSize: 13, color: 'var(--fg-1)', marginBottom: 8,
+                    }}>{opp.title}</div>
+                    <div style={{
+                      fontFamily: 'Archivo, sans-serif', fontSize: 14,
+                      color: 'var(--fg-3)', marginBottom: 10, lineHeight: 1.5,
+                    }}>{opp.signal}</div>
+                    <div style={{
+                      fontFamily: 'Archivo, sans-serif', fontSize: 14,
+                      color: 'var(--fg-2)', lineHeight: 1.5,
+                    }}>→ {opp.opportunity}</div>
+                  </div>
+                ))}
+              </div>
+              {project.designDirection.focus && (
+                <div style={{
+                  border: '1.5px solid var(--ink)',
+                  padding: '28px 32px',
+                  display: 'grid',
+                  gridTemplateColumns: '160px 1fr',
+                  gap: 40,
+                  alignItems: 'start',
+                }}>
+                  <div style={{
+                    fontFamily: 'Archivo, sans-serif', fontWeight: 700,
+                    fontSize: 11, letterSpacing: '0.14em', textTransform: 'uppercase',
+                    color: 'var(--ink)', paddingTop: 3,
+                  }}>{project.designDirection.focus.title}</div>
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 28 }}>
+                    {project.designDirection.focus.reasons.map((r, i) => (
+                      <div key={i}>
+                        <div style={{
+                          fontFamily: 'Archivo, sans-serif', fontWeight: 700,
+                          fontSize: 14, color: 'var(--fg-1)', marginBottom: 8,
+                        }}>{r.title}</div>
+                        <div style={{
+                          fontFamily: 'Archivo, sans-serif', fontSize: 14,
+                          lineHeight: 1.6, color: 'var(--fg-2)',
+                        }}>{r.text}</div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+            <hr className="rule" />
+          </div>
+        )}
 
         {/* ── The Product ── */}
         {project.product && (
