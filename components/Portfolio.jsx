@@ -153,7 +153,7 @@ function PortfolioNav({ dark, onToggleDark }) {
       position: 'fixed', top: 20, left: 'var(--gutter)', right: 'var(--gutter)',
       zIndex: 50, display: 'flex', alignItems: 'center', justifyContent: 'space-between',
       padding: '12px 22px',
-      background: dark ? 'rgba(10,10,10,0.55)' : 'rgba(255,255,255,0.55)',
+      background: dark ? 'rgba(29,30,39,0.55)' : 'rgba(237,242,244,0.55)',
       backdropFilter: 'blur(36px) saturate(200%)',
       WebkitBackdropFilter: 'blur(36px) saturate(200%)',
       borderRadius: 9999,
@@ -1746,10 +1746,10 @@ const TWEAK_CSS = `
 /* MOOD ─ palette presets ────────────────────────────── */
 html.tw-mood-cream { /* default — already in design system */ }
 html.tw-mood-noir {
-  --paper:#0A0A0A; --paper-deep:#1A1A1A;
-  --ink:#F0F0F0; --ink-2:#C8C8C8; --ink-3:#8C8C8C; --ink-4:#5C5C5C;
-  --hairline:rgba(240,240,240,0.14); --capsule-border:rgba(240,240,240,0.25);
-  --accent-green:#8C8C8C;
+  --paper:#1D1E27; --paper-deep:#25262F;
+  --ink:#EDF2F4; --ink-2:#C0C4CB; --ink-3:#7A7E85; --ink-4:#4B4E53;
+  --hairline:rgba(237,242,244,0.14); --capsule-border:rgba(237,242,244,0.25);
+  --accent-green:#C80018;
 }
 html.tw-mood-lab {
   --paper:#F4F3EE; --paper-deep:#E9E7DE;
