@@ -1751,7 +1751,7 @@ function ContactSection() {
 
 }
 
-/* ---------- Scroll indicator + guest cursor ---------- */
+/* ---------- Scroll indicator ---------- */
 function ScrollIndicator() {
   return (
     <div style={{
@@ -1762,50 +1762,6 @@ function ScrollIndicator() {
       letterSpacing: '0.32em', textTransform: 'uppercase', color: 'var(--fg-3)',
       zIndex: 30, pointerEvents: 'none'
     }}>SCROLL ↓</div>);
-
-}
-
-function GuestCursor() {
-  const [pos, setPos] = useState({ x: 600, y: 400 });
-  const [target, setTarget] = useState({ x: 600, y: 400 });
-  const [visible, setVisible] = useState(false);
-  useEffect(() => {
-    const onMove = (e) => {setTarget({ x: e.clientX, y: e.clientY });setVisible(true);};
-    const onLeave = () => setVisible(false);
-    window.addEventListener('mousemove', onMove);
-    window.addEventListener('mouseleave', onLeave);
-    return () => {window.removeEventListener('mousemove', onMove);window.removeEventListener('mouseleave', onLeave);};
-  }, []);
-  useEffect(() => {
-    let raf;
-    const tick = () => {
-      setPos((p) => ({ x: p.x + (target.x - p.x) * 0.16, y: p.y + (target.y - p.y) * 0.16 }));
-      raf = requestAnimationFrame(tick);
-    };
-    raf = requestAnimationFrame(tick);
-    return () => cancelAnimationFrame(raf);
-  }, [target]);
-  if (!visible) return null;
-  return (
-    <div style={{
-      position: 'fixed', left: pos.x, top: pos.y, zIndex: 100, pointerEvents: 'none',
-      transform: 'translate(8px, 12px)'
-    }}>
-      <svg width="18" height="18" viewBox="0 0 18 18" style={{ display: 'block' }}>
-        <path d="M2 2 L2 14 L6 11 L9 16 L11 15 L8 10 L13 10 Z" fill="#0E0E0C" stroke="#EFE9DD" strokeWidth="1" />
-      </svg>
-      <span style={{
-        display: 'inline-flex', alignItems: 'center', gap: 6,
-        padding: '4px 10px', background: '#0E0E0C', color: '#EFE9DD',
-        borderRadius: 9999, fontFamily: 'Archivo, sans-serif',
-        fontSize: 11, fontWeight: 500, letterSpacing: '0.04em',
-        marginLeft: 8, marginTop: -4, position: 'relative', top: -2,
-        whiteSpace: 'nowrap'
-      }}>
-        <span style={{ width: 7, height: 7, borderRadius: 9999, background: '#E04E2A' }} />
-        Guest
-      </span>
-    </div>);
 
 }
 
@@ -1954,7 +1910,6 @@ function Portfolio() {
       <div>
         <style>{TWEAK_CSS}</style>
         <PortfolioNav dark={isNoir || dark} onToggleDark={() => setDark((d) => !d)} />
-        <GuestCursor />
         {project
           ? <ProjectDetailView project={project} />
           : (
@@ -1974,7 +1929,6 @@ function Portfolio() {
       <style>{TWEAK_CSS}</style>
       <PortfolioNav dark={isNoir || dark} onToggleDark={() => setDark((d) => !d)} />
       <ScrollIndicator />
-      <GuestCursor />
       <main>
         <Hero />
         <WorkSection />
