@@ -1680,36 +1680,34 @@ function ContactSection() {
           margin: 0, color: 'var(--ink)'
         }}>Let's talk !</h2>
 
+        {/* Single baseline row: capsules left, socials right */}
         <div style={{
-          display: 'grid', gridTemplateColumns: '1.1fr 0.9fr', gap: 64,
-          marginTop: 64, alignItems: 'start'
+          display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+          flexWrap: 'wrap', gap: 24,
+          marginTop: 52,
+          borderTop: '1px solid var(--hairline)',
+          paddingTop: 28
         }}>
-          {/* Email + intro */}
-          <div>
-            <div style={{ marginTop: 0, display: 'flex', gap: 8, flexWrap: 'wrap' }}>
-              <span className="capsule capsule--eyebrow">
-                <span className="dot" /> Open to Werkstudent / Internship
-              </span>
-              <span className="capsule capsule--eyebrow">REPLIES WITHIN 24H</span>
-            </div>
+          {/* Left: status capsules */}
+          <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+            <span className="capsule capsule--eyebrow">
+              <span className="dot" /> Open to Werkstudent / Internship
+            </span>
+            <span className="capsule capsule--eyebrow">Replies within 24h</span>
           </div>
 
-          {/* Social list */}
-          <div style={{ borderTop: '1px solid var(--hairline)' }}>
+          {/* Right: social links in a row */}
+          <div style={{ display: 'flex', gap: 24, alignItems: 'center' }}>
             {socials.map((s) =>
             <a key={s.label} href={s.href} style={{
-              display: 'grid', gridTemplateColumns: '1fr auto',
-              alignItems: 'baseline', gap: 16,
-              borderBottom: '1px solid var(--hairline)',
-              textDecoration: 'none', color: 'var(--ink)', width: "300px", opacity: "1", padding: "15px 0px 20px"
+              fontFamily: 'Archivo, sans-serif', fontSize: 11, fontWeight: 600,
+              letterSpacing: '0.14em', textTransform: 'uppercase',
+              color: 'var(--fg-3)', textDecoration: 'none',
+              display: 'inline-flex', alignItems: 'center', gap: 6,
+              transition: 'color 180ms ease'
             }}>
-                <div style={{
-                fontFamily: 'Archivo, sans-serif', fontSize: 11, fontWeight: 600,
-                letterSpacing: '0.14em', textTransform: 'uppercase',
-                color: 'var(--fg-3)'
-              }}>{s.label}</div>
-                <div style={{ fontSize: 16, color: 'var(--fg-3)' }}>↗</div>
-              </a>
+              {s.label} <span style={{ fontSize: 13 }}>↗</span>
+            </a>
             )}
           </div>
         </div>
