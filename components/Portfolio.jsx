@@ -1661,7 +1661,7 @@ function ContactSection() {
   return (
     <section id="contact" style={{
       paddingLeft: 'var(--gutter)', paddingRight: 'var(--gutter)',
-      marginTop: 'clamp(120px, 18vh, 220px)',
+      marginTop: 'clamp(200px, 40vh, 400px)',
       paddingBottom: 96
     }}>
       <div style={{ maxWidth: 'var(--maxw)', margin: '0 auto' }}>
