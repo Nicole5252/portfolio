@@ -1712,18 +1712,6 @@ function ContactSection() {
           </div>
         </div>
 
-        {/* Footer */}
-        <div style={{
-          marginTop: 96, paddingTop: 32,
-          borderTop: '1px solid var(--hairline)',
-          display: 'flex', justifyContent: 'space-between', flexWrap: 'wrap', gap: 16,
-          fontFamily: 'Archivo, sans-serif', fontSize: 11, fontWeight: 600,
-          letterSpacing: '0.14em', textTransform: 'uppercase', color: 'var(--fg-3)'
-        }}>
-          <span>© NICOLE LIN · 2024 – 2026</span>
-          <span>Designed in Augsburg · Set in Big Shoulders & Source Serif</span>
-          <span>Last updated April '26</span>
-        </div>
       </div>
     </section>);
 
