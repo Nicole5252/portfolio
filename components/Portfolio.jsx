@@ -196,14 +196,10 @@ function PortfolioNav({ dark, onToggleDark }) {
 
 /* ---------- Hero ---------- */
 function Hero() {
-  const skills = [
-  'UX Research', 'User Interviews', 'Usability Testing', 'Figma',
-  'Interaction Design', 'Industrial Design', 'Prototyping', 'Affinity Mapping',
-  'E-Textile', 'Survey Design', 'HCI', 'Physical Products'];
-
   return (
     <section id="top" style={{
       paddingTop: 'clamp(140px, 18vh, 200px)',
+      paddingBottom: 'clamp(96px, 14vh, 160px)',
       paddingLeft: 'var(--gutter)', paddingRight: 'var(--gutter)'
     }}>
       <div style={{ maxWidth: 'var(--maxw)', margin: '0 auto' }}>
@@ -232,11 +228,6 @@ function Hero() {
             <span className="capsule capsule--eyebrow">Munich · Augsburg, Germany</span>
           </div>
         </div>
-      </div>
-
-      {/* Marquee */}
-      <div style={{ marginTop: 96 }}>
-        <Marquee items={skills} />
       </div>
     </section>);
 
