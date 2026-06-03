@@ -217,13 +217,22 @@ function Hero() {
         {/* Display name — particle canvas */}
         <ParticleText text="Nicole Lin" />
 
-        {/* Intro row */}
+        {/* Masthead baseline row */}
         <div style={{
-          display: 'flex', justifyContent: 'flex-end',
-          marginTop: 56
+          display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start',
+          flexWrap: 'wrap', gap: 40,
+          marginTop: 52,
+          borderTop: '1px solid var(--hairline)',
+          paddingTop: 28
         }}>
-          {/* Status pills column */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 10, alignItems: 'flex-end' }}>
+          {/* Left: role descriptor */}
+          <p style={{
+            margin: 0, maxWidth: 360,
+            fontFamily: 'Archivo, sans-serif', fontSize: 17, lineHeight: 1.5,
+            color: 'var(--fg-2)', letterSpacing: '-0.005em'
+          }}>Research-led design across wearables, interfaces, and the physical products in between.</p>
+          {/* Right: status capsules */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 10, alignItems: 'flex-end', paddingTop: 2 }}>
             <span className="capsule capsule--eyebrow">
               <span className="dot" /> Open to Werkstudent / Internship
             </span>
