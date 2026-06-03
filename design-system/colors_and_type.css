@@ -1,0 +1,245 @@
+/* =============================================================
+   dvdrod Design System — colors & type
+   Import this file first. All other styles build on these tokens.
+   ============================================================= */
+
+@import url('https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@400;700;800;900&family=Archivo:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&display=swap');
+
+:root {
+  /* ---------- Color: paper / ink ---------- */
+  --paper:           #FFFFFF;   /* pure white background */
+  --paper-deep:      #F4F1EA;   /* warm off-white card / hover wash */
+  --ink:             #0E0E0C;   /* near-black text */
+  --ink-2:           #3A3A36;   /* body prose */
+  --ink-3:           #6F6E66;   /* meta, captions, dates */
+  --ink-4:           #A09E94;   /* disabled / placeholder */
+  --hairline:        rgba(14, 14, 12, 0.15);   /* 1px section rules */
+  --capsule-border:  rgba(14, 14, 12, 0.25);   /* pill outlines */
+
+  /* ---------- Color: accents ---------- */
+  --accent-green:    #1F8A4C;   /* available-for-work dot */
+  --accent-red:      #E04E2A;   /* live-cursor "Guest" dot */
+
+  /* ---------- Semantic foreground / background ---------- */
+  --fg-1:            var(--ink);
+  --fg-2:            var(--ink-2);
+  --fg-3:            var(--ink-3);
+  --fg-4:            var(--ink-4);
+  --bg-1:            var(--paper);
+  --bg-2:            var(--paper-deep);
+
+  /* ---------- Typography: families ---------- */
+  --font-display:    "Big Shoulders Display", "Helvetica Neue", Helvetica, Arial, sans-serif;  /* SUBSTITUTE */
+  --font-serif:      "Archivo", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --font-sans:       "Archivo", "Helvetica Neue", Helvetica, Arial, sans-serif;
+
+  /* ---------- Typography: scale ---------- */
+  --fs-display-xl:   clamp(96px, 17vw, 248px);
+  --fs-display-lg:   clamp(72px, 11vw, 160px);
+  --fs-display-md:   clamp(36px, 4.5vw, 56px);
+  --fs-metric:       40px;
+  --fs-body-lg:      18px;
+  --fs-body:         15px;
+  --fs-caption:      13px;
+  --fs-eyebrow:      11px;
+
+  --lh-tight:        0.85;
+  --lh-snug:         1.05;
+  --lh-normal:       1.5;
+  --lh-loose:        1.7;
+
+  --tracking-eyebrow: 0.12em;
+  --tracking-caption: 0.04em;
+  --tracking-display: -0.02em;
+
+  /* ---------- Spacing (8pt grid) ---------- */
+  --sp-1:  4px;
+  --sp-2:  8px;
+  --sp-3:  12px;
+  --sp-4:  16px;
+  --sp-5:  24px;
+  --sp-6:  32px;
+  --sp-7:  48px;
+  --sp-8:  64px;
+  --sp-9:  96px;
+  --sp-10: 128px;
+
+  /* ---------- Radii ---------- */
+  --radius-sm:    8px;
+  --radius-md:    12px;
+  --radius-lg:    16px;
+  --radius-xl:    24px;
+  --radius-pill:  9999px;
+
+  /* ---------- Shadows ---------- */
+  --shadow-float: 0 8px 24px rgba(14, 14, 12, 0.06), 0 2px 6px rgba(14, 14, 12, 0.04);
+  --shadow-press: 0 2px 8px rgba(14, 14, 12, 0.06);
+
+  /* ---------- Motion ---------- */
+  --ease-out:     cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-in-out:  cubic-bezier(0.65, 0, 0.35, 1);
+  --dur-fast:     120ms;
+  --dur-base:     220ms;
+  --dur-slow:     480ms;
+
+  /* ---------- Layout ---------- */
+  --maxw:         1200px;
+  --gutter:       clamp(20px, 5vw, 64px);
+}
+
+/* ---------- Dark mode (inferred from the DARK toggle) ---------- */
+:root[data-theme="dark"],
+.theme-dark {
+  --paper:          #0E0E0C;
+  --paper-deep:     #16161310;
+  --ink:            #EFE9DD;
+  --ink-2:          #C9C3B7;
+  --ink-3:          #8C8A82;
+  --ink-4:          #5C5B55;
+  --hairline:       rgba(239, 233, 221, 0.15);
+  --capsule-border: rgba(239, 233, 221, 0.25);
+}
+
+/* =============================================================
+   Semantic typography classes
+   Use these instead of bare font-size where possible.
+   ============================================================= */
+
+.t-eyebrow {
+  font-family: var(--font-sans);
+  font-size: var(--fs-eyebrow);
+  font-weight: 600;
+  letter-spacing: var(--tracking-eyebrow);
+  text-transform: uppercase;
+  color: var(--fg-3);
+  line-height: var(--lh-snug);
+}
+
+.t-caption {
+  font-family: var(--font-sans);
+  font-size: var(--fs-caption);
+  font-weight: 500;
+  letter-spacing: var(--tracking-caption);
+  color: var(--fg-3);
+}
+
+.t-body {
+  font-family: var(--font-serif);
+  font-size: var(--fs-body-lg);
+  line-height: var(--lh-normal);
+  color: var(--fg-2);
+}
+.t-body strong { color: var(--fg-1); font-weight: 700; }
+
+.t-body-sm {
+  font-family: var(--font-serif);
+  font-size: var(--fs-body);
+  line-height: var(--lh-normal);
+  color: var(--fg-2);
+}
+
+.t-metric {
+  font-family: var(--font-display);
+  font-size: var(--fs-metric);
+  font-weight: 800;
+  letter-spacing: var(--tracking-display);
+  color: var(--fg-1);
+  line-height: 1;
+}
+
+.t-h1, .t-display-md {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: var(--fs-display-md);
+  line-height: var(--lh-snug);
+  letter-spacing: var(--tracking-display);
+  color: var(--fg-1);
+}
+
+.t-display-lg {
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: var(--fs-display-lg);
+  line-height: var(--lh-tight);
+  letter-spacing: var(--tracking-display);
+  color: var(--fg-1);
+}
+
+.t-display-xl {
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: var(--fs-display-xl);
+  line-height: var(--lh-tight);
+  letter-spacing: var(--tracking-display);
+  color: var(--fg-1);
+}
+
+/* =============================================================
+   Capsule (pill) — the brand's signature shape
+   ============================================================= */
+
+.capsule {
+  display: inline-flex;
+  align-items: center;
+  white-space: nowrap;
+  gap: var(--sp-2);
+  padding: 8px 14px;
+  border: 1px solid var(--capsule-border);
+  border-radius: var(--radius-pill);
+  font-family: var(--font-sans);
+  font-size: var(--fs-caption);
+  font-weight: 500;
+  letter-spacing: var(--tracking-caption);
+  color: var(--fg-1);
+  background: transparent;
+  cursor: pointer;
+  transition: background var(--dur-base) var(--ease-out),
+              color var(--dur-base) var(--ease-out),
+              transform var(--dur-fast) var(--ease-out);
+}
+.capsule:hover { background: var(--ink); color: var(--paper); }
+.capsule:active { transform: scale(0.98); }
+
+.capsule--eyebrow {
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-eyebrow);
+  font-size: var(--fs-eyebrow);
+  padding: 6px 12px;
+}
+
+.dot {
+  width: 7px; height: 7px; border-radius: 50%;
+  background: var(--accent-green);
+  display: inline-block;
+}
+.dot--red { background: var(--accent-red); }
+
+/* =============================================================
+   Body baseline
+   ============================================================= */
+
+html, body {
+  background: var(--bg-1);
+  color: var(--fg-1);
+  font-family: var(--font-serif);
+  font-size: var(--fs-body-lg);
+  line-height: var(--lh-normal);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+a {
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-thickness: 1px;
+  transition: opacity var(--dur-base) var(--ease-out);
+}
+a:hover { opacity: 0.6; }
+
+hr.rule {
+  border: 0;
+  height: 1px;
+  background: var(--hairline);
+  margin: var(--sp-7) 0;
+}
