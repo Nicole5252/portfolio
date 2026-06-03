@@ -1512,14 +1512,20 @@ function AboutSection() {
       marginTop: 'clamp(120px, 16vh, 200px)', fontWeight: "400"
     }}>
       <div style={{ maxWidth: 'var(--maxw)', margin: '0 auto', lineHeight: "1.5" }}>
-        <SectionHeader eyebrow="My story" title="About" />
-
         <div style={{
-          display: 'grid', gridTemplateColumns: '1.1fr 0.9fr', gap: 96,
-          marginTop: 64, alignItems: 'start'
+          display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 64,
+          alignItems: 'start'
         }}>
-          {/* Left column — bio + experience */}
+          {/* Left column — title + bio */}
           <div>
+            {/* Display heading */}
+            <div style={{
+              fontFamily: "'Big Shoulders Display', Helvetica, sans-serif",
+              fontWeight: 900,
+              fontSize: 'clamp(72px, 10vw, 140px)',
+              lineHeight: 0.88, letterSpacing: '-0.02em',
+              color: 'var(--ink)', marginBottom: 52
+            }}>About</div>
             <div style={{
               fontFamily: 'Archivo, sans-serif', fontSize: 11, fontWeight: 600,
               letterSpacing: '0.14em', textTransform: 'uppercase',
@@ -1554,7 +1560,7 @@ function AboutSection() {
               display: 'inline-flex', alignItems: 'center', gap: 10,
               padding: '14px 22px',
               background: 'var(--ink)', color: 'var(--paper)',
-              border: 'none', borderRadius: 9999,
+              border: 'none', borderRadius: 0,
               fontFamily: 'Archivo, sans-serif', fontSize: 12, fontWeight: 600,
               letterSpacing: '0.14em', textTransform: 'uppercase',
               textDecoration: 'none'
