@@ -292,15 +292,14 @@ const PROJECTS = [
     },
   },
   // ── Case study detail ──
-  role: 'Two-person graduation project in collaboration with the Taiwan Textile Federation. I led the UX research and product design — designing the interview and survey instruments, analyzing both qualitative and quantitative data, designing the physical form, and building the 3D models.',
-  overview: 'Breastfeeding mothers face engorgement and blocked ducts that traditional warm-compress tools relieve slowly and awkwardly — often needing a second person to help. Mere is a smart nursing bra with integrated e-textile that delivers heating and cooling therapy, paired with a companion-app concept, so a mother can complete the whole routine on her own.',
+  role: 'Two-person graduation project · I led UX research and physical product design — interview design, survey, thematic analysis, and 3D modeling.',
+  overview: 'Mere is a smart nursing bra with integrated e-textile that delivers heating and cooling therapy, so a mother can manage breastfeeding engorgement on her own.',
   concept: {
     tagline: 'Feel the care. Cherish your moment.',
-    text: 'Mere is a smart nursing bra that integrates e-textile technology, designed specifically for postpartum mothers.',
     formula: ['Nursing Bra', 'E-Textile', 'Temperature Control'],
     result: 'A smoother breastfeeding process',
   },
-  problem: 'Existing relief methods — hot towels, manual massage, standalone warmers — are slow, messy, and hard to manage one-handed while caring for a newborn. Mothers described feeling helpless when no one was around to help. We needed to understand the real pain points before designing a wearable solution.',
+  problem: 'Existing relief methods — hot towels, warmers, manual massage — are two-handed, slow, and hard to manage alone while holding a newborn.',
   contextImage: {
     label: 'Context — the current routine',
     note: 'Traditional warm-compress tools / breastfeeding context. Wide shot, no text.',
@@ -347,7 +346,7 @@ const PROJECTS = [
     { label: 'Washable construction', note: 'Electronics separated from the fabric layer.' },
   ],
   product: {
-    text: 'Mere weaves a soft heating-and-cooling circuit directly into the fabric of a nursing bra. The whole system is a set: the bra itself, a pair of detachable thermal pads, and a small clip-on controller — designed so a mother can run her own warm- or cold-compress routine without separate tools or a second person.',
+    text: 'Mere is a complete set: the bra, thermal pads, and a clip-on controller — designed so a mother can run warm- or cold-compress therapy without separate tools.',
     features: [
       'Temperature-controlled heating & cooling',
       'Machine-washable fabric layer',
@@ -357,12 +356,12 @@ const PROJECTS = [
   },
   anatomy: {
     title: 'The heating / cooling pad',
-    text: 'The thermal pad is the heart of the system. A heating-alloy thread is woven across a hydrogel core, then sealed inside a soft textile layer that sits gently against the skin. Skin-friendly velcro lets the pad attach and detach for washing.',
+    text: 'A modular thermal pad — woven heating thread over a hydrogel core — that clips into the bra pocket with skin-friendly velcro.',
     parts: [
-      { name: 'Heating alloy thread', desc: 'Conductive thread that warms evenly across the pad surface.' },
-      { name: 'Hydrogel core', desc: 'Holds and spreads warmth — and chills for cold compress.' },
-      { name: 'Skin-friendly velcro', desc: 'Attaches and detaches the pad for washing and swapping.' },
-      { name: 'Soft textile layer', desc: 'Sits gently against sensitive skin during a session.' },
+      { name: 'Heating alloy thread', desc: 'Warms evenly across the pad surface.', icon: 'thread' },
+      { name: 'Hydrogel core', desc: 'Retains heat and chills for cold compress.', icon: 'drop' },
+      { name: 'Skin-friendly velcro', desc: 'Detaches cleanly for washing and swapping.', icon: 'velcro' },
+      { name: 'Soft textile layer', desc: 'Sits gently against sensitive skin.', icon: 'textile' },
     ],
     images: [
       { label: 'Pad — exploded view', note: 'Layered diagram of the pad construction. Lay out part labels manually.' },
@@ -382,11 +381,11 @@ const PROJECTS = [
     ],
   },
   usage: {
-    text: 'A full routine moves through three short stages — warm to encourage flow, breastfeed, then cool to soothe. Each thermal stage runs only a few minutes, so the whole cycle fits inside a single feed.',
+    text: 'Three stages — warm to encourage flow, breastfeed, then cool to soothe.',
     steps: [
-      { name: 'Hot · 40°C', desc: 'Warm compress for 5–15 min to ease engorgement and encourage flow.' },
-      { name: 'Breastfeed', desc: 'Feed the baby with the warmed, softened breast.' },
-      { name: 'Cold · 15°C', desc: 'Cold compress for 15 min to reduce swelling and soothe.' },
+      { name: 'Hot · 40°C', desc: 'Warm compress 5–15 min to ease engorgement.', icon: 'hot' },
+      { name: 'Breastfeed', desc: 'Feed with the warmed, softened breast.', icon: 'baby' },
+      { name: 'Cold · 15°C', desc: 'Cold compress 15 min to reduce swelling.', icon: 'cold' },
     ],
     flow: [
       'Pull the zipper',
@@ -397,7 +396,7 @@ const PROJECTS = [
     diagram: { label: 'Usage flow diagram', note: 'Step-by-step routine illustration. Lay out step labels manually.' },
   },
   appConcept: {
-    text: 'A companion-app concept lets mothers run a session, log it in about 15 minutes, and watch the live temperature. A skin-sensitivity alert — drawn from secondary research (literature review) — warns if a side runs too warm during compression. The app was designed as part of the system; it was not engineered into a working build.',
+    text: 'The companion app monitors live temperature, records session history, and alerts if a side runs too warm — helping mothers prevent inflammation. Designed as a system concept, not an engineered build.',
     images: [
       { label: 'App concept — Splash', note: 'Opening / welcome screen.' },
       { label: 'App concept — Care history', note: 'Past sessions, ~15-min logs.' },
@@ -406,7 +405,7 @@ const PROJECTS = [
     ],
   },
   userTesting: {
-    setup: 'Usability testing with 3 mothers — one who had taken part in the development interviews (informed) and two with no prior knowledge of the design. Each completed the heating routine independently.',
+    setup: 'n=3 — one informed participant, two blind. Each completed the heating routine independently.',
     positives: [
       'Cut the routine time roughly in half versus traditional tools',
       'Operation felt intuitive — no points of confusion',
@@ -430,9 +429,8 @@ const PROJECTS = [
     { label: 'Final product — worn', note: 'Clean shot of the finished bra in context.' },
     { label: '3D render', note: 'Product render / construction breakdown.' },
   ],
-  reflection: 'Testing surfaced that physical ergonomics — zipper range, dial sensitivity, control placement — mattered as much as the core thermal function, and were only visible once mothers used the product unaided. With more time I would run a second iteration addressing these issues and expand scope to the cooling and EMS needs we deprioritized.',
+  reflection: 'Testing surfaced that physical ergonomics — zipper range, dial sensitivity, controller placement — mattered as much as the thermal function itself, and were only visible once mothers used the product unaided.',
   designDirection: {
-    intro: 'Research and behavioral observation revealed four moments in the care routine with strong potential for embodied interaction. Under project time and technical constraints, we focused on thermal care.',
     opportunities: [
       {
         title: 'Pressure Guidance',
@@ -915,6 +913,16 @@ function ProjectDetailView({ project }) {
     margin: 0, maxWidth: 680
   };
 
+  const ICONS = {
+    thread: <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"><path d="M2 9 Q5 4 8 9 Q11 14 14 9 Q15.5 6.5 17 9"/></svg>,
+    drop:   <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M9 2 Q14 7.5 14 11.5 A5 5 0 0 1 4 11.5 Q4 7.5 9 2Z"/></svg>,
+    velcro: <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth="1.5"><rect x="2" y="2" width="6" height="6"/><rect x="10" y="2" width="6" height="6"/><rect x="2" y="10" width="6" height="6"/><rect x="10" y="10" width="6" height="6"/></svg>,
+    textile:<svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"><path d="M2 5 Q9 3 16 5"/><path d="M2 9 Q9 7 16 9"/><path d="M2 13 Q9 11 16 13"/></svg>,
+    hot:    <svg width="22" height="22" viewBox="0 0 22 22" fill="none" stroke="var(--accent)" strokeWidth="1.5" strokeLinecap="round"><line x1="11" y1="3" x2="11" y2="12"/><circle cx="11" cy="16" r="3"/><line x1="8" y1="6.5" x2="9.5" y2="6.5"/><line x1="8" y1="9.5" x2="9.5" y2="9.5"/></svg>,
+    baby:   <svg width="22" height="22" viewBox="0 0 22 22" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="11" cy="5.5" r="2.5"/><path d="M7 10.5 Q11 9 15 10.5 L14 19 H8 Z"/></svg>,
+    cold:   <svg width="22" height="22" viewBox="0 0 22 22" fill="none" stroke="#5B8DB8" strokeWidth="1.5" strokeLinecap="round"><line x1="11" y1="2" x2="11" y2="20"/><line x1="2" y1="11" x2="20" y2="11"/><line x1="5" y1="5" x2="17" y2="17"/><line x1="17" y1="5" x2="5" y2="17"/></svg>,
+  };
+
   return (
     <main style={{ paddingTop: 'clamp(100px, 14vh, 160px)', paddingBottom: 96 }}>
       <div style={{ maxWidth: 'var(--maxw)', margin: '0 auto', paddingLeft: 'var(--gutter)', paddingRight: 'var(--gutter)' }}>
@@ -1269,15 +1277,24 @@ function ProjectDetailView({ project }) {
                   {project.anatomy.parts.map((p, i) => (
                     <div key={i} style={{
                       display: 'grid',
-                      gridTemplateColumns: 'minmax(160px, 0.4fr) minmax(0, 1fr)',
+                      gridTemplateColumns: 'minmax(180px, 0.4fr) minmax(0, 1fr)',
                       gap: 24,
                       padding: '16px 0',
-                      borderBottom: '1px solid var(--hairline)'
+                      borderBottom: '1px solid var(--hairline)',
+                      alignItems: 'center',
                     }}>
                       <div style={{
+                        display: 'flex', alignItems: 'center', gap: 10,
                         fontFamily: 'Archivo, sans-serif', fontWeight: 700,
-                        fontSize: 15, color: 'var(--fg-1)'
-                      }}>{p.name}</div>
+                        fontSize: 15, color: 'var(--fg-1)',
+                      }}>
+                        {p.icon && (
+                          <span style={{ color: 'var(--fg-3)', flexShrink: 0 }}>
+                            {ICONS[p.icon]}
+                          </span>
+                        )}
+                        {p.name}
+                      </div>
                       <div style={{
                         fontFamily: 'Archivo, sans-serif', fontSize: 15,
                         lineHeight: 1.55, color: 'var(--fg-2)'
@@ -1331,14 +1348,16 @@ function ProjectDetailView({ project }) {
                   {project.usage.steps.map((s, i) => (
                     <div key={i} style={{
                       border: '1px solid var(--hairline)',
-                      borderRadius: 8,
-                      padding: '20px 22px',
-                      background: 'var(--paper-deep)'
+                      padding: '22px 24px',
+                      background: 'var(--paper-deep)',
                     }}>
+                      {s.icon && (
+                        <div style={{ marginBottom: 12 }}>{ICONS[s.icon]}</div>
+                      )}
                       <div style={{
                         fontFamily: "'Big Shoulders Display', Helvetica, sans-serif",
                         fontWeight: 700, fontSize: 22,
-                        color: 'var(--ink)', marginBottom: 8,
+                        color: 'var(--ink)', marginBottom: 6,
                         letterSpacing: '-0.01em'
                       }}>{s.name}</div>
                       <div style={{
