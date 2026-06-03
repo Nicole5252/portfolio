@@ -1545,15 +1545,6 @@ function AboutSection() {
               translating findings into actionable insights for designers and PMs.
             </p>
 
-            <p style={{
-              fontFamily: "Archivo, sans-serif",
-              fontSize: 19, lineHeight: 1.55, color: 'var(--fg-2)',
-              maxWidth: 540, margin: '0 0 40px 0'
-            }}>
-              <strong style={{ fontWeight: 700, color: "var(--fg-1)" }}>My current research</strong>{' '}
-              explores how interactive installations help museum visitors exchange ideas
-              and build social connections.
-            </p>
 
             {/* CV button */}
             <a href="#" style={{
