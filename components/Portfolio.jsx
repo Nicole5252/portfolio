@@ -205,19 +205,10 @@ function Hero() {
       paddingLeft: 'var(--gutter)', paddingRight: 'var(--gutter)'
     }}>
       <div style={{ maxWidth: 'var(--maxw)', margin: '0 auto' }}>
-        {/* Eyebrow */}
-        <div style={{
-          fontFamily: 'Archivo, sans-serif', fontSize: 11, fontWeight: 600,
-          letterSpacing: '0.14em', textTransform: 'uppercase',
-          color: 'var(--fg-3)', marginBottom: 28
-        }}>UX/UI · INDUSTRIAL DESIGNER · PORTFOLIO '26
-
-        </div>
-
         {/* Display name — particle canvas */}
         <ParticleText text="Nicole Lin" />
 
-        {/* Masthead baseline row */}
+        {/* Masthead baseline row — eyebrow left, capsules right */}
         <div style={{
           display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start',
           flexWrap: 'wrap', gap: 40,
@@ -225,14 +216,14 @@ function Hero() {
           borderTop: '1px solid var(--hairline)',
           paddingTop: 28
         }}>
-          {/* Left: role descriptor */}
-          <p style={{
-            margin: 0, maxWidth: 360,
-            fontFamily: 'Archivo, sans-serif', fontSize: 17, lineHeight: 1.5,
-            color: 'var(--fg-2)', letterSpacing: '-0.005em'
-          }}>Research-led design across wearables, interfaces, and the physical products in between.</p>
+          {/* Left: eyebrow (moved from top) */}
+          <div style={{
+            fontFamily: 'Archivo, sans-serif', fontSize: 11, fontWeight: 600,
+            letterSpacing: '0.14em', textTransform: 'uppercase',
+            color: 'var(--fg-3)', paddingTop: 2
+          }}>UX/UI · Industrial Designer · Portfolio '26</div>
           {/* Right: status capsules */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 10, alignItems: 'flex-end', paddingTop: 2 }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 10, alignItems: 'flex-end' }}>
             <span className="capsule capsule--eyebrow">
               <span className="dot" /> Open to Werkstudent / Internship
             </span>
