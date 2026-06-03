@@ -708,51 +708,27 @@ function ProjectCard({ p, rotate, onOpen }) {
       onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') onOpen && onOpen(p.slug); }}
       style={{
         position: 'relative',
-        background: 'var(--paper-deep)',
-        border: '1.5px solid var(--ink)',
-        borderRadius: 6,
-        aspectRatio: '4 / 3',
+        background: 'var(--paper)',
+        border: 'none',
+        borderRadius: 0,
+        aspectRatio: '1 / 1',
         overflow: 'hidden',
         cursor: 'pointer',
-        transform: `rotate(${rotate}deg)`,
-        transition: 'transform 380ms cubic-bezier(.22,1,.36,1), box-shadow 380ms cubic-bezier(.22,1,.36,1)',
-        boxShadow: hover ?
-        '8px 10px 0 var(--ink)' :
-        '4px 5px 0 var(--ink)',
+        transition: 'background 240ms ease',
         outline: 'none'
       }}>
 
-      {/* Resting state — doodle + title */}
+      {/* Resting state — doodle only, centered */}
       <div style={{
         position: 'absolute', inset: 0,
-        display: 'flex', flexDirection: 'column',
-        padding: '20px 22px 22px',
-        transition: 'opacity 260ms ease, transform 380ms cubic-bezier(.22,1,.36,1)',
+        display: 'flex', alignItems: 'center', justifyContent: 'center',
+        transition: 'opacity 260ms ease',
         opacity: hover ? 0 : 1,
-        transform: hover ? 'translateY(-8px)' : 'translateY(0)'
+        pointerEvents: hover ? 'none' : 'auto'
       }}>
-        {/* Top label row */}
-        <div style={{
-          display: 'flex', justifyContent: 'space-between',
-          fontFamily: 'Archivo, sans-serif', fontSize: 11, fontWeight: 700,
-          letterSpacing: '0.16em', textTransform: 'uppercase',
-          color: 'var(--ink)'
-        }}>
-          <span>№ {p.idx}</span>
-          <span>{p.period}</span>
-        </div>
-        {/* Doodle fills the middle */}
-        <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '8px 8px 0' }}>
+        <div style={{ width: '42%' }}>
           <Doodle kind={p.doodle} />
         </div>
-        {/* Handwritten-style title */}
-        <div style={{
-          fontFamily: "Archivo, sans-serif",
-          fontStyle: 'italic', fontWeight: 600,
-          fontSize: 'clamp(20px, 2.4vw, 28px)',
-          lineHeight: 1.1, color: 'var(--ink)',
-          marginTop: 10
-        }}>{p.title}</div>
       </div>
 
       {/* Hover state — info panel */}
@@ -772,7 +748,7 @@ function ProjectCard({ p, rotate, onOpen }) {
           display: 'flex', justifyContent: 'space-between',
           fontFamily: 'Archivo, sans-serif', fontSize: 10.5, fontWeight: 600,
           letterSpacing: '0.16em', textTransform: 'uppercase',
-          color: 'rgba(239,233,221,0.6)', marginBottom: 14
+          color: 'rgba(255,255,255,0.5)', marginBottom: 14
         }}>
           <span>№ {p.idx} · {p.org}</span>
           <span>{p.period}</span>
@@ -791,7 +767,7 @@ function ProjectCard({ p, rotate, onOpen }) {
         <p style={{
           fontFamily: "Archivo, sans-serif",
           fontSize: 14.5, lineHeight: 1.5,
-          color: 'rgba(239,233,221,0.82)',
+          color: 'rgba(255,255,255,0.8)',
           margin: '0 0 14px 0'
         }}>{p.blurb}</p>
 
@@ -800,12 +776,12 @@ function ProjectCard({ p, rotate, onOpen }) {
           {p.tags.map((t) =>
           <span key={t} style={{
             padding: '4px 10px',
-            border: '1px solid rgba(239,233,221,0.4)',
+            border: '1px solid rgba(255,255,255,0.3)',
             borderRadius: 9999,
             fontFamily: 'Archivo, sans-serif',
             fontSize: 10.5, fontWeight: 500,
             letterSpacing: '0.04em',
-            color: 'rgba(239,233,221,0.9)',
+            color: 'rgba(255,255,255,0.9)',
             whiteSpace: 'nowrap'
           }}>{t}</span>
           )}
@@ -814,11 +790,11 @@ function ProjectCard({ p, rotate, onOpen }) {
         {/* Insight pinned to bottom */}
         <div style={{
           marginTop: 'auto', paddingTop: 14,
-          borderTop: '1px dashed rgba(239,233,221,0.3)',
+          borderTop: '1px dashed rgba(255,255,255,0.2)',
           display: 'flex', justifyContent: 'space-between', alignItems: 'baseline',
           fontFamily: 'Archivo, sans-serif',
           fontSize: 11, fontWeight: 600, letterSpacing: '0.08em',
-          color: 'rgba(239,233,221,0.78)', textTransform: 'uppercase'
+          color: 'rgba(255,255,255,0.7)', textTransform: 'uppercase'
         }}>
           <span>{p.insight}</span>
           <span style={{ fontSize: 14 }}>View case study ↗</span>
