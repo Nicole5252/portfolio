@@ -283,7 +283,7 @@ const PROJECTS = [
   title: 'Mere',
   blurb: 'A smart nursing bra with integrated heating/cooling e-textile that lets breastfeeding mothers relieve engorgement on their own — backed by a 32-person survey and 14 in-depth interviews.',
   tags: ['UX Research', 'E-Textile', 'Mixed Methods', 'Wearable', 'Product Design'],
-  insight: 'n=32 survey · n=14 interviews · 3 interaction opportunities',
+  insight: 'n=32 survey · n=14 interviews · 4 interaction opportunities',
   doodle: 'textile',
   images: {
     hero: {
@@ -321,18 +321,18 @@ const PROJECTS = [
   findings: [
     {
       title: '75% of mothers suffer from breastfeeding pain',
-      description: 'Pain from engorgement and blocked ducts was near-universal and recurring, yet relief depended on slow, separate rituals.',
-      design: 'Built thermal therapy directly into a wearable, so relief is always on-hand rather than a separate task.',
+      description: 'Engorgement pain was near-universal — yet relief meant slow, separate rituals.',
+      design: 'Thermal therapy built into the garment — always on-hand, not a separate task.',
     },
     {
       title: '42% are frustrated by inconvenient cold/hot compress tools',
-      description: 'Existing tools were described as slow, messy, and two-handed — hard to use while holding a newborn.',
-      design: 'Integrated the heating e-textile into the bra so the whole routine is hands-free and self-operable — no second person needed.',
+      description: 'Existing tools are slow, messy, and two-handed — hard to use holding a newborn.',
+      design: 'Heating e-textile in the bra makes the routine hands-free and self-operable.',
     },
     {
       title: '64% want soft materials and an easy-to-clean product',
-      description: 'Comfort and hygiene ranked alongside function: mothers would not wear something stiff or hard to wash daily.',
-      design: 'Selected skin-friendly e-textile and a construction that separates the electronics from a washable fabric layer.',
+      description: 'Comfort and hygiene ranked alongside function — nothing stiff or hard to wash.',
+      design: 'Skin-friendly e-textile with electronics that detach from a washable layer.',
     },
   ],
   scopeNote: 'Mothers raised several needs — heating, cooling, and EMS massage. Under project time constraints we prioritized the most-cited need, thermal care, and scoped the final physical prototype around heating and cooling.',
