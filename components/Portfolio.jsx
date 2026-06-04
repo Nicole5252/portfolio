@@ -913,6 +913,10 @@ function ProjectDetailView({ project }) {
     margin: 0, maxWidth: 680
   };
 
+  // LEAN MODE — deeper sections live in the downloadable PDF, not on the page.
+  // Flip to true to show them all again (data is untouched in PROJECTS).
+  const SHOW_DETAIL = false;
+
   const ICONS = {
     thread: <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"><path d="M2 9 Q5 4 8 9 Q11 14 14 9 Q15.5 6.5 17 9"/></svg>,
     drop:   <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M9 2 Q14 7.5 14 11.5 A5 5 0 0 1 4 11.5 Q4 7.5 9 2Z"/></svg>,
@@ -1050,7 +1054,7 @@ function ProjectDetailView({ project }) {
           </div>
         )}
 
-        {project.contextImage && (
+        {SHOW_DETAIL && project.contextImage && (
           <div style={{ marginBottom: 80 }}>
             <ImagePlaceholder
               label={project.contextImage.label}
@@ -1081,7 +1085,7 @@ function ProjectDetailView({ project }) {
                 <span key={m} className="capsule">{m}</span>
               ))}
             </div>
-            {project.methodsImages && project.methodsImages.length > 0 && (
+            {SHOW_DETAIL && project.methodsImages && project.methodsImages.length > 0 && (
               <div style={{ marginTop: 28 }}>
                 <ImageGrid images={project.methodsImages} minCol={240} aspectRatio={'4 / 3'} />
               </div>
@@ -1145,13 +1149,13 @@ function ProjectDetailView({ project }) {
                 </div>
               ))}
             </div>
-            {project.scopeNote && (
+            {SHOW_DETAIL && project.scopeNote && (
               <p style={{
                 fontFamily: 'Archivo, sans-serif', fontSize: 15, lineHeight: 1.6,
                 color: 'var(--fg-3)', margin: '24px 0 0', maxWidth: 680, fontStyle: 'italic'
               }}>{project.scopeNote}</p>
             )}
-            {project.findingsChart && (
+            {SHOW_DETAIL && project.findingsChart && (
               <div style={{ marginTop: 36 }}>
                 <ImagePlaceholder
                   label={project.findingsChart.label}
@@ -1160,7 +1164,7 @@ function ProjectDetailView({ project }) {
                 />
               </div>
             )}
-            {project.designImages && project.designImages.length > 0 && (
+            {SHOW_DETAIL && project.designImages && project.designImages.length > 0 && (
               <div style={{ marginTop: 48 }}>
                 <div style={{ ...eyebrow, marginBottom: 18 }}>From research to form</div>
                 <ImageGrid images={project.designImages} minCol={220} aspectRatio={'4 / 3'} />
@@ -1267,7 +1271,7 @@ function ProjectDetailView({ project }) {
         )}
 
         {/* ── Anatomy: heating / cooling pad ── */}
-        {project.anatomy && (
+        {SHOW_DETAIL && project.anatomy && (
           <div>
             <div style={{ marginBottom: 80 }}>
               <div style={eyebrow}>{project.anatomy.title || 'Anatomy'}</div>
@@ -1312,7 +1316,7 @@ function ProjectDetailView({ project }) {
         )}
 
         {/* ── Controller ── */}
-        {project.controller && (
+        {SHOW_DETAIL && project.controller && (
           <div>
             <div style={{ marginBottom: 80 }}>
               <div style={eyebrow}>The Controller</div>
@@ -1333,7 +1337,7 @@ function ProjectDetailView({ project }) {
         )}
 
         {/* ── How It Works ── */}
-        {project.usage && (
+        {SHOW_DETAIL && project.usage && (
           <div>
             <div style={{ marginBottom: 80 }}>
               <div style={eyebrow}>How It Works</div>
@@ -1407,7 +1411,7 @@ function ProjectDetailView({ project }) {
         )}
 
         {/* ── Companion App (concept) ── */}
-        {project.appConcept && (
+        {SHOW_DETAIL && project.appConcept && (
           <div>
             <div style={{ marginBottom: 80 }}>
               <div style={eyebrow}>Companion App — Concept</div>
@@ -1421,7 +1425,7 @@ function ProjectDetailView({ project }) {
         )}
 
         {/* ── User Testing ── */}
-        {project.userTesting && (
+        {SHOW_DETAIL && project.userTesting && (
           <div>
             <div style={{ marginBottom: 80 }}>
               <div style={eyebrow}>User Testing</div>
@@ -1477,7 +1481,7 @@ function ProjectDetailView({ project }) {
 
         {/* ── Outcome ── */}
         {project.outcome && (
-          <div style={{ marginBottom: project.reflection ? 80 : 96 }}>
+          <div style={{ marginBottom: (SHOW_DETAIL && project.reflection) ? 80 : 96 }}>
             <div style={eyebrow}>Outcome</div>
             <p style={{ ...bodyText, marginBottom: project.outcomeImages ? 28 : 0 }}>{project.outcome}</p>
             {project.outcomeImages && project.outcomeImages.length > 0 && (
@@ -1487,7 +1491,7 @@ function ProjectDetailView({ project }) {
         )}
 
         {/* ── Reflection ── */}
-        {project.reflection && (
+        {SHOW_DETAIL && project.reflection && (
           <div>
             <hr className="rule" />
             <div style={{ marginBottom: 96, marginTop: 80 }}>
