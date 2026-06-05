@@ -211,6 +211,35 @@
   padding: 6px 12px;
 }
 
+/* =============================================================
+   Tag — square-cornered label (case-study pages).
+   Brand preference: square over rounded; quieter than .capsule.
+   ============================================================= */
+.tag {
+  display: inline-flex;
+  align-items: center;
+  white-space: nowrap;
+  gap: var(--sp-2);
+  padding: 7px 12px;
+  border: 1px solid var(--capsule-border);
+  border-radius: 2px;
+  font-family: var(--font-sans);
+  font-size: var(--fs-caption);
+  font-weight: 500;
+  letter-spacing: var(--tracking-caption);
+  color: var(--fg-2);
+  background: transparent;
+}
+.tag--accent {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+.tag--solid {
+  background: var(--ink);
+  border-color: var(--ink);
+  color: var(--paper);
+}
+
 .dot {
   width: 0; height: 0;
   background: transparent;

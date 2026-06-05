@@ -841,33 +841,37 @@ function ProjectCard({ p, rotate, onOpen }) {
 
 /* ---------- Image placeholder (dashed box w/ label) ---------- */
 function ImagePlaceholder({ label, note, aspectRatio = '4 / 3', height }) {
+  // Intentional empty-state panel (not a dashed "missing image" box).
+  // `label` shows as a quiet corner caption so Nicole knows what to drop in.
   return (
     <div style={{
-      border: '1.5px dashed var(--fg-4, var(--ink))',
-      borderRadius: 6,
+      position: 'relative',
       background: 'var(--paper-deep)',
-      display: 'flex', flexDirection: 'column',
-      alignItems: 'center', justifyContent: 'center',
-      gap: 10, padding: 24, textAlign: 'center',
+      borderRadius: 2,
+      overflow: 'hidden',
       aspectRatio: height ? undefined : aspectRatio,
       height: height || undefined,
       minHeight: 140,
-      color: 'var(--fg-3)'
     }}>
-      <svg width="34" height="34" viewBox="0 0 24 24" fill="none"
-        stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-        <rect x="3" y="4" width="18" height="16" rx="2" />
-        <circle cx="8.5" cy="9.5" r="1.6" />
-        <path d="M21 16 L15 11 L7 19" />
-      </svg>
       <div style={{
-        fontFamily: 'Archivo, sans-serif', fontSize: 12, fontWeight: 700,
-        letterSpacing: '0.08em', textTransform: 'uppercase', color: 'var(--ink)'
-      }}>{label}</div>
-      {note && <div style={{
-        fontFamily: 'Archivo, sans-serif', fontSize: 12.5, lineHeight: 1.45,
-        color: 'var(--fg-3)', maxWidth: 320
-      }}>{note}</div>}
+        position: 'absolute', inset: 0,
+        display: 'flex', alignItems: 'center', justifyContent: 'center',
+        color: 'var(--fg-4)',
+      }}>
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none"
+          stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round">
+          <rect x="3" y="4" width="18" height="16" rx="1" />
+          <circle cx="8.5" cy="9.5" r="1.5" />
+          <path d="M21 16 L15 11 L7 19" />
+        </svg>
+      </div>
+      {label && (
+        <div style={{
+          position: 'absolute', left: 12, bottom: 10,
+          fontFamily: 'Archivo, sans-serif', fontSize: 10.5, fontWeight: 600,
+          letterSpacing: '0.1em', textTransform: 'uppercase', color: 'var(--fg-4)',
+        }}>{label}</div>
+      )}
     </div>
   );
 }
@@ -927,6 +931,37 @@ function ProjectDetailView({ project }) {
     cold:   <svg width="22" height="22" viewBox="0 0 22 22" fill="none" stroke="#5B8DB8" strokeWidth="1.5" strokeLinecap="round"><line x1="11" y1="2" x2="11" y2="20"/><line x1="2" y1="11" x2="20" y2="11"/><line x1="5" y1="5" x2="17" y2="17"/><line x1="17" y1="5" x2="5" y2="17"/></svg>,
   };
 
+  // Section-marker pictograms (functional wayfinding, monochrome, inherit color)
+  const SECTION_ICONS = {
+    role:      <svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"><circle cx="8" cy="5" r="2.6"/><path d="M2.8 13.5 Q8 8.5 13.2 13.5"/></svg>,
+    overview:  <svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"><path d="M1.5 8 Q8 2.5 14.5 8 Q8 13.5 1.5 8Z"/><circle cx="8" cy="8" r="1.9"/></svg>,
+    numbers:   <svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round"><line x1="3" y1="13.5" x2="3" y2="9"/><line x1="8" y1="13.5" x2="8" y2="4"/><line x1="13" y1="13.5" x2="13" y2="7"/></svg>,
+    concept:   <svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"><path d="M8 1.5 L9.6 6.4 L14.5 8 L9.6 9.6 L8 14.5 L6.4 9.6 L1.5 8 L6.4 6.4Z"/></svg>,
+    problem:   <svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"><path d="M8 2 L14.5 13.5 H1.5Z"/><line x1="8" y1="6.5" x2="8" y2="9.5"/><circle cx="8" cy="11.6" r="0.5" fill="currentColor"/></svg>,
+    methods:   <svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"><circle cx="7" cy="7" r="4.5"/><line x1="10.4" y1="10.4" x2="14" y2="14"/></svg>,
+    findings:  <svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"><path d="M2 10 L6 6 L9 9 L14 3.5"/><path d="M14 7 V3.5 H10.5"/></svg>,
+    direction: <svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"><circle cx="8" cy="8" r="6.2"/><path d="M8 8 L10.6 5.4 M8 8 L5.6 10.6"/></svg>,
+    product:   <svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"><path d="M8 1.8 L14 5 V11 L8 14.2 L2 11 V5Z"/><path d="M2 5 L8 8 L14 5 M8 8 V14.2"/></svg>,
+    outcome:   <svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"><path d="M3.5 14 V2 H12 L10 5 L12 8 H3.5"/></svg>,
+  };
+
+  const SectionLabel = ({ icon, children }) => (
+    <div style={{ display: 'flex', alignItems: 'center', gap: 11, marginBottom: 22 }}>
+      {icon && SECTION_ICONS[icon] && (
+        <span style={{
+          display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
+          width: 28, height: 28, flexShrink: 0,
+          border: '1px solid var(--capsule-border)', borderRadius: 2,
+          color: 'var(--accent)',
+        }}>{SECTION_ICONS[icon]}</span>
+      )}
+      <span style={{
+        fontFamily: 'Archivo, sans-serif', fontSize: 11, fontWeight: 600,
+        letterSpacing: '0.14em', textTransform: 'uppercase', color: 'var(--fg-3)',
+      }}>{children}</span>
+    </div>
+  );
+
   return (
     <main style={{ paddingTop: 'clamp(100px, 14vh, 160px)', paddingBottom: 96 }}>
       <div style={{ maxWidth: 'var(--maxw)', margin: '0 auto', paddingLeft: 'var(--gutter)', paddingRight: 'var(--gutter)' }}>
@@ -953,7 +988,7 @@ function ProjectDetailView({ project }) {
           }}>{project.title}</h1>
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
             {project.tags.map((tag) => (
-              <span key={tag} className="capsule">{tag}</span>
+              <span key={tag} className="tag">{tag}</span>
             ))}
           </div>
         </div>
@@ -977,39 +1012,54 @@ function ProjectDetailView({ project }) {
 
         {/* ── My Role ── */}
         {project.role && (
-          <div style={{ marginBottom: 80 }}>
-            <div style={eyebrow}>My Role</div>
+          <div style={{ marginBottom: 72 }}>
+            <SectionLabel icon="role">My Role</SectionLabel>
             <p style={bodyText}>{project.role}</p>
           </div>
         )}
 
-        {/* ── Two-col: overview + by the numbers ── */}
+        {/* ── Two-col: overview + by the numbers (big figures) ── */}
         <div style={{
           display: 'grid',
-          gridTemplateColumns: 'minmax(0, 1.2fr) minmax(0, 0.8fr)',
+          gridTemplateColumns: 'minmax(0, 1.15fr) minmax(0, 0.85fr)',
           gap: 'clamp(40px, 8vw, 96px)',
-          marginBottom: 80,
+          marginBottom: 96,
           alignItems: 'start'
         }}>
           <div>
-            <div style={eyebrow}>Overview</div>
+            <SectionLabel icon="overview">Overview</SectionLabel>
             <p style={bodyText}>{project.overview}</p>
           </div>
           <div>
-            <div style={eyebrow}>By the numbers</div>
-            <div style={{
-              fontFamily: "'Big Shoulders Display', Helvetica, sans-serif",
-              fontWeight: 700, fontSize: 17,
-              color: 'var(--ink)', lineHeight: 1.7,
-              letterSpacing: '-0.01em'
-            }}>{project.insight}</div>
+            <SectionLabel icon="numbers">By the numbers</SectionLabel>
+            <div style={{ display: 'grid', gap: 'clamp(18px, 2.4vw, 26px)' }}>
+              {(project.insight || '').split('·').map(s => s.trim()).filter(Boolean).map((item, i) => {
+                const sp = item.indexOf(' ');
+                const fig = sp === -1 ? item : item.slice(0, sp);
+                const label = sp === -1 ? '' : item.slice(sp + 1);
+                return (
+                  <div key={i} style={{ borderTop: i === 0 ? 'none' : '1px solid var(--hairline)', paddingTop: i === 0 ? 0 : 'clamp(18px, 2.4vw, 26px)' }}>
+                    <div style={{
+                      fontFamily: "'Big Shoulders Display', Helvetica, sans-serif",
+                      fontWeight: 900, fontSize: 'clamp(38px, 5vw, 56px)',
+                      color: 'var(--ink)', lineHeight: 0.95, letterSpacing: '-0.02em',
+                    }}>{fig}</div>
+                    {label && <div style={{
+                      fontFamily: 'Archivo, sans-serif', fontSize: 12, fontWeight: 600,
+                      letterSpacing: '0.1em', textTransform: 'uppercase',
+                      color: 'var(--fg-3)', marginTop: 8,
+                    }}>{label}</div>}
+                  </div>
+                );
+              })}
+            </div>
           </div>
         </div>
 
         {/* ── Concept ── */}
         {project.concept && (
-          <div style={{ marginBottom: 80 }}>
-            <div style={eyebrow}>Concept</div>
+          <div style={{ marginBottom: 96 }}>
+            <SectionLabel icon="concept">Concept</SectionLabel>
             {project.concept.tagline && (
               <p style={{
                 fontFamily: "'Big Shoulders Display', Helvetica, sans-serif",
@@ -1032,21 +1082,16 @@ function ProjectDetailView({ project }) {
                         fontSize: 16, color: 'var(--fg-3)'
                       }}>+</span>
                     )}
-                    <span className="capsule">{part}</span>
+                    <span className="tag">{part}</span>
                   </React.Fragment>
                 ))}
                 {project.concept.result && (
                   <React.Fragment>
                     <span style={{
                       fontFamily: 'Archivo, sans-serif', fontWeight: 700,
-                      fontSize: 16, color: 'var(--fg-3)'
+                      fontSize: 16, color: 'var(--accent)'
                     }}>=</span>
-                    <span style={{
-                      fontFamily: 'Archivo, sans-serif', fontWeight: 700,
-                      fontSize: 13, letterSpacing: '0.02em',
-                      color: 'var(--paper)', background: 'var(--ink)',
-                      padding: '8px 16px', borderRadius: 999, whiteSpace: 'nowrap'
-                    }}>{project.concept.result}</span>
+                    <span className="tag tag--solid" style={{ fontWeight: 700 }}>{project.concept.result}</span>
                   </React.Fragment>
                 )}
               </div>
@@ -1064,25 +1109,23 @@ function ProjectDetailView({ project }) {
           </div>
         )}
 
-        <hr className="rule" />
 
         {/* ── The Problem ── */}
         {project.problem && (
           <div style={{ marginBottom: 80 }}>
-            <div style={eyebrow}>The Problem</div>
+            <SectionLabel icon="problem">The Problem</SectionLabel>
             <p style={bodyText}>{project.problem}</p>
           </div>
         )}
 
-        <hr className="rule" />
 
         {/* ── Research Methods ── */}
         {project.methods && project.methods.length > 0 && (
           <div style={{ marginBottom: 80 }}>
-            <div style={eyebrow}>Research Methods</div>
+            <SectionLabel icon="methods">Research Methods</SectionLabel>
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
               {project.methods.map((m) => (
-                <span key={m} className="capsule">{m}</span>
+                <span key={m} className="tag">{m}</span>
               ))}
             </div>
             {SHOW_DETAIL && project.methodsImages && project.methodsImages.length > 0 && (
@@ -1093,18 +1136,21 @@ function ProjectDetailView({ project }) {
           </div>
         )}
 
-        <hr className="rule" />
 
         {/* ── Key Findings ── */}
         {project.findings && project.findings.length > 0 && (
           <div style={{ marginBottom: 80 }}>
-            <div style={eyebrow}>Key Findings</div>
+            <SectionLabel icon="findings">Key Findings</SectionLabel>
             <div style={{
               display: 'grid',
               gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))',
               gap: 20,
             }}>
-              {project.findings.map((f, i) => (
+              {project.findings.map((f, i) => {
+                const m = (f.title || '').match(/^(\d+%)\s+(.*)$/);
+                const fig = m ? m[1] : '0' + (i + 1);
+                const ttl = m ? m[2] : f.title;
+                return (
                 <div key={i} style={{
                   border: '1px solid var(--hairline)',
                   padding: '28px 28px',
@@ -1113,16 +1159,17 @@ function ProjectDetailView({ project }) {
                   flexDirection: 'column',
                 }}>
                   <div style={{
-                    fontFamily: 'Archivo, sans-serif', fontWeight: 700,
-                    fontSize: 11, letterSpacing: '0.14em', textTransform: 'uppercase',
-                    color: 'var(--fg-4)', marginBottom: 16
-                  }}>0{i + 1}</div>
+                    fontFamily: "'Big Shoulders Display', Helvetica, sans-serif",
+                    fontWeight: 900, fontSize: m ? 'clamp(40px, 5vw, 58px)' : 24,
+                    color: m ? 'var(--accent)' : 'var(--fg-4)',
+                    lineHeight: 0.95, letterSpacing: '-0.02em', marginBottom: 14,
+                  }}>{fig}</div>
                   <div style={{
                     fontFamily: 'Archivo, sans-serif',
-                    fontWeight: 700, fontSize: 17,
+                    fontWeight: 700, fontSize: 16,
                     color: 'var(--fg-1)', lineHeight: 1.35,
                     marginBottom: 12
-                  }}>{f.title}</div>
+                  }}>{ttl}</div>
                   <p style={{
                     fontFamily: 'Archivo, sans-serif',
                     fontSize: 15, lineHeight: 1.65,
@@ -1147,7 +1194,8 @@ function ProjectDetailView({ project }) {
                     </div>
                   )}
                 </div>
-              ))}
+                );
+              })}
             </div>
             {SHOW_DETAIL && project.scopeNote && (
               <p style={{
@@ -1173,13 +1221,12 @@ function ProjectDetailView({ project }) {
           </div>
         )}
 
-        <hr className="rule" />
 
         {/* ── Design Direction ── */}
         {project.designDirection && (
           <div>
             <div style={{ marginBottom: 80 }}>
-              <div style={eyebrow}>Design Direction</div>
+              <SectionLabel icon="direction">Design Direction</SectionLabel>
               {project.designDirection.intro && (
                 <p style={{ ...bodyText, marginBottom: 32 }}>{project.designDirection.intro}</p>
               )}
@@ -1241,20 +1288,19 @@ function ProjectDetailView({ project }) {
                 </div>
               )}
             </div>
-            <hr className="rule" />
-          </div>
+              </div>
         )}
 
         {/* ── The Product ── */}
         {project.product && (
           <div>
             <div style={{ marginBottom: 80 }}>
-              <div style={eyebrow}>The Product</div>
+              <SectionLabel icon="product">The Product</SectionLabel>
               <p style={{ ...bodyText, marginBottom: project.product.features ? 24 : 28 }}>{project.product.text}</p>
               {project.product.features && project.product.features.length > 0 && (
                 <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, marginBottom: project.product.setImage ? 36 : 0 }}>
                   {project.product.features.map((f) => (
-                    <span key={f} className="capsule">{f}</span>
+                    <span key={f} className="tag">{f}</span>
                   ))}
                 </div>
               )}
@@ -1266,8 +1312,7 @@ function ProjectDetailView({ project }) {
                 />
               )}
             </div>
-            <hr className="rule" />
-          </div>
+              </div>
         )}
 
         {/* ── Anatomy: heating / cooling pad ── */}
@@ -1311,8 +1356,7 @@ function ProjectDetailView({ project }) {
                 <ImageGrid images={project.anatomy.images} minCol={240} aspectRatio={'4 / 3'} />
               )}
             </div>
-            <hr className="rule" />
-          </div>
+              </div>
         )}
 
         {/* ── Controller ── */}
@@ -1324,7 +1368,7 @@ function ProjectDetailView({ project }) {
               {project.controller.features && project.controller.features.length > 0 && (
                 <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, marginBottom: project.controller.images ? 36 : 0 }}>
                   {project.controller.features.map((f) => (
-                    <span key={f} className="capsule">{f}</span>
+                    <span key={f} className="tag">{f}</span>
                   ))}
                 </div>
               )}
@@ -1332,8 +1376,7 @@ function ProjectDetailView({ project }) {
                 <ImageGrid images={project.controller.images} minCol={240} aspectRatio={'4 / 3'} />
               )}
             </div>
-            <hr className="rule" />
-          </div>
+              </div>
         )}
 
         {/* ── How It Works ── */}
@@ -1406,8 +1449,7 @@ function ProjectDetailView({ project }) {
                 />
               )}
             </div>
-            <hr className="rule" />
-          </div>
+              </div>
         )}
 
         {/* ── Companion App (concept) ── */}
@@ -1420,8 +1462,7 @@ function ProjectDetailView({ project }) {
                 <ImageGrid images={project.appConcept.images} minCol={160} aspectRatio={'9 / 16'} maxWidth={740} />
               )}
             </div>
-            <hr className="rule" />
-          </div>
+              </div>
         )}
 
         {/* ── User Testing ── */}
@@ -1475,14 +1516,13 @@ function ProjectDetailView({ project }) {
                 <ImageGrid images={project.userTesting.photos} minCol={220} aspectRatio={'4 / 3'} />
               )}
             </div>
-            <hr className="rule" />
-          </div>
+              </div>
         )}
 
         {/* ── Outcome ── */}
         {project.outcome && (
           <div style={{ marginBottom: (SHOW_DETAIL && project.reflection) ? 80 : 96 }}>
-            <div style={eyebrow}>Outcome</div>
+            <SectionLabel icon="outcome">Outcome</SectionLabel>
             <p style={{ ...bodyText, marginBottom: project.outcomeImages ? 28 : 0 }}>{project.outcome}</p>
             {project.outcomeImages && project.outcomeImages.length > 0 && (
               <ImageGrid images={project.outcomeImages} minCol={240} aspectRatio={'4 / 3'} />
@@ -1493,8 +1533,7 @@ function ProjectDetailView({ project }) {
         {/* ── Reflection ── */}
         {SHOW_DETAIL && project.reflection && (
           <div>
-            <hr className="rule" />
-            <div style={{ marginBottom: 96, marginTop: 80 }}>
+                <div style={{ marginBottom: 96, marginTop: 80 }}>
               <div style={eyebrow}>Reflection</div>
               <p style={bodyText}>{project.reflection}</p>
             </div>
