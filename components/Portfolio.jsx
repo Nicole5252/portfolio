@@ -684,12 +684,198 @@ const PROJECTS = [
     },
   ],
   methodReflection: {
-    intro: 'Running the pipeline twice — and seeing it shape a real iteration — sharpened how I work as a researcher.',
+    intro: ‘Running the same analysis pipeline twice — across two different products — taught me as much about how to research as about the products themselves.’,
     points: [
-      { title: 'It changed the build', text: 'The re-weighted audience and the prioritised structural changes were adopted into the product’s next iteration.' },
-      { title: 'Directional, not conclusive', text: 'With 16 and 9 participants the study points to strong directions, not statistical proof — so I framed every recommendation as a hypothesis to validate, not a verdict.' },
-      { title: 'The model itself needed re-cutting', text: 'Mid-study the quadrant axes proved imperfect; treating the segmentation as a hypothesis to test — not a fixed truth — mattered as much as any single finding.' },
-      { title: 'Insight → prioritised action', text: 'What I grew most: turning scattered qualitative signal into MoSCoW-ranked, build-ready recommendations a PM and designers could act on directly.' },
+      { title: ‘Curation over completeness’, text: ‘The most-mentioned finding is not always the most important one. I learned to weigh each signal against brand positioning, development cost, and design potential before assigning priority — some low-frequency observations unlocked higher-value directions than majority opinions did.’ },
+      { title: ‘Cross-disciplinary judgment as a research tool’, text: ‘Carrying product design, development, and business lenses alongside UX let me evaluate each finding for feasibility and brand fit, not just user value. That cross-disciplinary view is what turned raw interview data into recommendations stakeholders could act on directly.’ },
+      { title: ‘AI collaboration requires a designed protocol’, text: ‘Unstructured AI use introduced two failure modes I had to design around: inconsistent extraction standards across team members, and AI stripping context to reach surface-level conclusions. I built a fixed extraction framework — defined criteria first, AI for aggregation, then my own review for context integrity. The second run was markedly faster because the protocol already existed.’ },
+      { title: ‘Precision is a communication skill’, text: ‘From a PM review after the first report, I learned that vague synthesis language creates ambiguity for anyone without full interview context. I moved to Must / Should / Nice-to-have ratings and colour-coded segments to make priority legible at a glance. Precise wording matters as much as precise findings — a single imprecise term can shift how a team interprets a recommendation.’ },
+    ],
+  },
+},
+{
+  idx: '03',
+  slug: 'voice-shell',
+  // Glow-gold sampled from the shell's lit rim — warm, deepened so it stays legible on paper.
+  accent: '#C8920E',
+  period: '2026.03 – 2026.04',
+  org: 'HCI Project',
+  title: 'Voice Shell',
+  blurb: "Glowing shells placed in front of paintings, each holding a stranger's voice — what they felt looking at the same artwork. You pick one up, listen, and leave yours.",
+  tags: ['UX Research', 'Interaction Design', 'Concept'],
+  insight: 'n=10 interviews · 5 visitor types · 3 design iterations',
+  doodle: 'museum',
+  images: {
+    hero: {
+      label: 'Hero — glowing shells in front of an artwork',
+      note: 'Lead with a hand sketch or the AI spatial scene. 16:9 or 4:3, no text overlaid.',
+    },
+  },
+  // ── Case study detail ──
+  role: 'Four-person team (2026.03 – 2026.04). I led the design and interview analysis, concept ideation, the web prototype, and defining the interaction model.',
+  overview: 'Voice Shell is a physical interaction for museums: a set of glowing shells set on the floor in front of an artwork, each holding one anonymous visitor’s spoken reaction to that same piece. You pick a shell up, hold it to your ear to hear a stranger, then open one to leave your own voice for whoever comes next. It turns looking — normally silent and one-directional — into an anonymous, asynchronous exchange between visitors.',
+  concept: {
+    tagline: 'Pick one up, listen, and leave yours.',
+  },
+  problem: 'In a gallery, people have rich, private reactions to what they see — and almost no way to share them, or to hear anyone else’s. The experience stays one-directional: visitor and artwork, never visitor and visitor. The most interesting layer of a show — how other people read the same painting — vanishes silently the moment they walk away.',
+  researchMethods: [
+    {
+      name: 'Phase 01',
+      title: 'Interviews',
+      meta: 'n=10',
+      purpose: 'Semi-structured interviews at a hair-themed art exhibition in Munich — covering memorable works, what visitors thought about while looking, their interest in others’ views, and their willingness to share.',
+      images: [
+        { step: '01', label: 'Interview — participant at exhibition', note: 'From the Reinterview folder.' },
+        { step: '02', label: 'Interview — note-taking and probing', note: 'From the Reinterview folder.' },
+      ],
+    },
+    {
+      name: 'Phase 02',
+      title: 'Observation',
+      meta: 'on-site',
+      purpose: 'Watched how visitors actually moved through the show — where they paused, how long they lingered, and whether they reacted to one another — to ground the interview accounts in real behaviour.',
+      images: [
+        { step: '01', label: 'Observation — visitor movement at artwork', note: 'From the Reob folder.' },
+        { step: '02', label: 'Observation — lingering and pausing behaviour', note: 'From the Reob folder.' },
+      ],
+    },
+    {
+      name: 'Phase 03',
+      title: 'Synthesis',
+      meta: 'qual',
+      purpose: 'Affinity mapping clustered the quotes into 6 themes; from these I built 5 visitor types and a four-lens curiosity framework (Empathic, Epistemic, Social Comparison, Hedonic), grounded in Proxemic Interaction literature.',
+    },
+    {
+      name: 'Phase 04',
+      title: 'Workshop',
+      meta: '15+ concepts',
+      purpose: 'A team workshop analysed two artworks, gathered live reactions, and tested ways to share — writing, speaking, recording, bodily interaction — sketching 15+ interface concepts.',
+      image: { label: 'Workshop', note: 'From the reworkshop folder.' },
+    },
+  ],
+  findingsIntro: 'The interviews pointed one direction: visitors are hungry to hear each other, but reluctant to speak — and what moves them is personal, not aesthetic.',
+  findings: [
+    { title: '78% want to hear a stranger’s thoughts on the same artwork' },
+    { title: '33% would share — but only if it’s anonymous and quick' },
+    { title: '100% connected to a work through personal experience or their own view — not its beauty' },
+  ],
+  insightGroups: {
+    intro: 'Across interviews, observation and the workshop, seven insights held — four about the visitor, three about the interaction.',
+    groups: [
+      {
+        label: 'About the visitor',
+        items: [
+          { title: 'People want to listen, rarely to speak', text: 'Curiosity about others is near-universal; the will to contribute is not.' },
+          { title: 'Anonymity is the price of honesty', text: 'Visitors open up only when nothing is tied back to them.' },
+          { title: 'Speed is the price of participation', text: 'Anything that feels slow or effortful gets skipped.' },
+          { title: 'Personal experience beats expertise', text: 'What resonates is a memory or a feeling, not art-historical knowledge.' },
+        ],
+      },
+      {
+        label: 'About the interaction',
+        items: [
+          { title: 'Curiosity needs a trigger to become action', text: 'Interest alone stays passive until something invites the first move.' },
+          { title: 'Voice carries what text loses', text: 'A spoken reaction holds a connection that written words flatten.' },
+          { title: 'Proximity is more natural than instruction', text: 'Visitors respond to nearness and presence faster than to signage.' },
+        ],
+      },
+    ],
+  },
+  howMightWe: [
+    'How might we let a visitor share a reaction in under a minute — anonymously and effortlessly?',
+    'How might we preserve the emotional connection in a reaction — the part plain text flattens?',
+    'How might we turn a visitor’s curiosity into a first move — without telling them what to do?',
+  ],
+  designEvolution: {
+    intro: 'Three iterations, each failing in a way that defined the next.',
+    iterations: [
+      {
+        name: 'Phone booth + headphones',
+        what: 'A central booth to record in; headphones beside each work played reactions back.',
+        verdictType: 'dropped',
+        verdict: 'Severed from the artwork — the feeling happened at the painting, the recording somewhere else.',
+      },
+      {
+        name: 'Interactive blocks',
+        what: 'Several blocks per artwork: pick up to listen, shake to switch, squeeze to record.',
+        verdictType: 'dropped',
+        verdict: 'Too many objects — visual clutter and choice overload pulled attention off the work.',
+      },
+      {
+        name: 'Voice Shell',
+        what: 'A flip-open shell on the floor in front of the work — eight fixed shells, an intuitive gesture, two self-explaining states.',
+        verdictType: 'kept',
+        verdict: 'Eight stays calm, the gesture needs no instruction, the states explain themselves — all in the artwork’s space.',
+      },
+    ],
+  },
+  product: {
+    text: 'The final object is a palm-sized, flip-open shell in frosted translucent polycarbonate. A solid dome in the lid holds an LED; light bleeds through the frosted surface and escapes brightest through a ring of holes around the rim. The bowl underneath has a mic-and-speaker mesh at its centre. It opens and closes like a clamshell — or a powder compact.',
+    features: [
+      'Frosted polycarbonate, palm-sized',
+      'Flip-open clamshell gesture',
+      'LED glow through a perforated rim',
+      'Mic + speaker in one object',
+    ],
+    images: [
+      { label: 'Vizcom product render', note: 'The shell, lit. Use the Vizcom render here.' },
+      { label: 'AI spatial scene', note: 'The shells in a gallery, in front of an artwork. AI-generated scene.' },
+    ],
+  },
+  principles: [
+    { label: 'Anonymous', text: 'Voice only — no identity, no login, no trace. The record button holds no name.' },
+    { label: 'Fast', text: 'Under a minute from pick-up to set-down. Anything that feels slow gets skipped.' },
+    { label: 'Curiosity attraction', text: 'Within a metre the shells whisper. A hand nearing one triggers a glow. Proximity does the inviting — no sign needed.' },
+  ],
+  designSpec: {
+    intro: 'Two states, two proximity behaviours, and a self-renewing lifecycle keep the system legible without a single instruction.',
+    rows: [
+      { label: 'Dead shell (empty)', text: 'Glows faintly from within and can be fully opened. Opening it starts recording; closing it finishes.' },
+      { label: 'Alive shell (full)', text: 'Glows whole and won’t open. Held to the ear, it plays its message — then dies back to a faint glow, empty again.' },
+      { label: 'Proximity — whisper (≤ 1 m)', text: 'Come within about a metre and the shells whisper, drawing your curiosity closer.' },
+      { label: 'Proximity — glow (hand near)', text: 'As a hand nears a shell, a glow layers on top of its current state, guiding the pick-up.' },
+      { label: 'Lifecycle', text: 'No time decay. Only when all eight shells are alive do the two oldest die — clearing themselves so there is always room to speak. Every recording is archived to a website visitors can revisit after the show.' },
+      { label: 'In the space', text: 'Eight shells sit in a shallow, semicircular concrete dip directly below the artwork — a gentle bowl, like a skate ramp, in the same material as the floor.' },
+    ],
+    cycleImage: { label: 'Shell lifecycle', note: 'Diagram of the 8-shell eviction cycle. From the shellcycle folder.' },
+  },
+  prototype: {
+    text: 'A mouse-driven prototype of the white-museum build lets you walk the full first-person flow — approach to trigger the whispers, hand-near to light a shell, pick up to listen, open to record.',
+    label: 'Interactive prototype — white museum build',
+    note: 'Screenshot placeholder. Embeddable build to be slotted in later.',
+    caption: 'Mouse prototype: walk up, hear the whispers, pick up a shell, leave your voice. (Live embed coming.)',
+    link: null,
+  },
+  userTesting: {
+    participants: 'n=6',
+    method: 'Structured observation + think-aloud (2026.06). Brief concept intro → two shell-state images + questions → TouchDesigner-simulated proximity and recording interaction with a physical low-fi prototype.',
+    rqs: [
+      'Which shell attracts the visitor first?',
+      'Do visitors understand the full interaction flow?',
+    ],
+    positives: [
+      '4 of 6 reached for the closed shell first — mystery drives the first move, which matches the intended entry point (closed = listen).',
+      'The two-state concept landed after a short explanation — the logic is coherent once heard.',
+      'Emotional response was positive: hearing a stranger was described as surprising and personal.',
+    ],
+    negatives: [
+      '0 of 6 interacted independently — the museum "don\'t touch" norm suppressed spontaneous action entirely.',
+      'No shared convention for closed → listen / open → record: participants split evenly between matching and reversing the mapping; shape alone cannot carry it.',
+      'Recording discoverability is low: only 1 of 5 found the record function unaided — an explicit cue (icon, colour, audio) is required.',
+      'Privacy concern (2 of 6): participants wanted to know exactly when recording started and whether the voice was saved.',
+    ],
+    photos: [
+      { label: 'Testing session — shell states shown to participant', note: 'From the test session folder.' },
+      { label: 'TouchDesigner proximity simulation in use', note: 'From the test session folder.' },
+    ],
+  },
+  methodReflection: {
+    intro: 'A first observational study (n=6) confirmed the closed shape as the stronger attractor and revealed that affordance — not the concept — is the next design problem to solve.',
+    points: [
+      { title: 'Make the state mapping explicit', text: 'The closed/open → listen/record mapping has no shared convention. The next iteration adds an icon, colour, or text cue on each shell — proximity invites, but the state must be legible.' },
+      { title: "Break the don't touch norm", text: "A plinth, a floor label, or audio feedback on pick-up is needed to overcome the museum default. The design's current silence reads as exhibit/not-interaction." },
+      { title: 'Does voice build connection?', text: "Validate whether hearing a stranger's voice shifts how connected visitors feel to the artwork and to each other." },
+      { title: 'Lifecycle parameters', text: 'Tune the eviction rule — how many shells, how old, and how fast — in a live museum setting.' },
     ],
   },
 },
@@ -1335,25 +1521,46 @@ function ProjectDetailView({ project }) {
         {project.researchMethods && project.researchMethods.length > 0 && (
           <div style={{ marginBottom: 'clamp(80px, 13vw, 168px)' }}>
             <SectionLabel num="02">Research Methods</SectionLabel>
-            <div style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
-              gap: 'clamp(20px, 3vw, 36px)',
-            }}>
-              {project.researchMethods.map((m, i) => (
-                <div key={i} style={{
-                  border: '1px solid var(--hairline)', borderRadius: 2,
-                  padding: 'clamp(26px, 3vw, 44px)',
-                  display: 'flex', flexDirection: 'column', gap: 16,
-                }}>
-                  <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', gap: 12 }}>
-                    <span style={{ ...eyebrow, marginBottom: 0 }}>{m.name}</span>
-                    {m.meta && <span style={{ fontFamily: "'Big Shoulders Display', Helvetica, sans-serif", fontWeight: 900, fontSize: 22, color: 'var(--accent)' }}>{m.meta}</span>}
+            <div style={{ display: 'grid', gap: 'clamp(12px, 1.5vw, 20px)' }}>
+              {project.researchMethods.map((m, i) => {
+                const hasImgs = (m.images && m.images.length > 0) || m.image;
+                return (
+                  <div key={i} style={{
+                    border: '1px solid var(--hairline)', borderRadius: 2,
+                    padding: 'clamp(26px, 3vw, 44px)',
+                    display: 'grid',
+                    gridTemplateColumns: hasImgs ? 'minmax(0, 1fr) minmax(0, 1.2fr)' : '1fr',
+                    gap: 'clamp(28px, 4vw, 60px)',
+                    alignItems: 'start',
+                  }}>
+                    {/* Left — text */}
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+                      <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', gap: 12 }}>
+                        <span style={{ ...eyebrow, marginBottom: 0 }}>{m.name}</span>
+                        {m.meta && <span style={{ fontFamily: "'Big Shoulders Display', Helvetica, sans-serif", fontWeight: 900, fontSize: 22, color: 'var(--accent)' }}>{m.meta}</span>}
+                      </div>
+                      <div style={{ fontFamily: "'Big Shoulders Display', Helvetica, sans-serif", fontWeight: 800, fontSize: 'clamp(30px, 3.6vw, 44px)', color: 'var(--ink)', lineHeight: 1, letterSpacing: '-0.01em' }}>{m.title}</div>
+                      <p style={{ fontFamily: 'Archivo, sans-serif', fontSize: 15, lineHeight: 1.6, color: 'var(--fg-2)', margin: 0 }}>{m.purpose}</p>
+                    </div>
+                    {/* Right — images (2-column mini grid) */}
+                    {m.images && m.images.length > 0 && (
+                      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 'clamp(8px, 1.2vw, 16px)' }}>
+                        {m.images.map((img, ii) => (
+                          <div key={ii}>
+                            {img.step && <div style={{ fontFamily: 'Archivo, sans-serif', fontSize: 11, fontWeight: 600, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'var(--accent)', marginBottom: 6 }}>Step {img.step}</div>}
+                            <ImagePlaceholder label={img.label} note={img.note} src={img.src} aspectRatio={'4 / 3'} />
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                    {m.image && (
+                      <div>
+                        <ImagePlaceholder label={m.image.label} note={m.image.note} src={m.image.src} aspectRatio={'4 / 3'} />
+                      </div>
+                    )}
                   </div>
-                  <div style={{ fontFamily: "'Big Shoulders Display', Helvetica, sans-serif", fontWeight: 800, fontSize: 'clamp(30px, 3.6vw, 44px)', color: 'var(--ink)', lineHeight: 1, letterSpacing: '-0.01em' }}>{m.title}</div>
-                  <p style={{ fontFamily: 'Archivo, sans-serif', fontSize: 15, lineHeight: 1.6, color: 'var(--fg-2)', margin: 0 }}>{m.purpose}</p>
-                </div>
-              ))}
+                );
+              })}
             </div>
           </div>
         )}
@@ -1687,31 +1894,26 @@ function ProjectDetailView({ project }) {
             {project.designEvolution.intro && (
               <p style={{ ...bodyText, maxWidth: 760, marginBottom: 'clamp(40px, 6vw, 72px)' }}>{project.designEvolution.intro}</p>
             )}
-            <div style={{ display: 'grid', gap: 'clamp(40px, 6vw, 72px)' }}>
+            <div style={{
+              display: 'grid',
+              gridTemplateColumns: `repeat(${project.designEvolution.iterations.length}, minmax(0, 1fr))`,
+              columnGap: 'clamp(24px, 4vw, 48px)', rowGap: 'clamp(24px, 3vw, 36px)',
+            }}>
               {project.designEvolution.iterations.map((it, i) => {
                 const kept = it.verdictType === 'kept';
                 return (
-                  <div key={i} style={{ borderTop: '1px solid var(--hairline)', paddingTop: 'clamp(22px, 2.6vw, 34px)' }}>
-                    <div style={{ display: 'grid', gridTemplateColumns: 'auto minmax(0, 1fr)', gap: 'clamp(16px, 3vw, 36px)', alignItems: 'start' }}>
-                      <span style={{ fontFamily: "'Big Shoulders Display', Helvetica, sans-serif", fontWeight: 900, fontSize: 'clamp(26px, 3.2vw, 44px)', color: 'var(--accent)', lineHeight: 1 }}>{String(i + 1).padStart(2, '0')}</span>
-                      <div>
-                        <div style={{ display: 'flex', alignItems: 'baseline', gap: 12, flexWrap: 'wrap', marginBottom: 10 }}>
-                          <h3 style={{ fontFamily: "'Big Shoulders Display', Helvetica, sans-serif", fontWeight: 800, fontSize: 'clamp(24px, 3vw, 38px)', color: 'var(--ink)', margin: 0, lineHeight: 1, letterSpacing: '-0.01em' }}>{it.name}</h3>
-                          <span style={{ fontFamily: 'Archivo, sans-serif', fontWeight: 700, fontSize: 10.5, letterSpacing: '0.14em', textTransform: 'uppercase', padding: '4px 10px', borderRadius: 2, color: kept ? 'var(--paper)' : 'var(--fg-3)', background: kept ? 'var(--accent)' : 'var(--paper-deep)' }}>{kept ? 'Final' : 'Dropped'}</span>
-                        </div>
-                        {it.what && <p style={{ fontFamily: 'Archivo, sans-serif', fontSize: 16, lineHeight: 1.55, color: 'var(--fg-2)', margin: '0 0 14px', maxWidth: 680 }}>{it.what}</p>}
-                        {it.verdict && (
-                          <p style={{ fontFamily: 'Archivo, sans-serif', fontSize: 15, lineHeight: 1.55, color: 'var(--fg-1)', margin: 0, maxWidth: 680 }}>
-                            <span style={{ fontWeight: 700, color: kept ? 'var(--accent)' : 'var(--ink)' }}>{kept ? 'Why it stayed — ' : 'Why it failed — '}</span>{it.verdict}
-                          </p>
-                        )}
-                        {it.image && (
-                          <div style={{ marginTop: 'clamp(20px, 2.6vw, 32px)' }}>
-                            <ImagePlaceholder label={it.image.label} note={it.image.note} src={it.image.src} aspectRatio={'16 / 9'} />
-                          </div>
-                        )}
-                      </div>
+                  <div key={i} style={{ borderTop: `2px solid ${kept ? 'var(--accent)' : 'var(--hairline)'}`, paddingTop: 'clamp(16px, 2vw, 22px)' }}>
+                    <div style={{ display: 'flex', alignItems: 'baseline', gap: 10, marginBottom: 10 }}>
+                      <span style={{ fontFamily: "'Big Shoulders Display', Helvetica, sans-serif", fontWeight: 900, fontSize: 'clamp(22px, 2.6vw, 32px)', color: 'var(--accent)', lineHeight: 1 }}>{String(i + 1).padStart(2, '0')}</span>
+                      <span style={{ fontFamily: 'Archivo, sans-serif', fontWeight: 700, fontSize: 9.5, letterSpacing: '0.14em', textTransform: 'uppercase', padding: '3px 9px', borderRadius: 2, color: kept ? 'var(--paper)' : 'var(--fg-3)', background: kept ? 'var(--accent)' : 'var(--paper-deep)' }}>{kept ? 'Final' : 'Dropped'}</span>
                     </div>
+                    <h3 style={{ fontFamily: "'Big Shoulders Display', Helvetica, sans-serif", fontWeight: 800, fontSize: 'clamp(20px, 2.2vw, 28px)', color: 'var(--ink)', margin: '0 0 12px', lineHeight: 1.05, letterSpacing: '-0.01em' }}>{it.name}</h3>
+                    {it.what && <p style={{ fontFamily: 'Archivo, sans-serif', fontSize: 14, lineHeight: 1.5, color: 'var(--fg-2)', margin: '0 0 12px' }}>{it.what}</p>}
+                    {it.verdict && (
+                      <p style={{ fontFamily: 'Archivo, sans-serif', fontSize: 13.5, lineHeight: 1.5, color: 'var(--fg-1)', margin: 0 }}>
+                        <span style={{ fontWeight: 700, color: kept ? 'var(--accent)' : 'var(--ink)' }}>{kept ? 'Why it stayed — ' : 'Why it failed — '}</span>{it.verdict}
+                      </p>
+                    )}
                   </div>
                 );
               })}
@@ -1747,6 +1949,30 @@ function ProjectDetailView({ project }) {
               </div>
         )}
 
+        {/* ── Three Principles ── */}
+        {project.principles && project.principles.length > 0 && (
+          <div style={{ marginBottom: 'clamp(80px, 13vw, 168px)' }}>
+            <SectionLabel>Three Principles</SectionLabel>
+            <div style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(3, minmax(0, 1fr))',
+              gap: 2,
+            }}>
+              {project.principles.map((p, i) => (
+                <div key={i} style={{
+                  background: 'var(--paper-deep)',
+                  padding: 'clamp(28px, 3.5vw, 48px)',
+                  display: 'flex', flexDirection: 'column', gap: 14,
+                }}>
+                  <div style={{ fontFamily: "'Big Shoulders Display', Helvetica, sans-serif", fontWeight: 900, fontSize: 'clamp(40px, 5vw, 64px)', color: 'var(--accent)', lineHeight: 0.9, letterSpacing: '-0.02em' }}>{String(i + 1).padStart(2, '0')}</div>
+                  <div style={{ fontFamily: "'Big Shoulders Display', Helvetica, sans-serif", fontWeight: 800, fontSize: 'clamp(24px, 2.6vw, 34px)', color: 'var(--ink)', lineHeight: 1.0, letterSpacing: '-0.01em' }}>{p.label}</div>
+                  <p style={{ fontFamily: 'Archivo, sans-serif', fontSize: 15, lineHeight: 1.6, color: 'var(--fg-2)', margin: 0 }}>{p.text}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
         {/* ── How It Works — states, proximity, lifecycle (definition rows) ── */}
         {project.designSpec && (
           <div style={{ marginBottom: 'clamp(80px, 13vw, 168px)' }}>
@@ -1768,6 +1994,11 @@ function ProjectDetailView({ project }) {
                 </div>
               ))}
             </div>
+            {project.designSpec.cycleImage && (
+              <div style={{ marginTop: 'clamp(28px, 4vw, 48px)' }}>
+                <ImagePlaceholder label={project.designSpec.cycleImage.label} note={project.designSpec.cycleImage.note} src={project.designSpec.cycleImage.src} aspectRatio={'16 / 9'} />
+              </div>
+            )}
           </div>
         )}
 
@@ -1973,11 +2204,37 @@ function ProjectDetailView({ project }) {
         )}
 
         {/* ── User Testing ── */}
-        {SHOW_DETAIL && project.userTesting && (
+        {project.userTesting && (
           <div>
             <div style={{ marginBottom: 80 }}>
-              <div style={eyebrow}>User Testing</div>
-              <p style={{ ...bodyText, marginBottom: 32 }}>{project.userTesting.setup}</p>
+              <SectionLabel>Validation</SectionLabel>
+              {/* Method + RQs strip */}
+              {(project.userTesting.method || project.userTesting.rqs) && (
+                <div style={{
+                  display: 'grid',
+                  gridTemplateColumns: project.userTesting.rqs ? `auto repeat(${project.userTesting.rqs.length}, minmax(0, 1fr))` : '1fr',
+                  gap: 2,
+                  marginBottom: 'clamp(32px, 4vw, 52px)',
+                }}>
+                  {project.userTesting.method && (
+                    <div style={{ background: 'var(--paper-deep)', padding: 'clamp(22px, 2.8vw, 36px)', display: 'flex', flexDirection: 'column', gap: 10 }}>
+                      {project.userTesting.participants && (
+                        <div style={{ fontFamily: "'Big Shoulders Display', Helvetica, sans-serif", fontWeight: 900, fontSize: 'clamp(36px, 4.5vw, 56px)', color: 'var(--accent)', lineHeight: 0.9, letterSpacing: '-0.02em' }}>{project.userTesting.participants}</div>
+                      )}
+                      <p style={{ fontFamily: 'Archivo, sans-serif', fontSize: 14, lineHeight: 1.55, color: 'var(--fg-2)', margin: 0 }}>{project.userTesting.method}</p>
+                    </div>
+                  )}
+                  {project.userTesting.rqs && project.userTesting.rqs.map((rq, ri) => (
+                    <div key={ri} style={{ background: 'var(--ink)', padding: 'clamp(22px, 2.8vw, 36px)', display: 'flex', flexDirection: 'column', gap: 10 }}>
+                      <div style={{ fontFamily: "'Big Shoulders Display', Helvetica, sans-serif", fontWeight: 900, fontSize: 13, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'var(--accent)' }}>RQ{ri + 1}</div>
+                      <p style={{ fontFamily: 'Archivo, sans-serif', fontSize: 15, lineHeight: 1.5, color: 'var(--paper)', margin: 0, fontWeight: 500 }}>{rq}</p>
+                    </div>
+                  ))}
+                </div>
+              )}
+              {project.userTesting.setup && (
+                <p style={{ ...bodyText, marginBottom: 32 }}>{project.userTesting.setup}</p>
+              )}
               <div style={{
                 display: 'grid',
                 gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))',
