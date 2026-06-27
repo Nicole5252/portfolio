@@ -220,15 +220,15 @@
   align-items: center;
   white-space: nowrap;
   gap: var(--sp-2);
-  padding: 7px 12px;
-  border: 1px solid var(--capsule-border);
+  padding: 6px 12px;
+  border: none;
   border-radius: 2px;
   font-family: var(--font-sans);
   font-size: var(--fs-caption);
   font-weight: 500;
   letter-spacing: var(--tracking-caption);
-  color: var(--fg-2);
-  background: transparent;
+  color: var(--fg-3);
+  background: var(--paper-deep);
 }
 .tag--accent {
   border-color: var(--accent);

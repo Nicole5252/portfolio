@@ -278,17 +278,20 @@ const PROJECTS = [
 {
   idx: '01',
   slug: 'mere',
+  accent: '#5E7585',
+  thumb: 'assets/mere/thumb.jpg',
   period: '2023.05 – 2024.04',
   org: 'Graduation Thesis · Taiwan Textile Federation',
   title: 'Mere',
-  blurb: 'A smart nursing bra with integrated heating/cooling e-textile that lets breastfeeding mothers relieve engorgement on their own — backed by a 32-person survey and 14 in-depth interviews.',
+  blurb: 'A smart nursing bra with integrated heating/cooling e-textile that lets breastfeeding mothers relieve engorgement on their own — backed by a 23-person survey and 5 in-depth interviews.',
   tags: ['UX Research', 'E-Textile', 'Mixed Methods', 'Wearable', 'Product Design'],
-  insight: 'n=32 survey · n=14 interviews · 4 interaction opportunities',
+  insight: 'n=23 survey · n=5 interviews · 4 interaction opportunities',
   doodle: 'textile',
   images: {
     hero: {
       label: 'Hero image — Mere nursing bra',
       note: 'Clean product shot: worn in context or hero render. 16:9 or 4:3, no text overlaid.',
+      src: 'assets/mere/hero-01.jpg',
     },
   },
   // ── Case study detail ──
@@ -296,17 +299,19 @@ const PROJECTS = [
   overview: 'Mere is a smart nursing bra with integrated e-textile that delivers heating and cooling therapy, so a mother can manage breastfeeding engorgement on her own.',
   concept: {
     tagline: 'Feel the care. Cherish your moment.',
+    text: 'Mère is a smart nursing bra that integrates e-textile technology, designed specifically for postpartum mothers.',
     formula: ['Nursing Bra', 'E-Textile', 'Temperature Control'],
     result: 'A smoother breastfeeding process',
   },
-  problem: 'Existing relief methods — hot towels, warmers, manual massage — are two-handed, slow, and hard to manage alone while holding a newborn.',
+  problem: 'In the postpartum period, milk engorgement and blocked ducts during breastfeeding often cause breast pain and make nursing difficult. Left unaddressed, this physical discomfort can build into emotional stress — and, in some cases, contribute to postpartum depression.',
+  problemImage: { src: 'assets/mere/problem.jpg', label: 'Postpartum breastfeeding' },
   contextImage: {
     label: 'Context — the current routine',
     note: 'Traditional warm-compress tools / breastfeeding context. Wide shot, no text.',
   },
   methods: [
-    'Survey (n=32)',
-    'In-depth Interviews (n=14)',
+    'Survey (n=23)',
+    'In-depth Interviews (n=5)',
     'Mixed-Methods Analysis',
     'Thematic Analysis',
     'Affinity Mapping',
@@ -314,30 +319,65 @@ const PROJECTS = [
     '3D Modeling',
     'Physical Prototyping',
   ],
+  researchMethods: [
+    {
+      name: 'Method 01',
+      title: 'Survey',
+      meta: 'n=23',
+      purpose: "To understand mothers' most pressing pain points and needs after birth, gather feedback on our initial feature concepts, and learn which features they'd want in the app.",
+    },
+    {
+      name: 'Method 02',
+      title: 'Interviews',
+      meta: 'n=5',
+      purpose: "After narrowing the focus to hot- and cold-compress therapy, to study mothers' habits and the friction points they hit throughout that routine.",
+    },
+  ],
+  painMatrix: [
+    {
+      observed: 'Breastfeeding is often chaotic',
+      problem: 'Current products need to be refrigerated or filled with hot water',
+      how: 'Reduce setup & cleanup time',
+      src: 'assets/mere/pain-1.png',
+    },
+    {
+      observed: 'Hard textures can worsen breast pain',
+      problem: 'Most existing products are made of harder plastic',
+      how: 'Integrate e-textiles while keeping material softness',
+      src: 'assets/mere/pain-2.png',
+    },
+    {
+      observed: 'Mothers often breastfeed alone for privacy',
+      problem: "Can't care for the baby and prepare the tools at the same time",
+      how: 'Complete the whole process on the spot',
+      src: 'assets/mere/pain-3.png',
+    },
+  ],
   methodsImages: [
     { label: 'Affinity mapping', note: 'Interview insights clustered into themes.' },
     { label: 'Research process', note: 'Survey + interview flow, or session photos.' },
   ],
+  findingsIntro: 'Across the survey and interviews, mothers described the same physical and emotional strain. Engorgement pain was near-universal, and existing relief routines were slow, two-handed, and hard to manage alone with a newborn.',
   findings: [
     {
-      title: '75% of mothers suffer from breastfeeding pain',
+      title: '75% suffer engorgement pain and poor milk flow',
       description: 'Engorgement pain was near-universal — yet relief meant slow, separate rituals.',
       design: 'Thermal therapy built into the garment — always on-hand, not a separate task.',
     },
     {
-      title: '42% are frustrated by inconvenient cold/hot compress tools',
+      title: '55% want a smoother hot- & cold-compress routine for engorgement',
       description: 'Existing tools are slow, messy, and two-handed — hard to use holding a newborn.',
       design: 'Heating e-textile in the bra makes the routine hands-free and self-operable.',
     },
     {
-      title: '64% want soft materials and an easy-to-clean product',
+      title: '80% want an easy-to-store, easy-to-use compress product',
       description: 'Comfort and hygiene ranked alongside function — nothing stiff or hard to wash.',
       design: 'Skin-friendly e-textile with electronics that detach from a washable layer.',
     },
   ],
   scopeNote: 'Mothers raised several needs — heating, cooling, and EMS massage. Under project time constraints we prioritized the most-cited need, thermal care, and scoped the final physical prototype around heating and cooling.',
   findingsChart: {
-    label: 'Survey results chart (n=32)',
+    label: 'Survey results chart (n=23)',
     note: 'Bar / percentage chart you lay out manually: 75% breastfeeding pain · 42% inconvenient compress tools · 64% want soft, easy-clean materials.',
   },
   designImages: [
@@ -352,7 +392,29 @@ const PROJECTS = [
       'Machine-washable fabric layer',
       'App-based session tracking',
     ],
-    setImage: { label: 'The Mere set', note: 'Flat-lay of the full set: bra, thermal pads, and controller. Clean shot, no text.' },
+    images: [
+      { src: 'assets/mere/intro-0.jpg', label: 'Mère' },
+      { src: 'assets/mere/intro-1.jpg', label: 'Mère' },
+      { src: 'assets/mere/intro-2.jpg', label: 'Mère' },
+      { src: 'assets/mere/intro-3.jpg', label: 'Mère' },
+    ],
+  },
+  app: {
+    text: 'A companion app visualises live temperature, logs each care session, and alerts mothers when a side runs too warm — helping prevent inflammation.',
+    images: [
+      { src: 'assets/mere/app-1.jpg', label: 'Mère app' },
+      { src: 'assets/mere/app-2.jpg', label: 'Mère app' },
+    ],
+  },
+  details: {
+    hero: { src: 'assets/mere/detail-1.jpg', label: 'Mère detail' },
+    images: [
+      { src: 'assets/mere/detail-2.jpg' },
+      { src: 'assets/mere/detail-3.jpg' },
+      { src: 'assets/mere/detail-4.jpg' },
+      { src: 'assets/mere/detail-5.jpg' },
+      { src: 'assets/mere/detail-6.jpg' },
+    ],
   },
   anatomy: {
     title: 'The heating / cooling pad',
@@ -425,9 +487,7 @@ const PROJECTS = [
   },
   outcome: 'Mere was exhibited at the Young Designers’ Exhibition (新一代設計展), where the public could experience the smart textile firsthand — including EMS massage and heating/cooling — while the validated heating prototype was tested with mothers as described above.',
   outcomeImages: [
-    { label: '新一代設計展 booth', note: 'Exhibition stand where the public tried the smart textile.' },
-    { label: 'Final product — worn', note: 'Clean shot of the finished bra in context.' },
-    { label: '3D render', note: 'Product render / construction breakdown.' },
+    { label: 'Mère in use — postpartum care', src: 'assets/mere/outcome.jpg' },
   ],
   reflection: 'Testing surfaced that physical ergonomics — zipper range, dial sensitivity, controller placement — mattered as much as the thermal function itself, and were only visible once mothers used the product unaided.',
   designDirection: {
@@ -435,37 +495,202 @@ const PROJECTS = [
       {
         title: 'Pressure Guidance',
         signal: 'Incorrect massage force is a key cause of physical pain',
-        opportunity: 'Textile pressure sensors could provide real-time force feedback on force and direction',
-      },
-      {
-        title: 'Thermal Feedback',
-        signal: 'Sudden heat indicates inflammation risk',
-        opportunity: 'Distributed thermal sensing can detect abnormal temperature rise early',
-      },
-      {
-        title: 'Procedural Support',
-        signal: 'Care is often performed alone and under stress',
-        opportunity: 'Step-by-step guidance can lead mothers through the correct sequence',
+        opportunity: 'Textile pressure sensors could give real-time feedback on force and direction',
       },
       {
         title: 'Embodied Interaction',
-        signal: 'The care process happens directly on the body',
-        opportunity: 'The bra itself becomes a natural interface, reducing reliance on external tools',
+        signal: 'The care happens directly on the body',
+        opportunity: 'The bra itself becomes the interface, delivering hot- and cold-compress therapy without external tools',
+      },
+      {
+        title: 'App Breastfeeding Tracking',
+        signal: 'Care is easy to lose track of, and inflammation escalates fast',
+        opportunity: 'An app logs each feeding and care session, helping mothers spot patterns and catch problems early',
       },
     ],
     focus: {
-      title: 'Why Thermal Care',
+      title: 'Final Decision',
       reasons: [
         {
-          title: 'User Needs & Reliability',
-          text: 'Thermal regulation is the most immediate and high-impact need during engorgement — mothers need a solution that works reliably without calibration.',
+          title: 'Embodied Interaction',
+          text: 'Build hot/cold thermal care into the garment itself, so the bra becomes a hands-free interface during the care routine.',
         },
         {
-          title: 'Technical Feasibility',
-          text: 'Pressure sensing and EMS massage had strong potential but required calibration cycles that exceeded the project timeline. Thermal care was buildable, testable, and demonstrable.',
+          title: 'App Breastfeeding Tracking',
+          text: 'Pair the garment with an app that tracks the breastfeeding routine and flags abnormal temperature early.',
         },
       ],
     },
+  },
+},
+{
+  idx: '02',
+  slug: 'pangolin',
+  // Brand orange sampled from the PNGL logo mark.
+  accent: '#F39D34',
+  period: '2025.03 – 2026.02',
+  org: 'UX Research Internship · Pangolin',
+  title: 'Pangolin',
+  blurb: 'A solo UX-research internship where I designed, ran, and analysed sample-feedback interviews across two carry products’ second iteration — turning four-quadrant audience studies and region-by-region teardowns into prioritised recommendations for PM and designers.',
+  tags: ['UX Research', 'User Interviews', 'Audience Segmentation', 'Qualitative + Quantitative', 'Design Thinking'],
+  insight: '25 interviews · 2 four-quadrant audience studies · validated → retired a product hypothesis',
+  doodle: 'tent',
+  images: {
+    hero: {
+      label: 'Hero image — PNGL carry products in context',
+      note: 'Wide shot of the two carry products in use, or a clean research-in-context image. 16:9 or 4:3, no text overlaid.',
+      src: 'assets/pangolin/hero.jpg',
+    },
+  },
+  // ── Case study detail ──
+  role: 'Solo UX Research intern (2025.03 – 2026.02). For both products I designed the interview guide, ran the interviews, analysed the results, and reported insights to the PM and designers; on the convertible bag I also contributed part of the design drawings.',
+  concept: {
+    // Thesis line only — no formula chips (keeps the dark band a single statement).
+    tagline: 'Validate the audience before refining the product.',
+  },
+  problemLabel: 'Research Objective',
+  problem: 'Both carry products were entering a second iteration. Rather than redesigning parts, the brief was to interrogate the audience model and the product bets behind it — before any feature was touched.',
+  objectiveQuestions: [
+    'Do the four hypothesised audience quadrants hold — and are their weighting and definitions right?',
+    'What does each segment actually want — their goals, behaviours, pain points, and the words they use to describe them?',
+    'Do the current product bets still match the segments they were built for?',
+  ],
+  researchMethods: [
+    {
+      name: 'Method 01',
+      title: 'Interviews',
+      meta: 'n=25',
+      purpose: 'Designed the guide and ran sample-feedback interviews across both products — 16 for the phone carry, 9 for the convertible bag — covering goals, needs, pain points, and the words customers actually use.',
+    },
+    {
+      name: 'Method 02',
+      title: 'Affinity Mapping',
+      meta: 'qual',
+      purpose: 'Clustered every interview note into each segment’s concerns, behaviours and needs — the raw material for validating the audience model.',
+    },
+    {
+      name: 'Method 03',
+      title: 'Quadrant + Weighted Scoring',
+      meta: '2×2',
+      purpose: 'Mapped participants onto a two-axis matrix and scored purchase intent and willingness-to-pay to test whether the segments and their weighting held.',
+    },
+  ],
+  analysisProcess: {
+    exampleNote: 'Worked example — the convertible bag (the same pipeline ran on the phone carry too).',
+    intro: 'The six-step pipeline below runs end to end — from clustering interviews to the weighting call and design feedback. (The code-rendered visuals are mine; the photos are the original deck artifacts, with the meaningful labels in English.)',
+    steps: [
+      {
+        title: 'Cluster what each segment cares about',
+        detail: 'Consolidated every interview into each segment’s concerns, behaviours and needs, then wrote up one analysis sheet per segment.',
+        images: [
+          { label: 'Affinity board 1', src: 'assets/pangolin/affinity/1.jpg' },
+          { label: 'Affinity board 2', src: 'assets/pangolin/affinity/2.jpg' },
+          { label: 'Affinity board 3', src: 'assets/pangolin/affinity/3.jpg' },
+        ],
+        imagesCaption: 'Affinity boards from the interviews (original working notes).',
+        image: { label: 'Per-segment analysis (Frequent Overnighter shown)', src: 'assets/pangolin/segments.jpg' },
+        caption: 'Per-segment analysis sheet · AI-translated to English.',
+      },
+      {
+        title: 'Validate the audience quadrants & re-weight',
+        detail: 'Tested whether the hypothesised segments held, then re-cut the weighting against what the interviews actually showed.',
+        caption: 'Original audience-quadrant slide (V5) · AI-translated to English.',
+        image: { label: 'Audience quadrant (V5)', src: 'assets/pangolin/quadrant.jpg' },
+        bullets: [
+          'Multi-function and signature-feature aren’t opposites under the current definitions — revise this axis.',
+          'Few people actually cared about “packed size”; reframe the axis around packing process / packed appearance / portability (name TBD).',
+          'Refined Men & Women scored notably low — define the segment more strictly and pre-screen interviewees.',
+          'Healthy Sporty Group came in below the expected count; the two valid samples both prioritised waterproofing for rain sports — define it more pointedly.',
+          'Daily Commuter overlaps Refined Men & Women (both cite everyday use); the real split is looks vs. practicality — redefine the segment.',
+        ],
+        weights: [
+          { name: 'Refined Men & Women', before: 35, after: 30, reason: 'Lowest purchase intent of the four.' },
+          { name: 'Healthy Sporty Group', before: 30, after: 20, reason: 'Several wouldn’t actually use it for sport.' },
+          { name: 'Regular Overnighter', before: 20, after: 35, reason: 'Overnight use was far more common than assumed.' },
+          { name: 'Daily Commuter', before: 15, after: 15, reason: 'Held — but overlaps Refined Men & Women; flagged for review.' },
+        ],
+      },
+      {
+        title: 'Associate score & price with feedback',
+        detail: 'Linked each score band and each price band back to the qualitative reasons behind it.',
+        bands: {
+          score: {
+            metric: 'Weighted score', avg: '6.8',
+            bands: [
+              { label: 'High', range: '≥ 7.9 — 3 people', reason: 'High everyday use, felt the capacity gain; waterproof, anti-theft and quick-access all landed.' },
+              { label: 'Mid', range: '7.1–7.8 — 4 people', reason: 'Core needs met, but first-use learning cost was high.' },
+              { label: 'Low', range: '≤ 7.0 — 2 people', reason: 'Looks felt unresolved, learning cost high, product positioning unclear.' },
+            ],
+          },
+          price: {
+            metric: 'Willingness to pay (NT$)', avg: '1,261',
+            bands: [
+              { label: 'Low', range: '≤ 1,056 — 3 people', reason: 'Minimal needs; would only pay up for a hard pain like waterproofing.' },
+              { label: 'Mid', range: '1,056–1,427 — 3 people', reason: 'Value by CP / material / durability; pay for visible quality plus real use.' },
+              { label: 'High', range: '≥ 1,427 — 3 people', reason: 'Function + durability trust + looks → worth investing; one-bag-many-uses.' },
+            ],
+          },
+        },
+      },
+      {
+        title: 'Tear down feedback by functional zone',
+        detail: 'Organised reactions region by region across the bag’s components, annotating each zone with the weighted feedback.',
+        images: [
+          { label: 'Front layer zone', src: 'assets/pangolin/teardown/1.jpg' },
+          { label: 'Functional zone 2', src: 'assets/pangolin/teardown/2.jpg' },
+          { label: 'Functional zone 3', src: 'assets/pangolin/teardown/3.jpg' },
+          { label: 'Functional zone 4', src: 'assets/pangolin/teardown/4.jpg' },
+        ],
+        imagesCaption: 'Each functional zone — front drawcord layer, mesh pocket, lower compartment, magnetic clasp & hook — scored and annotated with the weighted feedback. (Working drawings kept in the original Chinese.)',
+        imagesMinCol: 420,
+        imagesAspect: '16 / 10',
+      },
+      {
+        title: 'Inventory the preference signals',
+        detail: 'Pulled together the preference data captured alongside the core study.',
+        prefs: [
+          { label: 'Colour preference', note: 'Black led across all 9; grey and cocoa-brown the secondary choices.' },
+          { label: 'KOL & media', note: 'IG core, YouTube secondary; YT mentions concentrated in two segments.' },
+          { label: 'Keyword impression', note: '“Compact, simple, versatile, functional — for daily commute and outdoors.”' },
+          { label: 'Strap add-on intent', note: '50% would add a strap; average willingness NT$461.' },
+        ],
+      },
+      {
+        title: 'Synthesise into design feedback',
+        detail: 'Combined every finding with the re-cut weighting into the prioritised, per-product recommendations below.',
+      },
+    ],
+  },
+  studies: [
+    {
+      product: 'Convertible Bag',
+      meta: 'n=9 · worked through above',
+      findings: [
+        { title: 'Quadrants held, but the weighting needed re-cutting', description: 'One segment overlapped enough with another to question whether it should stay.', design: 'Re-ranked priority and flagged the commuter segment for possible removal.' },
+        { title: 'The “toiletry-bag” positioning was rejected', description: 'Across almost every segment, the secondary positioning did not survive real use.', design: 'Drop it; refocus on the small ↔ large convertible core.' },
+        { title: 'Operation was the biggest shared blocker (+8)', description: 'Carry method, drawcords and magnetic clasps all caused first-use friction.', design: 'Lower the learning curve and add a quick-start guide for the large mode.' },
+      ],
+      recommendation: 'P0: streamline the large-bag packing flow and cut the learning cost. Add a back-carry mode and waterproof, easy-clean material.',
+    },
+    {
+      product: 'Phone Carry',
+      meta: 'n=16 · same method',
+      findings: [
+        { title: 'All four quadrants held; light-travel led at 35%', description: 'The hypothesised segmentation was validated, with the light-travel segment the largest.', design: 'Kept the model and carried the weighting into the next build.' },
+        { title: 'The bottom compartment was a cross-segment P0', description: 'Low usage traced back to one structural cause shared across segments.', design: 'Re-estimate the core storage volume; swap the upper / lower layers and lift the quick-access layer.' },
+        { title: 'One card clasp, three failure modes', description: 'Hard to use, too shallow, and barely used — three problems behind one label.', design: 'Split into three scoped changes for the designers.' },
+      ],
+      recommendation: 'P0: rework the core storage and the card layer. The body read too long — segments preferred a wider form — and several asked for a back-carry option.',
+    },
+  ],
+  methodReflection: {
+    intro: 'Running the pipeline twice sharpened the method itself.',
+    points: [
+      { title: 'Fix the framework first', text: 'Locking the analysis structure before extracting data made the second study far faster.' },
+      { title: 'Objective before questions', text: 'Settling the research goal before writing the guide raised the accuracy of what came back.' },
+      { title: 'Odd-numbered segments', text: 'An odd sample size per segment makes the trend easier to call.' },
+      { title: 'Standardise the vocabulary', text: 'Unifying the product-part names up front prevents confusion downstream.' },
+    ],
   },
 },
 ];
@@ -603,7 +828,7 @@ function ProjectCard({ p, rotate, onOpen }) {
         outline: 'none'
       }}>
 
-      {/* Resting state — doodle only, centered */}
+      {/* Resting state — thumbnail image (or doodle fallback) */}
       <div style={{
         position: 'absolute', inset: 0,
         display: 'flex', alignItems: 'center', justifyContent: 'center',
@@ -611,9 +836,13 @@ function ProjectCard({ p, rotate, onOpen }) {
         opacity: hover ? 0 : 1,
         pointerEvents: hover ? 'none' : 'auto'
       }}>
-        <div style={{ width: '42%' }}>
-          <Doodle kind={p.doodle} />
-        </div>
+        {p.thumb ? (
+          <img src={p.thumb} alt={p.title} loading="lazy" style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
+        ) : (
+          <div style={{ width: '42%' }}>
+            <Doodle kind={p.doodle} />
+          </div>
+        )}
       </div>
 
       {/* Hover state — info panel */}
@@ -688,39 +917,123 @@ function ProjectCard({ p, rotate, onOpen }) {
     </article>);
 }
 
+/* ---------- Project row (home list layout — one project per horizontal row) ---------- */
+function ProjectRow({ p, onOpen, last }) {
+  const [hover, setHover] = React.useState(false);
+  const heroSrc = p.images && p.images.hero && p.images.hero.src;
+  return (
+    <article
+      onClick={() => onOpen && onOpen(p.slug)}
+      onMouseEnter={() => setHover(true)}
+      onMouseLeave={() => setHover(false)}
+      onFocus={() => setHover(true)}
+      onBlur={() => setHover(false)}
+      tabIndex={0}
+      role="button"
+      onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') onOpen && onOpen(p.slug); }}
+      style={{
+        display: 'grid',
+        gridTemplateColumns: 'minmax(0, 0.92fr) minmax(0, 1.08fr)',
+        gap: 'clamp(24px, 4vw, 64px)',
+        alignItems: 'center',
+        padding: 'clamp(28px, 4vw, 52px) 0',
+        borderTop: '1px solid var(--hairline)',
+        borderBottom: last ? '1px solid var(--hairline)' : 'none',
+        cursor: 'pointer', outline: 'none',
+      }}>
+      {/* Hero image (falls back to the doodle if no hero is set) */}
+      <div style={{ overflow: 'hidden', borderRadius: 2, aspectRatio: '4 / 3', background: 'var(--paper-deep)' }}>
+        {heroSrc ? (
+          <img src={heroSrc} alt={p.title} loading="lazy"
+            style={{
+              width: '100%', height: '100%', objectFit: 'cover', display: 'block',
+              transform: hover ? 'scale(1.045)' : 'scale(1)',
+              transition: 'transform 620ms cubic-bezier(.22,1,.36,1)',
+            }} />
+        ) : (
+          <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <div style={{ width: '42%' }}><Doodle kind={p.doodle} /></div>
+          </div>
+        )}
+      </div>
+      {/* Text */}
+      <div>
+        <div style={{
+          display: 'flex', justifyContent: 'space-between', gap: 16,
+          fontFamily: 'Archivo, sans-serif', fontSize: 11, fontWeight: 600,
+          letterSpacing: '0.14em', textTransform: 'uppercase', color: 'var(--fg-3)', marginBottom: 16,
+        }}>
+          <span>№ {p.idx} · {p.org}</span>
+          <span style={{ whiteSpace: 'nowrap' }}>{p.period}</span>
+        </div>
+        <h3 style={{
+          fontFamily: "'Big Shoulders Display', Helvetica, sans-serif", fontWeight: 800,
+          fontSize: 'clamp(30px, 3.6vw, 52px)', lineHeight: 1, letterSpacing: '-0.02em',
+          margin: '0 0 16px 0', color: hover ? 'var(--accent)' : 'var(--ink)', transition: 'color 200ms ease',
+        }}>{p.title}</h3>
+        <p style={{
+          fontFamily: 'Archivo, sans-serif', fontSize: 'clamp(14px, 1.4vw, 16px)', lineHeight: 1.55,
+          color: 'var(--fg-2)', margin: '0 0 18px 0', maxWidth: 560,
+        }}>{p.blurb}</p>
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 7, marginBottom: 20 }}>
+          {p.tags.map((t) => <span key={t} className="tag">{t}</span>)}
+        </div>
+        <div style={{
+          display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', gap: 16,
+          paddingTop: 16, borderTop: '1px dashed var(--hairline)',
+          fontFamily: 'Archivo, sans-serif', fontSize: 11, fontWeight: 600, letterSpacing: '0.08em',
+          textTransform: 'uppercase', color: 'var(--fg-3)',
+        }}>
+          <span>{p.insight}</span>
+          <span style={{ color: 'var(--ink)', fontSize: 13, whiteSpace: 'nowrap' }}>
+            View case study{' '}
+            <span style={{ display: 'inline-block', transform: hover ? 'translateX(4px)' : 'translateX(0)', transition: 'transform 240ms ease' }}>↗</span>
+          </span>
+        </div>
+      </div>
+    </article>);
+}
+
 /* ---------- Image placeholder (dashed box w/ label) ---------- */
-function ImagePlaceholder({ label, note, aspectRatio = '4 / 3', height }) {
+function ImagePlaceholder({ label, note, src, aspectRatio = '4 / 3', height }) {
+  // Real image. With a height → cover banner (controlled). Without → natural full width.
+  if (src) {
+    return (
+      <img src={src} alt={label || ''} loading="lazy"
+        style={{ width: '100%', height: height || 'auto', objectFit: height ? 'cover' : undefined, display: 'block', borderRadius: 2 }} />
+    );
+  }
   // Intentional empty-state panel (not a dashed "missing image" box).
   // `label` shows as a quiet corner caption so Nicole knows what to drop in.
   return (
     <div style={{
       position: 'relative',
       background: 'var(--paper-deep)',
+      border: '1px solid var(--hairline)',
       borderRadius: 2,
       overflow: 'hidden',
       aspectRatio: height ? undefined : aspectRatio,
       height: height || undefined,
-      minHeight: 140,
+      minHeight: 120,
+      display: 'flex', alignItems: 'center', justifyContent: 'center',
     }}>
       <div style={{
-        position: 'absolute', inset: 0,
-        display: 'flex', alignItems: 'center', justifyContent: 'center',
-        color: 'var(--fg-4)',
+        display: 'flex', flexDirection: 'column', alignItems: 'center',
+        gap: 12, color: 'var(--fg-4)', padding: 24, textAlign: 'center',
       }}>
-        <svg width="26" height="26" viewBox="0 0 24 24" fill="none"
-          stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none"
+          stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round">
           <rect x="3" y="4" width="18" height="16" rx="1" />
           <circle cx="8.5" cy="9.5" r="1.5" />
           <path d="M21 16 L15 11 L7 19" />
         </svg>
+        {label && (
+          <div style={{
+            fontFamily: 'Archivo, sans-serif', fontSize: 10.5, fontWeight: 600,
+            letterSpacing: '0.1em', textTransform: 'uppercase', color: 'var(--fg-3)',
+          }}>{label}</div>
+        )}
       </div>
-      {label && (
-        <div style={{
-          position: 'absolute', left: 12, bottom: 10,
-          fontFamily: 'Archivo, sans-serif', fontSize: 10.5, fontWeight: 600,
-          letterSpacing: '0.1em', textTransform: 'uppercase', color: 'var(--fg-4)',
-        }}>{label}</div>
-      )}
     </div>
   );
 }
@@ -736,8 +1049,64 @@ function ImageGrid({ images, minCol = 220, aspectRatio = '4 / 3', maxWidth }) {
       maxWidth: maxWidth || undefined
     }}>
       {images.map((im, i) => (
-        <ImagePlaceholder key={i} label={im.label} note={im.note} aspectRatio={aspectRatio} />
+        <ImagePlaceholder key={i} label={im.label} note={im.note} src={im.src} aspectRatio={aspectRatio} />
       ))}
+    </div>
+  );
+}
+
+/* ---------- Weighting shift: hypothesised → re-cut, with rationale ---------- */
+function WeightShift({ rows }) {
+  const bF = 'Archivo, sans-serif';
+  const tF = "'Big Shoulders Display', Helvetica, sans-serif";
+  return (
+    <div style={{ display: 'grid', gap: 0 }}>
+      <div style={{ fontFamily: bF, fontSize: 11, fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'var(--fg-3)', marginBottom: 6 }}>Weighting · hypothesised → re-cut</div>
+      {rows.map((r, i) => {
+        const same = r.after === r.before;
+        const up = r.after > r.before;
+        return (
+          <div key={i} style={{
+            display: 'grid', gridTemplateColumns: 'minmax(120px, 1fr) auto minmax(0, 1.25fr)',
+            gap: 'clamp(10px, 1.8vw, 24px)', alignItems: 'baseline',
+            padding: '12px 0', borderTop: '1px solid var(--hairline)',
+            borderBottom: i === rows.length - 1 ? '1px solid var(--hairline)' : 'none',
+          }}>
+            <span style={{ fontFamily: bF, fontWeight: 700, fontSize: 14.5, color: 'var(--fg-1)' }}>{r.name}</span>
+            <span style={{ fontFamily: tF, fontWeight: 900, fontSize: 17, color: 'var(--ink)', whiteSpace: 'nowrap' }}>
+              {r.before}% <span style={{ color: same ? 'var(--fg-4)' : 'var(--accent)' }}>→</span> {r.after}%
+              {!same && <span style={{ fontFamily: bF, fontSize: 11, fontWeight: 700, color: 'var(--accent)', marginLeft: 5 }}>{up ? '▲' : '▼'}</span>}
+            </span>
+            <span style={{ fontFamily: bF, fontSize: 13, color: 'var(--fg-3)', lineHeight: 1.5 }}>{r.reason}</span>
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
+/* ---------- Band breakdown: metric band → associated feedback ---------- */
+function BandBreakdown({ data }) {
+  const bF = 'Archivo, sans-serif';
+  const tF = "'Big Shoulders Display', Helvetica, sans-serif";
+  return (
+    <div>
+      <div style={{ display: 'flex', alignItems: 'baseline', gap: 10, marginBottom: 16 }}>
+        <span style={{ fontFamily: bF, fontSize: 11, fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'var(--fg-3)' }}>{data.metric}</span>
+        <span style={{ fontFamily: tF, fontWeight: 900, fontSize: 24, color: 'var(--accent)' }}>{data.avg}</span>
+        <span style={{ fontFamily: bF, fontSize: 12, color: 'var(--fg-3)' }}>avg</span>
+      </div>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, minmax(0, 1fr))', columnGap: 'clamp(14px, 2.4vw, 28px)', rowGap: 10 }}>
+        {data.bands.map((b, i) => (
+          <div key={'l' + i} style={{ paddingTop: 12, borderTop: '2px solid var(--ink)', fontFamily: bF, fontWeight: 700, fontSize: 14, color: 'var(--fg-1)' }}>{b.label}</div>
+        ))}
+        {data.bands.map((b, i) => (
+          <div key={'r' + i} style={{ fontFamily: bF, fontSize: 11.5, color: 'var(--fg-4)' }}>{b.range}</div>
+        ))}
+        {data.bands.map((b, i) => (
+          <div key={'x' + i} style={{ fontFamily: bF, fontSize: 13, color: 'var(--fg-2)', lineHeight: 1.5 }}>{b.reason}</div>
+        ))}
+      </div>
     </div>
   );
 }
@@ -794,157 +1163,126 @@ function ProjectDetailView({ project }) {
     outcome:   <svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"><path d="M3.5 14 V2 H12 L10 5 L12 8 H3.5"/></svg>,
   };
 
-  const SectionLabel = ({ icon, children }) => (
-    <div style={{ display: 'flex', alignItems: 'center', gap: 11, marginBottom: 22 }}>
-      {icon && SECTION_ICONS[icon] && (
-        <span style={{
-          display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
-          width: 28, height: 28, flexShrink: 0,
-          border: '1px solid var(--capsule-border)', borderRadius: 2,
-          color: 'var(--accent)',
-        }}>{SECTION_ICONS[icon]}</span>
-      )}
-      <span style={{
-        fontFamily: 'Archivo, sans-serif', fontSize: 11, fontWeight: 600,
-        letterSpacing: '0.14em', textTransform: 'uppercase', color: 'var(--fg-3)',
-      }}>{children}</span>
+  const SectionLabel = ({ children }) => (
+    <div style={{ marginBottom: 'clamp(28px, 3.2vw, 48px)' }}>
+      <h2 style={{
+        fontFamily: "'Big Shoulders Display', Helvetica, sans-serif",
+        fontWeight: 800, fontSize: 'clamp(30px, 4vw, 46px)',
+        color: 'var(--ink)', lineHeight: 1, letterSpacing: '-0.02em', margin: 0,
+      }}>{children}</h2>
+      <div style={{ height: 1, background: 'var(--hairline)', marginTop: 'clamp(16px, 2vw, 22px)' }} />
     </div>
   );
 
   return (
-    <main style={{ paddingTop: 'clamp(100px, 14vh, 160px)', paddingBottom: 96 }}>
+    <main style={{ paddingTop: 'clamp(100px, 14vh, 160px)', paddingBottom: 96, ...(project.accent && { '--accent': project.accent }) }}>
       <div style={{ maxWidth: 'var(--maxw)', margin: '0 auto', paddingLeft: 'var(--gutter)', paddingRight: 'var(--gutter)' }}>
 
-        {/* ── Back link ── */}
+        {/* ── Back link (very top) ── */}
         <a href="#work" style={{
           display: 'inline-flex', alignItems: 'center', gap: 8,
           fontFamily: 'Archivo, sans-serif', fontSize: 11, fontWeight: 600,
           letterSpacing: '0.14em', textTransform: 'uppercase',
-          color: 'var(--fg-3)', textDecoration: 'none', marginBottom: 56
+          color: 'var(--fg-3)', textDecoration: 'none', marginBottom: 28
         }}>← Selected Work</a>
 
-        {/* ── Hero: eyebrow + title + tags ── */}
-        <div style={{ marginBottom: 56 }}>
-          <div style={{ ...eyebrow, marginBottom: 16 }}>
-            {project.org} · {project.period}
-          </div>
-          <h1 style={{
-            fontFamily: "'Big Shoulders Display', Helvetica, sans-serif",
-            fontWeight: 900,
-            fontSize: 'clamp(52px, 9vw, 128px)',
-            lineHeight: 0.9, letterSpacing: '-0.025em',
-            margin: '0 0 36px 0', color: 'var(--ink)'
-          }}>{project.title}</h1>
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
-            {project.tags.map((tag) => (
-              <span key={tag} className="tag">{tag}</span>
-            ))}
-          </div>
+        {/* ── Hero visual (full-bleed) ── */}
+        <div style={{ width: '100vw', marginLeft: 'calc(50% - 50vw)', marginBottom: 'clamp(36px, 5vw, 64px)' }}>
+          <ImagePlaceholder
+            label={(project.images && project.images.hero && project.images.hero.label) || project.title}
+            note={(project.images && project.images.hero && project.images.hero.note) || ''}
+            src={project.images && project.images.hero && project.images.hero.src}
+            height={'clamp(340px, 52vw, 660px)'}
+          />
         </div>
 
-        {/* ── Hero visual ── */}
-        {project.images && project.images.hero ? (
-          <div style={{ marginBottom: project.role ? 56 : 80 }}>
-            <ImagePlaceholder
-              label={project.images.hero.label}
-              note={project.images.hero.note}
-              height={'clamp(280px, 42vw, 520px)'}
-            />
-          </div>
-        ) : (
-          <div style={{
-            height: 'clamp(240px, 36vw, 420px)',
-            background: 'var(--ink)',
-            marginBottom: 80,
-          }} />
-        )}
-
-        {/* ── My Role ── */}
-        {project.role && (
-          <div style={{ marginBottom: 72 }}>
-            <SectionLabel icon="role">My Role</SectionLabel>
-            <p style={bodyText}>{project.role}</p>
-          </div>
-        )}
-
-        {/* ── Two-col: overview + by the numbers (big figures) ── */}
+        {/* ── Hero: meta sidebar + title + blurb ── */}
         <div style={{
           display: 'grid',
-          gridTemplateColumns: 'minmax(0, 1.15fr) minmax(0, 0.85fr)',
-          gap: 'clamp(40px, 8vw, 96px)',
-          marginBottom: 96,
-          alignItems: 'start'
+          gridTemplateColumns: 'minmax(0, 0.72fr) minmax(0, 1.7fr)',
+          gap: 'clamp(28px, 5vw, 72px)',
+          alignItems: 'end',
+          marginBottom: 'clamp(40px, 5vw, 72px)',
         }}>
-          <div>
-            <SectionLabel icon="overview">Overview</SectionLabel>
-            <p style={bodyText}>{project.overview}</p>
+          <div style={{ display: 'grid', gap: 22 }}>
+            <div>
+              <div style={{ ...eyebrow, marginBottom: 6 }}>Timeline</div>
+              <div style={{ fontFamily: 'Archivo, sans-serif', fontSize: 15, color: 'var(--fg-1)' }}>{project.period}</div>
+            </div>
+            <div>
+              <div style={{ ...eyebrow, marginBottom: 6 }}>Context</div>
+              <div style={{ fontFamily: 'Archivo, sans-serif', fontSize: 15, color: 'var(--fg-1)', lineHeight: 1.4 }}>{project.org}</div>
+            </div>
+            {project.role && (
+              <div>
+                <div style={{ ...eyebrow, marginBottom: 6 }}>Role</div>
+                <div style={{ fontFamily: 'Archivo, sans-serif', fontSize: 15, color: 'var(--fg-1)', lineHeight: 1.5 }}>{project.role}</div>
+              </div>
+            )}
           </div>
           <div>
-            <SectionLabel icon="numbers">By the numbers</SectionLabel>
-            <div style={{ display: 'grid', gap: 'clamp(18px, 2.4vw, 26px)' }}>
-              {(project.insight || '').split('·').map(s => s.trim()).filter(Boolean).map((item, i) => {
-                const sp = item.indexOf(' ');
-                const fig = sp === -1 ? item : item.slice(0, sp);
-                const label = sp === -1 ? '' : item.slice(sp + 1);
-                return (
-                  <div key={i} style={{ borderTop: i === 0 ? 'none' : '1px solid var(--hairline)', paddingTop: i === 0 ? 0 : 'clamp(18px, 2.4vw, 26px)' }}>
-                    <div style={{
-                      fontFamily: "'Big Shoulders Display', Helvetica, sans-serif",
-                      fontWeight: 900, fontSize: 'clamp(38px, 5vw, 56px)',
-                      color: 'var(--ink)', lineHeight: 0.95, letterSpacing: '-0.02em',
-                    }}>{fig}</div>
-                    {label && <div style={{
-                      fontFamily: 'Archivo, sans-serif', fontSize: 12, fontWeight: 600,
-                      letterSpacing: '0.1em', textTransform: 'uppercase',
-                      color: 'var(--fg-3)', marginTop: 8,
-                    }}>{label}</div>}
-                  </div>
-                );
-              })}
+            <h1 style={{
+              fontFamily: "'Big Shoulders Display', Helvetica, sans-serif",
+              fontWeight: 900,
+              fontSize: 'clamp(56px, 9vw, 132px)',
+              lineHeight: 0.9, letterSpacing: '-0.025em',
+              margin: '0 0 22px 0', color: 'var(--ink)'
+            }}>{project.title}</h1>
+            {project.blurb && (
+              <p style={{ ...bodyText, fontSize: 20, lineHeight: 1.5, marginBottom: 24, maxWidth: 640 }}>{project.blurb}</p>
+            )}
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
+              {project.tags.map((tag) => (
+                <span key={tag} className="tag">{tag}</span>
+              ))}
             </div>
           </div>
         </div>
 
-        {/* ── Concept ── */}
+        {/* (My Role folded into hero meta; Overview & By-the-numbers removed) */}
+
+        {/* ── Concept — full-bleed dark statement band ── */}
         {project.concept && (
-          <div style={{ marginBottom: 96 }}>
-            <SectionLabel icon="concept">Concept</SectionLabel>
-            {project.concept.tagline && (
-              <p style={{
-                fontFamily: "'Big Shoulders Display', Helvetica, sans-serif",
-                fontWeight: 700, fontStyle: 'italic',
-                fontSize: 'clamp(24px, 4vw, 38px)',
-                color: 'var(--ink)', lineHeight: 1.15,
-                letterSpacing: '-0.01em', margin: '0 0 20px'
-              }}>“{project.concept.tagline}”</p>
-            )}
-            {project.concept.text && (
-              <p style={{ ...bodyText, marginBottom: project.concept.formula ? 28 : 0 }}>{project.concept.text}</p>
-            )}
-            {project.concept.formula && project.concept.formula.length > 0 && (
-              <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 10 }}>
-                {project.concept.formula.map((part, i) => (
-                  <React.Fragment key={part}>
-                    {i > 0 && (
-                      <span style={{
-                        fontFamily: 'Archivo, sans-serif', fontWeight: 700,
-                        fontSize: 16, color: 'var(--fg-3)'
-                      }}>+</span>
-                    )}
-                    <span className="tag">{part}</span>
-                  </React.Fragment>
-                ))}
-                {project.concept.result && (
-                  <React.Fragment>
-                    <span style={{
-                      fontFamily: 'Archivo, sans-serif', fontWeight: 700,
-                      fontSize: 16, color: 'var(--accent)'
-                    }}>=</span>
-                    <span className="tag tag--solid" style={{ fontWeight: 700 }}>{project.concept.result}</span>
-                  </React.Fragment>
-                )}
-              </div>
-            )}
+          <div style={{
+            width: '100vw', marginLeft: 'calc(50% - 50vw)',
+            background: 'var(--ink)',
+            marginBottom: 'clamp(80px, 13vw, 168px)',
+          }}>
+            <div style={{
+              maxWidth: 'var(--maxw)', margin: '0 auto',
+              paddingLeft: 'var(--gutter)', paddingRight: 'var(--gutter)',
+              minHeight: '72vh',
+              display: 'flex', flexDirection: 'column',
+              alignItems: 'center', justifyContent: 'center', textAlign: 'center',
+              paddingTop: 'clamp(64px, 12vh, 140px)', paddingBottom: 'clamp(64px, 12vh, 140px)',
+            }}>
+              <div style={{ ...eyebrow, color: 'var(--paper)', opacity: 0.55, marginBottom: 30 }}>Concept</div>
+              {project.concept.tagline && (
+                <p style={{
+                  fontFamily: "'Big Shoulders Display', Helvetica, sans-serif",
+                  fontWeight: 700, fontStyle: 'italic',
+                  fontSize: 'clamp(44px, 7.5vw, 100px)',
+                  color: 'var(--paper)', lineHeight: 1.04,
+                  letterSpacing: '-0.02em', margin: '0 0 40px', maxWidth: '12em'
+                }}>“{project.concept.tagline}”</p>
+              )}
+              {project.concept.formula && project.concept.formula.length > 0 && (
+                <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'center', gap: 10 }}>
+                  {project.concept.formula.map((part, i) => (
+                    <React.Fragment key={part}>
+                      {i > 0 && (<span style={{ fontFamily: 'Archivo, sans-serif', fontWeight: 700, fontSize: 16, color: 'var(--paper)', opacity: 0.55 }}>+</span>)}
+                      <span style={{ fontFamily: 'Archivo, sans-serif', fontSize: 13, fontWeight: 500, letterSpacing: '0.02em', padding: '6px 12px', borderRadius: 2, color: 'var(--paper)', border: '1px solid rgba(237,242,244,0.32)' }}>{part}</span>
+                    </React.Fragment>
+                  ))}
+                  {project.concept.result && (
+                    <React.Fragment>
+                      <span style={{ fontFamily: 'Archivo, sans-serif', fontWeight: 700, fontSize: 16, color: 'var(--accent)' }}>=</span>
+                      <span style={{ fontFamily: 'Archivo, sans-serif', fontSize: 13, fontWeight: 700, letterSpacing: '0.02em', padding: '6px 12px', borderRadius: 2, color: 'var(--ink)', background: 'var(--paper)' }}>{project.concept.result}</span>
+                    </React.Fragment>
+                  )}
+                </div>
+              )}
+            </div>
           </div>
         )}
 
@@ -959,157 +1297,311 @@ function ProjectDetailView({ project }) {
         )}
 
 
-        {/* ── The Problem ── */}
+        {/* ── The Problem — full page (text + image) ── */}
         {project.problem && (
-          <div style={{ marginBottom: 80 }}>
-            <SectionLabel icon="problem">The Problem</SectionLabel>
-            <p style={bodyText}>{project.problem}</p>
-          </div>
-        )}
-
-
-        {/* ── Research Methods ── */}
-        {project.methods && project.methods.length > 0 && (
-          <div style={{ marginBottom: 80 }}>
-            <SectionLabel icon="methods">Research Methods</SectionLabel>
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
-              {project.methods.map((m) => (
-                <span key={m} className="tag">{m}</span>
-              ))}
+          <div style={{ marginBottom: 'clamp(80px, 13vw, 168px)' }}>
+            <SectionLabel num="01">{project.problemLabel || 'The Problem'}</SectionLabel>
+            <div style={{
+              display: 'grid',
+              gridTemplateColumns: project.problemImage ? 'minmax(0, 1fr) minmax(0, 0.78fr)' : '1fr',
+              gap: 'clamp(32px, 5vw, 72px)',
+              alignItems: 'center',
+            }}>
+              <p style={{ ...bodyText, fontSize: 'clamp(19px, 2.1vw, 27px)', lineHeight: 1.5, maxWidth: 600 }}>{project.problem}</p>
+              {project.problemImage && (
+                <ImagePlaceholder src={project.problemImage.src} label={project.problemImage.label} height={'clamp(320px, 38vw, 460px)'} />
+              )}
             </div>
-            {SHOW_DETAIL && project.methodsImages && project.methodsImages.length > 0 && (
-              <div style={{ marginTop: 28 }}>
-                <ImageGrid images={project.methodsImages} minCol={240} aspectRatio={'4 / 3'} />
+            {project.objectiveQuestions && project.objectiveQuestions.length > 0 && (
+              <div style={{ marginTop: 'clamp(32px, 4.5vw, 56px)', display: 'grid', gap: 0 }}>
+                {project.objectiveQuestions.map((q, i) => (
+                  <div key={i} style={{
+                    display: 'flex', alignItems: 'baseline', gap: 'clamp(16px, 2.5vw, 32px)',
+                    padding: 'clamp(16px, 2vw, 24px) 0',
+                    borderBottom: i < project.objectiveQuestions.length - 1 ? '1px solid var(--hairline)' : 'none',
+                    borderTop: i === 0 ? '1px solid var(--hairline)' : 'none',
+                  }}>
+                    <span style={{ fontFamily: "'Big Shoulders Display', Helvetica, sans-serif", fontWeight: 900, fontSize: 'clamp(20px, 2.4vw, 30px)', color: 'var(--accent)', lineHeight: 1, flexShrink: 0 }}>{String(i + 1).padStart(2, '0')}</span>
+                    <span style={{ fontFamily: 'Archivo, sans-serif', fontSize: 'clamp(16px, 1.5vw, 19px)', color: 'var(--fg-1)', lineHeight: 1.45 }}>{q}</span>
+                  </div>
+                ))}
               </div>
             )}
           </div>
         )}
 
 
-        {/* ── Key Findings ── */}
-        {project.findings && project.findings.length > 0 && (
-          <div style={{ marginBottom: 80 }}>
-            <SectionLabel icon="findings">Key Findings</SectionLabel>
+        {/* ── Research Methods — full page: title + two method boxes ── */}
+        {project.researchMethods && project.researchMethods.length > 0 && (
+          <div style={{ marginBottom: 'clamp(80px, 13vw, 168px)' }}>
+            <SectionLabel num="02">Research Methods</SectionLabel>
             <div style={{
               display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))',
-              gap: 20,
+              gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
+              gap: 'clamp(20px, 3vw, 36px)',
             }}>
-              {project.findings.map((f, i) => {
-                const m = (f.title || '').match(/^(\d+%)\s+(.*)$/);
-                const fig = m ? m[1] : '0' + (i + 1);
-                const ttl = m ? m[2] : f.title;
-                return (
+              {project.researchMethods.map((m, i) => (
                 <div key={i} style={{
-                  border: '1px solid var(--hairline)',
-                  padding: '28px 28px',
-                  background: 'var(--paper-deep)',
-                  display: 'flex',
-                  flexDirection: 'column',
+                  border: '1px solid var(--hairline)', borderRadius: 2,
+                  padding: 'clamp(26px, 3vw, 44px)',
+                  display: 'flex', flexDirection: 'column', gap: 16,
                 }}>
-                  <div style={{
-                    fontFamily: "'Big Shoulders Display', Helvetica, sans-serif",
-                    fontWeight: 900, fontSize: m ? 'clamp(40px, 5vw, 58px)' : 24,
-                    color: m ? 'var(--accent)' : 'var(--fg-4)',
-                    lineHeight: 0.95, letterSpacing: '-0.02em', marginBottom: 14,
-                  }}>{fig}</div>
-                  <div style={{
-                    fontFamily: 'Archivo, sans-serif',
-                    fontWeight: 700, fontSize: 16,
-                    color: 'var(--fg-1)', lineHeight: 1.35,
-                    marginBottom: 12
-                  }}>{ttl}</div>
-                  <p style={{
-                    fontFamily: 'Archivo, sans-serif',
-                    fontSize: 15, lineHeight: 1.65,
-                    color: 'var(--fg-2)', margin: 0,
-                    flexGrow: 1,
-                  }}>{f.description}</p>
-                  {f.design && (
-                    <div style={{
-                      marginTop: 20,
-                      paddingTop: 16,
-                      borderTop: '1px solid var(--hairline)',
-                    }}>
-                      <span style={{
-                        fontFamily: 'Archivo, sans-serif', fontSize: 11, fontWeight: 700,
-                        letterSpacing: '0.1em', textTransform: 'uppercase',
-                        color: 'var(--ink)',
-                      }}>Design → </span>
-                      <span style={{
-                        fontFamily: 'Archivo, sans-serif', fontSize: 14, lineHeight: 1.55,
-                        color: 'var(--fg-2)'
-                      }}>{f.design}</span>
-                    </div>
-                  )}
+                  <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', gap: 12 }}>
+                    <span style={{ ...eyebrow, marginBottom: 0 }}>{m.name}</span>
+                    {m.meta && <span style={{ fontFamily: "'Big Shoulders Display', Helvetica, sans-serif", fontWeight: 900, fontSize: 22, color: 'var(--accent)' }}>{m.meta}</span>}
+                  </div>
+                  <div style={{ fontFamily: "'Big Shoulders Display', Helvetica, sans-serif", fontWeight: 800, fontSize: 'clamp(30px, 3.6vw, 44px)', color: 'var(--ink)', lineHeight: 1, letterSpacing: '-0.01em' }}>{m.title}</div>
+                  <p style={{ fontFamily: 'Archivo, sans-serif', fontSize: 15, lineHeight: 1.6, color: 'var(--fg-2)', margin: 0 }}>{m.purpose}</p>
                 </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* ── Analysis Process — the six-step pipeline, each step with its artifact ── */}
+        {project.analysisProcess && (
+          <div style={{ marginBottom: 'clamp(80px, 13vw, 168px)' }}>
+            <SectionLabel>Analysis Process</SectionLabel>
+            {project.analysisProcess.exampleNote && (
+              <div style={{ fontFamily: 'Archivo, sans-serif', fontSize: 11, fontWeight: 600, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'var(--accent)', marginTop: 'calc(-1 * clamp(16px, 2vw, 28px))', marginBottom: 'clamp(18px, 2.4vw, 28px)' }}>{project.analysisProcess.exampleNote}</div>
+            )}
+            {project.analysisProcess.intro && (
+              <p style={{ ...bodyText, maxWidth: 820, marginBottom: 'clamp(40px, 6vw, 72px)' }}>{project.analysisProcess.intro}</p>
+            )}
+            <div style={{ display: 'grid', gap: 'clamp(48px, 7vw, 80px)' }}>
+              {project.analysisProcess.steps.map((s, i) => {
+                const hasVisual = s.image || s.images || s.bullets || s.weights || s.bands || s.prefs;
+                const capStyle = { fontFamily: 'Archivo, sans-serif', fontSize: 12.5, lineHeight: 1.5, color: 'var(--fg-3)', marginTop: 12 };
+                return (
+                  <div key={i} style={{ borderTop: '1px solid var(--hairline)', paddingTop: 'clamp(22px, 2.6vw, 34px)' }}>
+                    <div style={{
+                      display: 'grid', gridTemplateColumns: 'auto minmax(0, 1fr)',
+                      gap: 'clamp(16px, 3vw, 36px)', alignItems: 'baseline',
+                      marginBottom: hasVisual ? 'clamp(24px, 3vw, 38px)' : 0,
+                    }}>
+                      <span style={{ fontFamily: "'Big Shoulders Display', Helvetica, sans-serif", fontWeight: 900, fontSize: 'clamp(26px, 3.2vw, 44px)', color: 'var(--accent)', lineHeight: 1 }}>{String(i + 1).padStart(2, '0')}</span>
+                      <div>
+                        <div style={{ fontFamily: 'Archivo, sans-serif', fontWeight: 700, fontSize: 'clamp(17px, 1.7vw, 21px)', color: 'var(--ink)', lineHeight: 1.25, marginBottom: 7 }}>{s.title}</div>
+                        <div style={{ fontFamily: 'Archivo, sans-serif', fontSize: 15.5, color: 'var(--fg-2)', lineHeight: 1.55, maxWidth: 720 }}>{s.detail}</div>
+                      </div>
+                    </div>
+                    {hasVisual && (
+                      <div style={{ paddingLeft: 'clamp(0px, 5vw, 60px)', display: 'grid', gap: 'clamp(24px, 3vw, 36px)' }}>
+                        {s.images && s.images.length > 0 && (
+                          <figure style={{ margin: 0 }}>
+                            <ImageGrid images={s.images} minCol={s.imagesMinCol || 200} aspectRatio={s.imagesAspect || '4 / 3'} maxWidth={s.imagesMaxWidth} />
+                            {s.imagesCaption && <figcaption style={capStyle}>{s.imagesCaption}</figcaption>}
+                          </figure>
+                        )}
+                        {s.image && (
+                          <figure style={{ margin: 0 }}>
+                            <ImagePlaceholder label={s.image.label} src={s.image.src} aspectRatio={'16 / 9'} />
+                            {s.caption && <figcaption style={capStyle}>{s.caption}</figcaption>}
+                          </figure>
+                        )}
+                        {(s.bullets || s.weights) && (
+                          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: 'clamp(28px, 4vw, 52px)', alignItems: 'start' }}>
+                            {s.bullets && (
+                              <ul style={{ margin: 0, padding: 0, listStyle: 'none', display: 'grid', gap: 0 }}>
+                                {s.bullets.map((b, bi) => (
+                                  <li key={bi} style={{
+                                    display: 'flex', gap: 12, padding: '11px 0',
+                                    borderTop: '1px solid var(--hairline)',
+                                    borderBottom: bi === s.bullets.length - 1 ? '1px solid var(--hairline)' : 'none',
+                                    fontFamily: 'Archivo, sans-serif', fontSize: 14, lineHeight: 1.55, color: 'var(--fg-2)',
+                                  }}>
+                                    <span style={{ color: 'var(--accent)', fontWeight: 700, flexShrink: 0 }}>›</span>{b}
+                                  </li>
+                                ))}
+                              </ul>
+                            )}
+                            {s.weights && <WeightShift rows={s.weights} />}
+                          </div>
+                        )}
+                        {s.bands && (
+                          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 'clamp(28px, 4vw, 56px)' }}>
+                            {s.bands.score && <BandBreakdown data={s.bands.score} />}
+                            {s.bands.price && <BandBreakdown data={s.bands.price} />}
+                          </div>
+                        )}
+                        {s.prefs && (
+                          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: 'clamp(14px, 1.6vw, 20px)' }}>
+                            {s.prefs.map((p, pi) => (
+                              <div key={pi} style={{ border: '1px solid var(--hairline)', borderRadius: 2, padding: 'clamp(16px, 1.8vw, 22px)' }}>
+                                <div style={{ fontFamily: 'Archivo, sans-serif', fontWeight: 700, fontSize: 14, color: 'var(--fg-1)', marginBottom: 8 }}>{p.label}</div>
+                                <div style={{ fontFamily: 'Archivo, sans-serif', fontSize: 13, lineHeight: 1.5, color: 'var(--fg-2)' }}>{p.note}</div>
+                              </div>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+                    )}
+                  </div>
                 );
               })}
             </div>
-            {SHOW_DETAIL && project.scopeNote && (
-              <p style={{
-                fontFamily: 'Archivo, sans-serif', fontSize: 15, lineHeight: 1.6,
-                color: 'var(--fg-3)', margin: '24px 0 0', maxWidth: 680, fontStyle: 'italic'
-              }}>{project.scopeNote}</p>
-            )}
-            {SHOW_DETAIL && project.findingsChart && (
-              <div style={{ marginTop: 36 }}>
-                <ImagePlaceholder
-                  label={project.findingsChart.label}
-                  note={project.findingsChart.note}
-                  height={'clamp(220px, 30vw, 340px)'}
-                />
-              </div>
-            )}
-            {SHOW_DETAIL && project.designImages && project.designImages.length > 0 && (
-              <div style={{ marginTop: 48 }}>
-                <div style={{ ...eyebrow, marginBottom: 18 }}>From research to form</div>
-                <ImageGrid images={project.designImages} minCol={220} aspectRatio={'4 / 3'} />
-              </div>
-            )}
           </div>
         )}
 
+        {/* ── Findings & Design Feedback — split per product ── */}
+        {project.studies && project.studies.length > 0 && (
+          <div style={{ marginBottom: 'clamp(80px, 13vw, 168px)' }}>
+            <SectionLabel>Findings &amp; Design Feedback</SectionLabel>
+            <div style={{ display: 'grid', gap: 'clamp(48px, 7vw, 88px)' }}>
+              {project.studies.map((st, si) => (
+                <div key={si}>
+                  <div style={{ display: 'flex', alignItems: 'baseline', gap: 14, marginBottom: 'clamp(20px, 2.4vw, 32px)', paddingBottom: 16, borderBottom: '1px solid var(--ink)' }}>
+                    <h3 style={{ fontFamily: "'Big Shoulders Display', Helvetica, sans-serif", fontWeight: 800, fontSize: 'clamp(24px, 3vw, 38px)', color: 'var(--ink)', margin: 0, lineHeight: 1, letterSpacing: '-0.01em' }}>{st.product}</h3>
+                    {st.meta && <span style={{ fontFamily: 'Archivo, sans-serif', fontWeight: 600, fontSize: 13, letterSpacing: '0.08em', color: 'var(--fg-3)' }}>{st.meta}</span>}
+                  </div>
+                  <div style={{
+                    display: 'grid',
+                    gridTemplateColumns: `repeat(${st.findings.length}, minmax(0, 1fr))`,
+                    columnGap: 'clamp(24px, 4vw, 48px)', rowGap: 'clamp(12px, 1.4vw, 18px)',
+                    marginBottom: st.recommendation ? 'clamp(24px, 3vw, 36px)' : 0,
+                  }}>
+                    {st.findings.map((f, fi) => (
+                      <div key={'t' + fi} style={{ paddingTop: 18, borderTop: '1px solid var(--hairline)', fontFamily: 'Archivo, sans-serif', fontWeight: 700, fontSize: 15.5, color: 'var(--fg-1)', lineHeight: 1.35 }}>{f.title}</div>
+                    ))}
+                    {st.findings.map((f, fi) => (
+                      <div key={'d' + fi} style={{ fontFamily: 'Archivo, sans-serif', fontSize: 14, color: 'var(--fg-3)', lineHeight: 1.5 }}>{f.description}</div>
+                    ))}
+                    {st.findings.map((f, fi) => (
+                      <div key={'g' + fi} style={{ fontFamily: 'Archivo, sans-serif', fontSize: 14, color: 'var(--fg-2)', lineHeight: 1.5 }}>→ {f.design}</div>
+                    ))}
+                  </div>
+                  {st.recommendation && (
+                    <div style={{ display: 'grid', gridTemplateColumns: '160px 1fr', gap: 40, alignItems: 'start', paddingTop: 4 }}>
+                      <div style={{ fontFamily: 'Archivo, sans-serif', fontWeight: 700, fontSize: 11, letterSpacing: '0.14em', textTransform: 'uppercase', color: 'var(--ink)', paddingTop: 3 }}>Recommendation</div>
+                      <p style={{ fontFamily: 'Archivo, sans-serif', fontSize: 15, lineHeight: 1.6, color: 'var(--fg-2)', margin: 0, maxWidth: 640 }}>{st.recommendation}</p>
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+
+        {/* ── Key Findings — ring charts ── */}
+        {project.findings && project.findings.length > 0 && (
+          <div style={{ marginBottom: 'clamp(80px, 13vw, 168px)' }}>
+            <SectionLabel num="03">Key Findings</SectionLabel>
+            {project.findingsIntro && (
+              <p style={{ ...bodyText, fontSize: 17, maxWidth: 760, marginBottom: 'clamp(44px, 6vw, 80px)' }}>{project.findingsIntro}</p>
+            )}
+            <div style={{
+              display: 'grid',
+              gridTemplateColumns: `repeat(${project.findings.length}, minmax(0, 1fr))`,
+              columnGap: 'clamp(24px, 4vw, 56px)',
+              rowGap: 24,
+              justifyItems: 'center',
+            }}>
+              {project.findings.map((f, i) => {
+                const m = (f.title || '').match(/^(\d+)%\s+(.*)$/);
+                const pct = m ? parseInt(m[1], 10) : 100;
+                const fig = m ? m[1] + '%' : '0' + (i + 1);
+                const ttl = m ? m[2] : f.title;
+                const R = 52, C = 2 * Math.PI * R;
+                return (
+                  <div key={i} style={{ textAlign: 'center', maxWidth: 240 }}>
+                    <svg viewBox="0 0 120 120" style={{ width: 'clamp(140px, 15vw, 190px)', height: 'auto', display: 'block', margin: '0 auto' }}>
+                      <circle cx="60" cy="60" r={R} fill="none" stroke="var(--paper-deep)" strokeWidth="9" />
+                      <circle cx="60" cy="60" r={R} fill="none" stroke="var(--accent)" strokeWidth="9" strokeLinecap="round"
+                        strokeDasharray={`${(pct / 100) * C} ${C}`} transform="rotate(-90 60 60)" />
+                      <text x="60" y="62" textAnchor="middle" dominantBaseline="middle"
+                        fontFamily="'Big Shoulders Display', Helvetica, sans-serif" fontWeight="900" fontSize="30" fill="var(--ink)">{fig}</text>
+                    </svg>
+                    <div style={{ fontFamily: 'Archivo, sans-serif', fontWeight: 700, fontSize: 15.5, color: 'var(--fg-1)', lineHeight: 1.35, marginTop: 18 }}>{ttl}</div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        )}
+
+
+        {/* ── Common Pain Points → How (qualitative matrix) ── */}
+        {project.painMatrix && project.painMatrix.length > 0 && (
+          <div style={{ marginBottom: 'clamp(48px, 8vw, 96px)' }}>
+            <SectionLabel num="04">Common Pain Points</SectionLabel>
+            <div style={{
+              display: 'grid',
+              gridTemplateColumns: `repeat(${project.painMatrix.length}, minmax(0, 1fr))`,
+              columnGap: 'clamp(24px, 4vw, 48px)',
+              rowGap: 'clamp(16px, 1.8vw, 24px)',
+            }}>
+              {project.painMatrix.map((row, i) => (
+                <div key={'img' + i} style={{ alignSelf: 'end' }}>
+                  {row.src && <img src={row.src} alt={row.observed} loading="lazy" style={{ width: '100%', height: 'auto', display: 'block' }} />}
+                </div>
+              ))}
+              {project.painMatrix.map((row, i) => (
+                <div key={'obs' + i} style={{ fontFamily: 'Archivo, sans-serif', fontWeight: 700, fontSize: 17, color: 'var(--fg-1)', lineHeight: 1.3 }}>{row.observed}</div>
+              ))}
+              {project.painMatrix.map((row, i) => (
+                <p key={'prob' + i} style={{ fontFamily: 'Archivo, sans-serif', fontSize: 14.5, lineHeight: 1.55, color: 'var(--fg-3)', fontStyle: 'italic', margin: 0 }}>“{row.problem}”</p>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* ── How Might We… (pulled from the pain matrix) ── */}
+        {project.painMatrix && project.painMatrix.length > 0 && (
+          <div style={{ marginBottom: 'clamp(80px, 13vw, 168px)' }}>
+            <SectionLabel>How Might We…</SectionLabel>
+            <div style={{ display: 'grid', gap: 0 }}>
+              {project.painMatrix.map((row, i) => (
+                <div key={i} style={{
+                  display: 'flex', alignItems: 'baseline', gap: 'clamp(16px, 2.5vw, 32px)',
+                  padding: 'clamp(20px, 2.6vw, 34px) 0',
+                  borderBottom: i < project.painMatrix.length - 1 ? '1px solid var(--hairline)' : 'none',
+                }}>
+                  <span style={{ fontFamily: "'Big Shoulders Display', Helvetica, sans-serif", fontWeight: 900, fontSize: 'clamp(24px, 3vw, 40px)', color: 'var(--accent)', lineHeight: 1, flexShrink: 0 }}>{String(i + 1).padStart(2, '0')}</span>
+                  <span style={{ fontFamily: "'Big Shoulders Display', Helvetica, sans-serif", fontWeight: 700, fontSize: 'clamp(24px, 3.2vw, 42px)', color: 'var(--ink)', lineHeight: 1.1, letterSpacing: '-0.01em' }}>How might we {row.how.charAt(0).toLowerCase() + row.how.slice(1)}?</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
 
         {/* ── Design Direction ── */}
         {project.designDirection && (
           <div>
             <div style={{ marginBottom: 80 }}>
-              <SectionLabel icon="direction">Design Direction</SectionLabel>
+              <SectionLabel num="05">Design Direction</SectionLabel>
               {project.designDirection.intro && (
                 <p style={{ ...bodyText, marginBottom: 32 }}>{project.designDirection.intro}</p>
               )}
               <div style={{
                 display: 'grid',
-                gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))',
-                gap: 16,
-                marginBottom: project.designDirection.focus ? 28 : 0,
+                gridTemplateColumns: `repeat(${project.designDirection.opportunities.length}, minmax(0, 1fr))`,
+                columnGap: 'clamp(20px, 3vw, 40px)',
+                rowGap: 14,
+                marginBottom: project.designDirection.focus ? 40 : 0,
               }}>
                 {project.designDirection.opportunities.map((opp, i) => (
-                  <div key={i} style={{
-                    border: '1px solid var(--hairline)',
-                    padding: '22px 24px',
-                    background: 'var(--paper-deep)',
-                  }}>
-                    <div style={{
-                      fontFamily: 'Archivo, sans-serif', fontWeight: 700,
-                      fontSize: 13, color: 'var(--fg-1)', marginBottom: 8,
-                    }}>{opp.title}</div>
-                    <div style={{
-                      fontFamily: 'Archivo, sans-serif', fontSize: 14,
-                      color: 'var(--fg-3)', marginBottom: 10, lineHeight: 1.5,
-                    }}>{opp.signal}</div>
-                    <div style={{
-                      fontFamily: 'Archivo, sans-serif', fontSize: 14,
-                      color: 'var(--fg-2)', lineHeight: 1.5,
-                    }}>→ {opp.opportunity}</div>
-                  </div>
+                  <div key={'t' + i} style={{
+                    paddingTop: 18, borderTop: '1px solid var(--hairline)',
+                    fontFamily: 'Archivo, sans-serif', fontWeight: 700, fontSize: 15, color: 'var(--fg-1)',
+                  }}>{opp.title}</div>
+                ))}
+                {project.designDirection.opportunities.map((opp, i) => (
+                  <div key={'s' + i} style={{
+                    fontFamily: 'Archivo, sans-serif', fontSize: 14, color: 'var(--fg-3)', lineHeight: 1.5,
+                  }}>{opp.signal}</div>
+                ))}
+                {project.designDirection.opportunities.map((opp, i) => (
+                  <div key={'o' + i} style={{
+                    fontFamily: 'Archivo, sans-serif', fontSize: 14, color: 'var(--fg-2)', lineHeight: 1.5,
+                  }}>→ {opp.opportunity}</div>
                 ))}
               </div>
               {project.designDirection.focus && (
                 <div style={{
-                  border: '1.5px solid var(--ink)',
-                  padding: '28px 32px',
+                  paddingTop: 28,
+                  marginTop: 8,
+                  borderTop: '1px solid var(--hairline)',
                   display: 'grid',
                   gridTemplateColumns: '160px 1fr',
                   gap: 40,
@@ -1144,24 +1636,62 @@ function ProjectDetailView({ project }) {
         {project.product && (
           <div>
             <div style={{ marginBottom: 80 }}>
-              <SectionLabel icon="product">The Product</SectionLabel>
+              <SectionLabel num="06">The Product</SectionLabel>
               <p style={{ ...bodyText, marginBottom: project.product.features ? 24 : 28 }}>{project.product.text}</p>
               {project.product.features && project.product.features.length > 0 && (
-                <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, marginBottom: project.product.setImage ? 36 : 0 }}>
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, marginBottom: project.product.images ? 36 : 0 }}>
                   {project.product.features.map((f) => (
                     <span key={f} className="tag">{f}</span>
                   ))}
                 </div>
               )}
-              {project.product.setImage && (
-                <ImagePlaceholder
-                  label={project.product.setImage.label}
-                  note={project.product.setImage.note}
-                  height={'clamp(240px, 34vw, 420px)'}
-                />
+              {project.product.images && project.product.images.length > 0 && (
+                <div style={{
+                  display: 'grid',
+                  gridTemplateColumns: '1fr',
+                  gap: 'clamp(16px, 2.5vw, 36px)',
+                }}>
+                  {project.product.images.map((im, i) => (
+                    <img key={i} src={im.src} alt={im.label || ''} loading="lazy" style={{ width: '100%', height: 'auto', display: 'block', borderRadius: 2 }} />
+                  ))}
+                </div>
               )}
             </div>
               </div>
+        )}
+
+        {/* ── The App ── */}
+        {project.app && (
+          <div style={{ marginBottom: 'clamp(80px, 13vw, 168px)' }}>
+            <SectionLabel num="07">The App</SectionLabel>
+            {project.app.text && <p style={{ ...bodyText, maxWidth: 680, marginBottom: 'clamp(32px, 4vw, 56px)' }}>{project.app.text}</p>}
+            {project.app.images && project.app.images.length > 0 && (
+              <div style={{ display: 'grid', gridTemplateColumns: `repeat(${project.app.images.length}, minmax(0, 1fr))`, gap: 'clamp(12px, 1.5vw, 20px)' }}>
+                {project.app.images.map((im, i) => (
+                  <img key={i} src={im.src} alt={im.label || ''} loading="lazy" style={{ width: '100%', height: 'auto', display: 'block', borderRadius: 2 }} />
+                ))}
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* ── Details — big image + row ── */}
+        {project.details && (
+          <div style={{ marginBottom: 'clamp(48px, 8vw, 96px)' }}>
+            <SectionLabel num="08">Details</SectionLabel>
+            {project.details.hero && (
+              <div style={{ marginBottom: 'clamp(12px, 1.5vw, 20px)' }}>
+                <img src={project.details.hero.src} alt={project.details.hero.label || ''} loading="lazy" style={{ width: '100%', height: 'auto', display: 'block', borderRadius: 2 }} />
+              </div>
+            )}
+            {project.details.images && project.details.images.length > 0 && (
+              <div style={{ display: 'grid', gridTemplateColumns: `repeat(${project.details.images.length}, minmax(0, 1fr))`, gap: 'clamp(10px, 1.2vw, 16px)' }}>
+                {project.details.images.map((im, i) => (
+                  <img key={i} src={im.src} alt={im.label || ''} loading="lazy" style={{ width: '100%', height: 'auto', display: 'block', borderRadius: 2 }} />
+                ))}
+              </div>
+            )}
+          </div>
         )}
 
         {/* ── Anatomy: heating / cooling pad ── */}
@@ -1368,16 +1898,7 @@ function ProjectDetailView({ project }) {
               </div>
         )}
 
-        {/* ── Outcome ── */}
-        {project.outcome && (
-          <div style={{ marginBottom: (SHOW_DETAIL && project.reflection) ? 80 : 96 }}>
-            <SectionLabel icon="outcome">Outcome</SectionLabel>
-            <p style={{ ...bodyText, marginBottom: project.outcomeImages ? 28 : 0 }}>{project.outcome}</p>
-            {project.outcomeImages && project.outcomeImages.length > 0 && (
-              <ImageGrid images={project.outcomeImages} minCol={240} aspectRatio={'4 / 3'} />
-            )}
-          </div>
-        )}
+        {/* (Outcome section removed) */}
 
         {/* ── Reflection ── */}
         {SHOW_DETAIL && project.reflection && (
@@ -1389,7 +1910,26 @@ function ProjectDetailView({ project }) {
           </div>
         )}
 
-        {/* ── Next Project ── */}
+        {/* ── Reflection — methodology learnings (always-on, separate from SHOW_DETAIL) ── */}
+        {project.methodReflection && (
+          <div style={{ marginBottom: 'clamp(48px, 8vw, 96px)' }}>
+            <SectionLabel>Reflection</SectionLabel>
+            {project.methodReflection.intro && (
+              <p style={{ ...bodyText, maxWidth: 760, marginBottom: 'clamp(28px, 4vw, 48px)' }}>{project.methodReflection.intro}</p>
+            )}
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: 'clamp(20px, 3vw, 40px)' }}>
+              {project.methodReflection.points.map((p, i) => (
+                <div key={i}>
+                  <div style={{ fontFamily: 'Archivo, sans-serif', fontWeight: 700, fontSize: 15, color: 'var(--fg-1)', marginBottom: 8 }}>{p.title}</div>
+                  <div style={{ fontFamily: 'Archivo, sans-serif', fontSize: 14, lineHeight: 1.6, color: 'var(--fg-2)' }}>{p.text}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* ── Next Project (only when there's more than one) ── */}
+        {PROJECTS.length > 1 && (
         <a href={`#work/${nextProject.slug}`} style={{ textDecoration: 'none', display: 'block' }}>
           <div style={{
             border: '1.5px solid var(--ink)',
@@ -1432,6 +1972,7 @@ function ProjectDetailView({ project }) {
             }}>→</div>
           </div>
         </a>
+        )}
 
       </div>
     </main>
@@ -1440,7 +1981,6 @@ function ProjectDetailView({ project }) {
 
 /* ---------- Work section ---------- */
 function WorkSection() {
-  const tilts = [-1.6, 1.2, -0.8, 1.8];
   const onOpen = (slug) => { window.location.hash = `work/${slug}`; };
   return (
     <section id="work" style={{
@@ -1449,14 +1989,10 @@ function WorkSection() {
     }}>
       <div style={{ maxWidth: 'var(--maxw)', margin: '0 auto' }}>
         <SectionHeader eyebrow="Sketchbook" title="Work" caption={`${PROJECTS.length} projects · 2024 – 2026`} />
-        <div style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(2, 1fr)',
-          gap: 40,
-          marginTop: 32,
-          paddingBottom: 24
-        }}>
-          {PROJECTS.map((p, i) => <ProjectCard key={p.idx} p={p} rotate={tilts[i % tilts.length]} onOpen={onOpen} />)}
+        <div style={{ marginTop: 8, paddingBottom: 24 }}>
+          {PROJECTS.map((p, i) => (
+            <ProjectRow key={p.idx} p={p} onOpen={onOpen} last={i === PROJECTS.length - 1} />
+          ))}
         </div>
       </div>
     </section>);
