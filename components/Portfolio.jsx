@@ -607,7 +607,7 @@ const PROJECTS = [
           { name: 'Refined Men & Women', before: 35, after: 30, reason: 'Lowest purchase intent of the four.' },
           { name: 'Healthy Sporty Group', before: 30, after: 20, reason: 'Several wouldn’t actually use it for sport.' },
           { name: 'Regular Overnighter', before: 20, after: 35, reason: 'Overnight use was far more common than assumed.' },
-          { name: 'Daily Commuter', before: 15, after: 15, reason: 'Held — but overlaps Refined Men & Women; flagged for review.' },
+          { name: 'Daily Commuter', before: 15, after: 15, reason: 'Weight unchanged — but it behaves almost identically to Refined Men & Women, so I flagged it to redefine or merge.' },
         ],
       },
       {
@@ -684,12 +684,12 @@ const PROJECTS = [
     },
   ],
   methodReflection: {
-    intro: 'Running the pipeline twice sharpened the method itself.',
+    intro: 'Running the pipeline twice — and seeing it shape a real iteration — sharpened how I work as a researcher.',
     points: [
-      { title: 'Fix the framework first', text: 'Locking the analysis structure before extracting data made the second study far faster.' },
-      { title: 'Objective before questions', text: 'Settling the research goal before writing the guide raised the accuracy of what came back.' },
-      { title: 'Odd-numbered segments', text: 'An odd sample size per segment makes the trend easier to call.' },
-      { title: 'Standardise the vocabulary', text: 'Unifying the product-part names up front prevents confusion downstream.' },
+      { title: 'It changed the build', text: 'The re-weighted audience and the prioritised structural changes were adopted into the product’s next iteration.' },
+      { title: 'Directional, not conclusive', text: 'With 16 and 9 participants the study points to strong directions, not statistical proof — so I framed every recommendation as a hypothesis to validate, not a verdict.' },
+      { title: 'The model itself needed re-cutting', text: 'Mid-study the quadrant axes proved imperfect; treating the segmentation as a hypothesis to test — not a fixed truth — mattered as much as any single finding.' },
+      { title: 'Insight → prioritised action', text: 'What I grew most: turning scattered qualitative signal into MoSCoW-ranked, build-ready recommendations a PM and designers could act on directly.' },
     ],
   },
 },
@@ -1521,6 +1521,54 @@ function ProjectDetailView({ project }) {
         )}
 
 
+        {/* ── Seven Insights — grouped grid (visitor / interaction) ── */}
+        {project.insightGroups && (
+          <div style={{ marginBottom: 'clamp(80px, 13vw, 168px)' }}>
+            <SectionLabel>Seven Insights</SectionLabel>
+            {project.insightGroups.intro && (
+              <p style={{ ...bodyText, fontSize: 17, maxWidth: 760, marginBottom: 'clamp(36px, 5vw, 64px)' }}>{project.insightGroups.intro}</p>
+            )}
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: 'clamp(32px, 5vw, 72px)' }}>
+              {project.insightGroups.groups.map((g, gi) => (
+                <div key={gi}>
+                  <div style={{ ...eyebrow, color: 'var(--accent)', marginBottom: 18 }}>{g.label}</div>
+                  <div style={{ display: 'grid', gap: 0 }}>
+                    {g.items.map((it, ii) => (
+                      <div key={ii} style={{
+                        padding: '16px 0', borderTop: '1px solid var(--hairline)',
+                        borderBottom: ii === g.items.length - 1 ? '1px solid var(--hairline)' : 'none',
+                      }}>
+                        <div style={{ fontFamily: 'Archivo, sans-serif', fontWeight: 700, fontSize: 16, color: 'var(--fg-1)', lineHeight: 1.3, marginBottom: 6 }}>{it.title}</div>
+                        <div style={{ fontFamily: 'Archivo, sans-serif', fontSize: 14.5, lineHeight: 1.55, color: 'var(--fg-2)' }}>{it.text}</div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* ── How Might We — bridge into the design response ── */}
+        {project.howMightWe && project.howMightWe.length > 0 && (
+          <div style={{ marginBottom: 'clamp(80px, 13vw, 168px)' }}>
+            <SectionLabel>How Might We…</SectionLabel>
+            <div style={{ display: 'grid', gap: 0 }}>
+              {project.howMightWe.map((q, i) => (
+                <div key={i} style={{
+                  display: 'flex', alignItems: 'baseline', gap: 'clamp(16px, 2.5vw, 32px)',
+                  padding: 'clamp(20px, 2.6vw, 34px) 0',
+                  borderBottom: i < project.howMightWe.length - 1 ? '1px solid var(--hairline)' : 'none',
+                }}>
+                  <span style={{ fontFamily: "'Big Shoulders Display', Helvetica, sans-serif", fontWeight: 900, fontSize: 'clamp(24px, 3vw, 40px)', color: 'var(--accent)', lineHeight: 1, flexShrink: 0 }}>{String(i + 1).padStart(2, '0')}</span>
+                  <span style={{ fontFamily: "'Big Shoulders Display', Helvetica, sans-serif", fontWeight: 700, fontSize: 'clamp(22px, 3vw, 40px)', color: 'var(--ink)', lineHeight: 1.12, letterSpacing: '-0.01em' }}>{q}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+
         {/* ── Common Pain Points → How (qualitative matrix) ── */}
         {project.painMatrix && project.painMatrix.length > 0 && (
           <div style={{ marginBottom: 'clamp(48px, 8vw, 96px)' }}>
@@ -1632,6 +1680,45 @@ function ProjectDetailView({ project }) {
               </div>
         )}
 
+        {/* ── Design Evolution — numbered iterations with verdicts ── */}
+        {project.designEvolution && (
+          <div style={{ marginBottom: 'clamp(80px, 13vw, 168px)' }}>
+            <SectionLabel>Design Evolution</SectionLabel>
+            {project.designEvolution.intro && (
+              <p style={{ ...bodyText, maxWidth: 760, marginBottom: 'clamp(40px, 6vw, 72px)' }}>{project.designEvolution.intro}</p>
+            )}
+            <div style={{ display: 'grid', gap: 'clamp(40px, 6vw, 72px)' }}>
+              {project.designEvolution.iterations.map((it, i) => {
+                const kept = it.verdictType === 'kept';
+                return (
+                  <div key={i} style={{ borderTop: '1px solid var(--hairline)', paddingTop: 'clamp(22px, 2.6vw, 34px)' }}>
+                    <div style={{ display: 'grid', gridTemplateColumns: 'auto minmax(0, 1fr)', gap: 'clamp(16px, 3vw, 36px)', alignItems: 'start' }}>
+                      <span style={{ fontFamily: "'Big Shoulders Display', Helvetica, sans-serif", fontWeight: 900, fontSize: 'clamp(26px, 3.2vw, 44px)', color: 'var(--accent)', lineHeight: 1 }}>{String(i + 1).padStart(2, '0')}</span>
+                      <div>
+                        <div style={{ display: 'flex', alignItems: 'baseline', gap: 12, flexWrap: 'wrap', marginBottom: 10 }}>
+                          <h3 style={{ fontFamily: "'Big Shoulders Display', Helvetica, sans-serif", fontWeight: 800, fontSize: 'clamp(24px, 3vw, 38px)', color: 'var(--ink)', margin: 0, lineHeight: 1, letterSpacing: '-0.01em' }}>{it.name}</h3>
+                          <span style={{ fontFamily: 'Archivo, sans-serif', fontWeight: 700, fontSize: 10.5, letterSpacing: '0.14em', textTransform: 'uppercase', padding: '4px 10px', borderRadius: 2, color: kept ? 'var(--paper)' : 'var(--fg-3)', background: kept ? 'var(--accent)' : 'var(--paper-deep)' }}>{kept ? 'Final' : 'Dropped'}</span>
+                        </div>
+                        {it.what && <p style={{ fontFamily: 'Archivo, sans-serif', fontSize: 16, lineHeight: 1.55, color: 'var(--fg-2)', margin: '0 0 14px', maxWidth: 680 }}>{it.what}</p>}
+                        {it.verdict && (
+                          <p style={{ fontFamily: 'Archivo, sans-serif', fontSize: 15, lineHeight: 1.55, color: 'var(--fg-1)', margin: 0, maxWidth: 680 }}>
+                            <span style={{ fontWeight: 700, color: kept ? 'var(--accent)' : 'var(--ink)' }}>{kept ? 'Why it stayed — ' : 'Why it failed — '}</span>{it.verdict}
+                          </p>
+                        )}
+                        {it.image && (
+                          <div style={{ marginTop: 'clamp(20px, 2.6vw, 32px)' }}>
+                            <ImagePlaceholder label={it.image.label} note={it.image.note} src={it.image.src} aspectRatio={'16 / 9'} />
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        )}
+
         {/* ── The Product ── */}
         {project.product && (
           <div>
@@ -1658,6 +1745,47 @@ function ProjectDetailView({ project }) {
               )}
             </div>
               </div>
+        )}
+
+        {/* ── How It Works — states, proximity, lifecycle (definition rows) ── */}
+        {project.designSpec && (
+          <div style={{ marginBottom: 'clamp(80px, 13vw, 168px)' }}>
+            <SectionLabel>How It Works</SectionLabel>
+            {project.designSpec.intro && (
+              <p style={{ ...bodyText, maxWidth: 760, marginBottom: 'clamp(36px, 5vw, 56px)' }}>{project.designSpec.intro}</p>
+            )}
+            <div style={{ display: 'grid', gap: 0 }}>
+              {project.designSpec.rows.map((r, i) => (
+                <div key={i} style={{
+                  display: 'grid', gridTemplateColumns: 'minmax(140px, 0.32fr) minmax(0, 1fr)',
+                  gap: 'clamp(16px, 3vw, 40px)', padding: 'clamp(16px, 2vw, 22px) 0',
+                  borderTop: '1px solid var(--hairline)',
+                  borderBottom: i === project.designSpec.rows.length - 1 ? '1px solid var(--hairline)' : 'none',
+                  alignItems: 'baseline',
+                }}>
+                  <div style={{ fontFamily: 'Archivo, sans-serif', fontWeight: 700, fontSize: 15, color: 'var(--fg-1)' }}>{r.label}</div>
+                  <div style={{ fontFamily: 'Archivo, sans-serif', fontSize: 15, lineHeight: 1.6, color: 'var(--fg-2)' }}>{r.text}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* ── Try It — interactive prototype (screenshot placeholder) ── */}
+        {project.prototype && (
+          <div style={{ marginBottom: 'clamp(80px, 13vw, 168px)' }}>
+            <SectionLabel>Try It</SectionLabel>
+            {project.prototype.text && (
+              <p style={{ ...bodyText, maxWidth: 760, marginBottom: 'clamp(28px, 4vw, 44px)' }}>{project.prototype.text}</p>
+            )}
+            <ImagePlaceholder label={project.prototype.label} note={project.prototype.note} src={project.prototype.src} aspectRatio={'16 / 9'} />
+            {project.prototype.caption && (
+              <div style={{ fontFamily: 'Archivo, sans-serif', fontSize: 12.5, lineHeight: 1.5, color: 'var(--fg-3)', marginTop: 12 }}>{project.prototype.caption}</div>
+            )}
+            {project.prototype.link && (
+              <a href={project.prototype.link} target="_blank" rel="noreferrer" style={{ display: 'inline-block', marginTop: 18, fontFamily: 'Archivo, sans-serif', fontWeight: 700, fontSize: 12, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'var(--accent)' }}>Open the prototype →</a>
+            )}
+          </div>
         )}
 
         {/* ── The App ── */}
