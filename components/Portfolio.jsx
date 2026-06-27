@@ -684,12 +684,12 @@ const PROJECTS = [
     },
   ],
   methodReflection: {
-    intro: ‘Running the same analysis pipeline twice — across two different products — taught me as much about how to research as about the products themselves.’,
+    intro: 'Running the same analysis pipeline twice — across two different products — taught me as much about how to research as about the products themselves.',
     points: [
-      { title: ‘Curation over completeness’, text: ‘The most-mentioned finding is not always the most important one. I learned to weigh each signal against brand positioning, development cost, and design potential before assigning priority — some low-frequency observations unlocked higher-value directions than majority opinions did.’ },
-      { title: ‘Cross-disciplinary judgment as a research tool’, text: ‘Carrying product design, development, and business lenses alongside UX let me evaluate each finding for feasibility and brand fit, not just user value. That cross-disciplinary view is what turned raw interview data into recommendations stakeholders could act on directly.’ },
-      { title: ‘AI collaboration requires a designed protocol’, text: ‘Unstructured AI use introduced two failure modes I had to design around: inconsistent extraction standards across team members, and AI stripping context to reach surface-level conclusions. I built a fixed extraction framework — defined criteria first, AI for aggregation, then my own review for context integrity. The second run was markedly faster because the protocol already existed.’ },
-      { title: ‘Precision is a communication skill’, text: ‘From a PM review after the first report, I learned that vague synthesis language creates ambiguity for anyone without full interview context. I moved to Must / Should / Nice-to-have ratings and colour-coded segments to make priority legible at a glance. Precise wording matters as much as precise findings — a single imprecise term can shift how a team interprets a recommendation.’ },
+      { title: 'Curation over completeness', text: 'The most-mentioned finding is not always the most important one. I learned to weigh each signal against brand positioning, development cost, and design potential before assigning priority — some low-frequency observations unlocked higher-value directions than majority opinions did.' },
+      { title: 'Cross-disciplinary judgment as a research tool', text: 'Carrying product design, development, and business lenses alongside UX let me evaluate each finding for feasibility and brand fit, not just user value. That cross-disciplinary view is what turned raw interview data into recommendations stakeholders could act on directly.' },
+      { title: 'AI collaboration requires a designed protocol', text: 'Unstructured AI use introduced two failure modes I had to design around: inconsistent extraction standards across team members, and AI stripping context to reach surface-level conclusions. I built a fixed extraction framework — defined criteria first, AI for aggregation, then my own review for context integrity. The second run was markedly faster because the protocol already existed.' },
+      { title: 'Precision is a communication skill', text: 'From a PM review after the first report, I learned that vague synthesis language creates ambiguity for anyone without full interview context. I moved to Must / Should / Nice-to-have ratings and colour-coded segments to make priority legible at a glance. Precise wording matters as much as precise findings — a single imprecise term can shift how a team interprets a recommendation.' },
     ],
   },
 },
@@ -725,8 +725,8 @@ const PROJECTS = [
       meta: 'n=10',
       purpose: 'Semi-structured interviews at a hair-themed art exhibition in Munich — covering memorable works, what visitors thought about while looking, their interest in others’ views, and their willingness to share.',
       images: [
-        { step: '01', label: 'Interview — participant at exhibition', note: 'From the Reinterview folder.' },
-        { step: '02', label: 'Interview — note-taking and probing', note: 'From the Reinterview folder.' },
+        { label: 'Interview — participant at exhibition', src: 'assets/voice-shell/interview-01.jpg' },
+        { label: 'Interview — note-taking and probing', src: 'assets/voice-shell/interview-02.jpg' },
       ],
     },
     {
@@ -735,8 +735,8 @@ const PROJECTS = [
       meta: 'on-site',
       purpose: 'Watched how visitors actually moved through the show — where they paused, how long they lingered, and whether they reacted to one another — to ground the interview accounts in real behaviour.',
       images: [
-        { step: '01', label: 'Observation — visitor movement at artwork', note: 'From the Reob folder.' },
-        { step: '02', label: 'Observation — lingering and pausing behaviour', note: 'From the Reob folder.' },
+        { label: 'Observation — visitor movement at artwork', src: 'assets/voice-shell/observation-01.jpg' },
+        { label: 'Observation — lingering and pausing behaviour', src: 'assets/voice-shell/observation-02.jpg' },
       ],
     },
     {
@@ -744,13 +744,20 @@ const PROJECTS = [
       title: 'Synthesis',
       meta: 'qual',
       purpose: 'Affinity mapping clustered the quotes into 6 themes; from these I built 5 visitor types and a four-lens curiosity framework (Empathic, Epistemic, Social Comparison, Hedonic), grounded in Proxemic Interaction literature.',
+      images: [
+        { label: 'Curiosity framework', src: 'assets/voice-shell/synthesis-01.jpg' },
+        { label: 'Visitor persona map', src: 'assets/voice-shell/synthesis-02.jpg' },
+      ],
     },
     {
       name: 'Phase 04',
       title: 'Workshop',
       meta: '15+ concepts',
       purpose: 'A team workshop analysed two artworks, gathered live reactions, and tested ways to share — writing, speaking, recording, bodily interaction — sketching 15+ interface concepts.',
-      image: { label: 'Workshop', note: 'From the reworkshop folder.' },
+      images: [
+        { label: 'Workshop — Crazy 8 sketches', src: 'assets/voice-shell/workshop-01.jpg' },
+        { label: 'Workshop — reactions wall', src: 'assets/voice-shell/workshop-02.jpg' },
+      ],
     },
   ],
   findingsIntro: 'The interviews pointed one direction: visitors are hungry to hear each other, but reluctant to speak — and what moves them is personal, not aesthetic.',
@@ -828,16 +835,14 @@ const PROJECTS = [
     { label: 'Curiosity attraction', text: 'Within a metre the shells whisper. A hand nearing one triggers a glow. Proximity does the inviting — no sign needed.' },
   ],
   designSpec: {
-    intro: 'Two states, two proximity behaviours, and a self-renewing lifecycle keep the system legible without a single instruction.',
-    rows: [
-      { label: 'Dead shell (empty)', text: 'Glows faintly from within and can be fully opened. Opening it starts recording; closing it finishes.' },
-      { label: 'Alive shell (full)', text: 'Glows whole and won’t open. Held to the ear, it plays its message — then dies back to a faint glow, empty again.' },
-      { label: 'Proximity — whisper (≤ 1 m)', text: 'Come within about a metre and the shells whisper, drawing your curiosity closer.' },
-      { label: 'Proximity — glow (hand near)', text: 'As a hand nears a shell, a glow layers on top of its current state, guiding the pick-up.' },
-      { label: 'Lifecycle', text: 'No time decay. Only when all eight shells are alive do the two oldest die — clearing themselves so there is always room to speak. Every recording is archived to a website visitors can revisit after the show.' },
-      { label: 'In the space', text: 'Eight shells sit in a shallow, semicircular concrete dip directly below the artwork — a gentle bowl, like a skate ramp, in the same material as the floor.' },
+    images: [
+      { src: 'assets/voice-shell/howitworks-01.jpg' },
+      { src: 'assets/voice-shell/howitworks-02.jpg' },
+      { src: 'assets/voice-shell/howitworks-03.jpg' },
+      { src: 'assets/voice-shell/howitworks-04.jpg' },
+      { src: 'assets/voice-shell/howitworks-05.jpg' },
+      { src: 'assets/voice-shell/howitworks-06.jpg' },
     ],
-    cycleImage: { label: 'Shell lifecycle', note: 'Diagram of the 8-shell eviction cycle. From the shellcycle folder.' },
   },
   prototype: {
     text: 'A mouse-driven prototype of the white-museum build lets you walk the full first-person flow — approach to trigger the whispers, hand-near to light a shell, pick up to listen, open to record.',
@@ -1546,10 +1551,7 @@ function ProjectDetailView({ project }) {
                     {m.images && m.images.length > 0 && (
                       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 'clamp(8px, 1.2vw, 16px)' }}>
                         {m.images.map((img, ii) => (
-                          <div key={ii}>
-                            {img.step && <div style={{ fontFamily: 'Archivo, sans-serif', fontSize: 11, fontWeight: 600, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'var(--accent)', marginBottom: 6 }}>Step {img.step}</div>}
-                            <ImagePlaceholder label={img.label} note={img.note} src={img.src} aspectRatio={'4 / 3'} />
-                          </div>
+                          <ImagePlaceholder key={ii} label={img.label} note={img.note} src={img.src} aspectRatio={'4 / 3'} />
                         ))}
                       </div>
                     )}
@@ -1973,27 +1975,36 @@ function ProjectDetailView({ project }) {
           </div>
         )}
 
-        {/* ── How It Works — states, proximity, lifecycle (definition rows) ── */}
+        {/* ── How It Works ── */}
         {project.designSpec && (
           <div style={{ marginBottom: 'clamp(80px, 13vw, 168px)' }}>
             <SectionLabel>How It Works</SectionLabel>
             {project.designSpec.intro && (
               <p style={{ ...bodyText, maxWidth: 760, marginBottom: 'clamp(36px, 5vw, 56px)' }}>{project.designSpec.intro}</p>
             )}
-            <div style={{ display: 'grid', gap: 0 }}>
-              {project.designSpec.rows.map((r, i) => (
-                <div key={i} style={{
-                  display: 'grid', gridTemplateColumns: 'minmax(140px, 0.32fr) minmax(0, 1fr)',
-                  gap: 'clamp(16px, 3vw, 40px)', padding: 'clamp(16px, 2vw, 22px) 0',
-                  borderTop: '1px solid var(--hairline)',
-                  borderBottom: i === project.designSpec.rows.length - 1 ? '1px solid var(--hairline)' : 'none',
-                  alignItems: 'baseline',
-                }}>
-                  <div style={{ fontFamily: 'Archivo, sans-serif', fontWeight: 700, fontSize: 15, color: 'var(--fg-1)' }}>{r.label}</div>
-                  <div style={{ fontFamily: 'Archivo, sans-serif', fontSize: 15, lineHeight: 1.6, color: 'var(--fg-2)' }}>{r.text}</div>
-                </div>
-              ))}
-            </div>
+            {project.designSpec.images && project.designSpec.images.length > 0 ? (
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 'clamp(8px, 1.2vw, 16px)' }}>
+                {project.designSpec.images.map((img, i) => (
+                  <img key={i} src={img.src} alt={img.label || ''} loading="lazy"
+                    style={{ width: '100%', height: 'auto', display: 'block', borderRadius: 2 }} />
+                ))}
+              </div>
+            ) : project.designSpec.rows && (
+              <div style={{ display: 'grid', gap: 0 }}>
+                {project.designSpec.rows.map((r, i) => (
+                  <div key={i} style={{
+                    display: 'grid', gridTemplateColumns: 'minmax(140px, 0.32fr) minmax(0, 1fr)',
+                    gap: 'clamp(16px, 3vw, 40px)', padding: 'clamp(16px, 2vw, 22px) 0',
+                    borderTop: '1px solid var(--hairline)',
+                    borderBottom: i === project.designSpec.rows.length - 1 ? '1px solid var(--hairline)' : 'none',
+                    alignItems: 'baseline',
+                  }}>
+                    <div style={{ fontFamily: 'Archivo, sans-serif', fontWeight: 700, fontSize: 15, color: 'var(--fg-1)' }}>{r.label}</div>
+                    <div style={{ fontFamily: 'Archivo, sans-serif', fontSize: 15, lineHeight: 1.6, color: 'var(--fg-2)' }}>{r.text}</div>
+                  </div>
+                ))}
+              </div>
+            )}
             {project.designSpec.cycleImage && (
               <div style={{ marginTop: 'clamp(28px, 4vw, 48px)' }}>
                 <ImagePlaceholder label={project.designSpec.cycleImage.label} note={project.designSpec.cycleImage.note} src={project.designSpec.cycleImage.src} aspectRatio={'16 / 9'} />
@@ -2212,22 +2223,24 @@ function ProjectDetailView({ project }) {
               {(project.userTesting.method || project.userTesting.rqs) && (
                 <div style={{
                   display: 'grid',
-                  gridTemplateColumns: project.userTesting.rqs ? `auto repeat(${project.userTesting.rqs.length}, minmax(0, 1fr))` : '1fr',
+                  gridTemplateColumns: project.userTesting.rqs ? `minmax(0, 1.6fr) repeat(${project.userTesting.rqs.length}, minmax(0, 1fr))` : '1fr',
                   gap: 2,
                   marginBottom: 'clamp(32px, 4vw, 52px)',
                 }}>
                   {project.userTesting.method && (
                     <div style={{ background: 'var(--paper-deep)', padding: 'clamp(22px, 2.8vw, 36px)', display: 'flex', flexDirection: 'column', gap: 10 }}>
-                      {project.userTesting.participants && (
-                        <div style={{ fontFamily: "'Big Shoulders Display', Helvetica, sans-serif", fontWeight: 900, fontSize: 'clamp(36px, 4.5vw, 56px)', color: 'var(--accent)', lineHeight: 0.9, letterSpacing: '-0.02em' }}>{project.userTesting.participants}</div>
-                      )}
-                      <p style={{ fontFamily: 'Archivo, sans-serif', fontSize: 14, lineHeight: 1.55, color: 'var(--fg-2)', margin: 0 }}>{project.userTesting.method}</p>
+                      <div style={{ fontFamily: 'Archivo, sans-serif', fontSize: 11, fontWeight: 600, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'var(--fg-3)' }}>
+                        Method{project.userTesting.participants ? ' · ' + project.userTesting.participants : ''}
+                      </div>
+                      <p style={{ fontFamily: 'Archivo, sans-serif', fontSize: 15, lineHeight: 1.5, color: 'var(--fg-1)', margin: 0 }}>{project.userTesting.method}</p>
                     </div>
                   )}
                   {project.userTesting.rqs && project.userTesting.rqs.map((rq, ri) => (
-                    <div key={ri} style={{ background: 'var(--ink)', padding: 'clamp(22px, 2.8vw, 36px)', display: 'flex', flexDirection: 'column', gap: 10 }}>
-                      <div style={{ fontFamily: "'Big Shoulders Display', Helvetica, sans-serif", fontWeight: 900, fontSize: 13, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'var(--accent)' }}>RQ{ri + 1}</div>
-                      <p style={{ fontFamily: 'Archivo, sans-serif', fontSize: 15, lineHeight: 1.5, color: 'var(--paper)', margin: 0, fontWeight: 500 }}>{rq}</p>
+                    <div key={ri} style={{ background: 'var(--paper-deep)', padding: 'clamp(22px, 2.8vw, 36px)', display: 'flex', flexDirection: 'column', gap: 10 }}>
+                      <div style={{ fontFamily: 'Archivo, sans-serif', fontSize: 11, fontWeight: 600, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'var(--accent)' }}>
+                        RQ {String(ri + 1).padStart(2, '0')}
+                      </div>
+                      <p style={{ fontFamily: 'Archivo, sans-serif', fontSize: 15, lineHeight: 1.5, color: 'var(--fg-1)', margin: 0 }}>{rq}</p>
                     </div>
                   ))}
                 </div>
@@ -2235,47 +2248,44 @@ function ProjectDetailView({ project }) {
               {project.userTesting.setup && (
                 <p style={{ ...bodyText, marginBottom: 32 }}>{project.userTesting.setup}</p>
               )}
-              <div style={{
-                display: 'grid',
-                gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))',
-                gap: 'clamp(24px, 5vw, 64px)',
-                marginBottom: 36
-              }}>
-                <div>
-                  <div style={{
-                    fontFamily: 'Archivo, sans-serif', fontSize: 12, fontWeight: 700,
-                    letterSpacing: '0.08em', textTransform: 'uppercase',
-                    color: 'var(--ink)', marginBottom: 14
-                  }}>What worked</div>
-                  <ul style={{ margin: 0, padding: 0, listStyle: 'none' }}>
+              {/* What Worked — full-width key-insight row */}
+              {project.userTesting.positives && project.userTesting.positives.length > 0 && (
+                <div style={{ marginBottom: 'clamp(40px, 5vw, 64px)' }}>
+                  <div style={{ ...eyebrow, color: 'var(--accent)', marginBottom: 'clamp(18px, 2.5vw, 28px)' }}>What Worked</div>
+                  <div style={{ display: 'grid', gap: 0 }}>
                     {project.userTesting.positives.map((item, i) => (
-                      <li key={i} style={{
-                        fontFamily: 'Archivo, sans-serif', fontSize: 16, lineHeight: 1.5,
-                        color: 'var(--fg-2)', padding: '10px 0',
-                        borderBottom: '1px solid var(--hairline)',
-                        display: 'flex', gap: 10
-                      }}><span style={{ color: 'var(--ink)', fontWeight: 700 }}>+</span>{item}</li>
+                      <div key={i} style={{
+                        display: 'flex', alignItems: 'baseline', gap: 'clamp(16px, 2.5vw, 32px)',
+                        padding: 'clamp(18px, 2.2vw, 28px) 0',
+                        borderTop: '1px solid var(--hairline)',
+                        borderBottom: i === project.userTesting.positives.length - 1 ? '1px solid var(--hairline)' : 'none',
+                      }}>
+                        <span style={{ fontFamily: "'Big Shoulders Display', Helvetica, sans-serif", fontWeight: 900, fontSize: 'clamp(28px, 3.2vw, 44px)', color: 'var(--accent)', lineHeight: 1, flexShrink: 0 }}>+</span>
+                        <span style={{ fontFamily: 'Archivo, sans-serif', fontWeight: 600, fontSize: 'clamp(16px, 1.5vw, 19px)', color: 'var(--fg-1)', lineHeight: 1.45 }}>{item}</span>
+                      </div>
                     ))}
-                  </ul>
+                  </div>
                 </div>
-                <div>
-                  <div style={{
-                    fontFamily: 'Archivo, sans-serif', fontSize: 12, fontWeight: 700,
-                    letterSpacing: '0.08em', textTransform: 'uppercase',
-                    color: 'var(--ink)', marginBottom: 14
-                  }}>What to improve</div>
-                  <ul style={{ margin: 0, padding: 0, listStyle: 'none' }}>
+              )}
+              {/* What to Improve — full-width key-insight row */}
+              {project.userTesting.negatives && project.userTesting.negatives.length > 0 && (
+                <div style={{ marginBottom: 'clamp(40px, 5vw, 64px)' }}>
+                  <div style={{ ...eyebrow, marginBottom: 'clamp(18px, 2.5vw, 28px)' }}>What to Improve</div>
+                  <div style={{ display: 'grid', gap: 0 }}>
                     {project.userTesting.negatives.map((item, i) => (
-                      <li key={i} style={{
-                        fontFamily: 'Archivo, sans-serif', fontSize: 16, lineHeight: 1.5,
-                        color: 'var(--fg-2)', padding: '10px 0',
-                        borderBottom: '1px solid var(--hairline)',
-                        display: 'flex', gap: 10
-                      }}><span style={{ color: 'var(--fg-3)' }}>→</span>{item}</li>
+                      <div key={i} style={{
+                        display: 'flex', alignItems: 'baseline', gap: 'clamp(16px, 2.5vw, 32px)',
+                        padding: 'clamp(18px, 2.2vw, 28px) 0',
+                        borderTop: '1px solid var(--hairline)',
+                        borderBottom: i === project.userTesting.negatives.length - 1 ? '1px solid var(--hairline)' : 'none',
+                      }}>
+                        <span style={{ fontFamily: "'Big Shoulders Display', Helvetica, sans-serif", fontWeight: 900, fontSize: 'clamp(28px, 3.2vw, 44px)', color: 'var(--fg-3)', lineHeight: 1, flexShrink: 0 }}>→</span>
+                        <span style={{ fontFamily: 'Archivo, sans-serif', fontWeight: 600, fontSize: 'clamp(16px, 1.5vw, 19px)', color: 'var(--fg-1)', lineHeight: 1.45 }}>{item}</span>
+                      </div>
                     ))}
-                  </ul>
+                  </div>
                 </div>
-              </div>
+              )}
               {project.userTesting.photos && project.userTesting.photos.length > 0 && (
                 <ImageGrid images={project.userTesting.photos} minCol={220} aspectRatio={'4 / 3'} />
               )}
