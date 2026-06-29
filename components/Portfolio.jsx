@@ -279,7 +279,7 @@ const PROJECTS = [
   idx: '01',
   slug: 'mere',
   accent: '#5E7585',
-  thumb: 'assets/mere/thumb.jpg',
+  thumb: 'assets/mere/thumb-main.jpg',
   period: '2023.05 – 2024.04',
   org: 'Graduation Thesis · Taiwan Textile Federation',
   title: 'Mere',
@@ -291,7 +291,7 @@ const PROJECTS = [
     hero: {
       label: 'Hero image — Mere nursing bra',
       note: 'Clean product shot: worn in context or hero render. 16:9 or 4:3, no text overlaid.',
-      src: 'assets/mere/hero-01.jpg',
+      src: 'assets/mere/hero-main.jpg',
     },
   },
   // ── Case study detail ──
@@ -709,6 +709,7 @@ const PROJECTS = [
     hero: {
       label: 'Hero — glowing shells in front of an artwork',
       note: 'Lead with a hand sketch or the AI spatial scene. 16:9 or 4:3, no text overlaid.',
+      src: 'assets/voice-shell/hero.jpg',
     },
   },
   // ── Case study detail ──
@@ -825,7 +826,7 @@ const PROJECTS = [
       'Mic + speaker in one object',
     ],
     images: [
-      { label: 'Vizcom product render', note: 'The shell, lit. Use the Vizcom render here.' },
+      { label: 'Vizcom product render', src: 'assets/voice-shell/object.jpg', note: 'The shell, lit. Use the Vizcom render here.' },
       { label: 'AI spatial scene', note: 'The shells in a gallery, in front of an artwork. AI-generated scene.' },
     ],
   },
@@ -1111,7 +1112,7 @@ function ProjectCard({ p, rotate, onOpen }) {
 /* ---------- Project row (home list layout — one project per horizontal row) ---------- */
 function ProjectRow({ p, onOpen, last }) {
   const [hover, setHover] = React.useState(false);
-  const heroSrc = p.images && p.images.hero && p.images.hero.src;
+  const heroSrc = p.thumb || (p.images && p.images.hero && p.images.hero.src);
   return (
     <article
       onClick={() => onOpen && onOpen(p.slug)}
@@ -1196,6 +1197,9 @@ function ImagePlaceholder({ label, note, src, aspectRatio = '4 / 3', height }) {
   }
   // Intentional empty-state panel (not a dashed "missing image" box).
   // `label` shows as a quiet corner caption so Nicole knows what to drop in.
+  // Hidden on the live site (any non-local host); shown locally as a "drop image here" reminder.
+  const isLocal = ['localhost', '127.0.0.1', ''].includes(window.location.hostname);
+  if (!isLocal) return null;
   return (
     <div style={{
       position: 'relative',
@@ -2432,7 +2436,7 @@ const EXPERIENCE = [
 
 
 const EDUCATION = [
-{ label: 'M.Sc. HCI · TH Augsburg', period: '2025 – Now' },
+{ label: 'M.Sc. HCI · TH Augsburg', period: '2026.03 – Now' },
 { label: 'Exchange Student · Eindhoven University of Technology', period: '2024.09 – 2025.02' },
 { label: 'B.S. Industrial Design · NTUST', period: '2020 – 2024' }];
 
