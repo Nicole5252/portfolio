@@ -2,6 +2,20 @@
 const { useState, useEffect, useRef } = React;
 
 /* =============================================================
+   RESPONSIVE — narrow-viewport hook (stacks fixed grids ≤720px)
+   ============================================================= */
+function useIsNarrow(breakpoint = 720) {
+  const [narrow, setNarrow] = useState(() => window.innerWidth <= breakpoint);
+  useEffect(() => {
+    const mq = window.matchMedia(`(max-width: ${breakpoint}px)`);
+    const onChange = () => setNarrow(mq.matches);
+    mq.addEventListener('change', onChange);
+    return () => mq.removeEventListener('change', onChange);
+  }, [breakpoint]);
+  return narrow;
+}
+
+/* =============================================================
    ROUTING — hash-based (#work/slug → detail page)
    ============================================================= */
 function useRoute() {
@@ -1017,7 +1031,6 @@ function ProjectCard({ p, rotate, onOpen }) {
         overflow: 'hidden',
         cursor: 'pointer',
         transition: 'background 240ms ease',
-        outline: 'none'
       }}>
 
       {/* Resting state — thumbnail image (or doodle fallback) */}
@@ -1112,6 +1125,7 @@ function ProjectCard({ p, rotate, onOpen }) {
 /* ---------- Project row (home list layout — one project per horizontal row) ---------- */
 function ProjectRow({ p, onOpen, last }) {
   const [hover, setHover] = React.useState(false);
+  const narrow = useIsNarrow();
   const heroSrc = p.thumb || (p.images && p.images.hero && p.images.hero.src);
   return (
     <article
@@ -1125,13 +1139,13 @@ function ProjectRow({ p, onOpen, last }) {
       onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') onOpen && onOpen(p.slug); }}
       style={{
         display: 'grid',
-        gridTemplateColumns: 'minmax(0, 0.92fr) minmax(0, 1.08fr)',
-        gap: 'clamp(24px, 4vw, 64px)',
+        gridTemplateColumns: narrow ? '1fr' : 'minmax(0, 0.92fr) minmax(0, 1.08fr)',
+        gap: narrow ? 20 : 'clamp(24px, 4vw, 64px)',
         alignItems: 'center',
         padding: 'clamp(28px, 4vw, 52px) 0',
         borderTop: '1px solid var(--hairline)',
         borderBottom: last ? '1px solid var(--hairline)' : 'none',
-        cursor: 'pointer', outline: 'none',
+        cursor: 'pointer',
       }}>
       {/* Hero image (falls back to the doodle if no hero is set) */}
       <div style={{ overflow: 'hidden', borderRadius: 2, aspectRatio: '4 / 3', background: 'var(--paper-deep)' }}>
@@ -1186,13 +1200,65 @@ function ProjectRow({ p, onOpen, last }) {
     </article>);
 }
 
+/* ---------- Lightbox (click-to-zoom for case-study images) ---------- */
+const LightboxCtx = React.createContext(null);
+
+function Lightbox({ item, onClose }) {
+  useEffect(() => {
+    if (!item) return;
+    const onKey = (e) => { if (e.key === 'Escape') onClose(); };
+    window.addEventListener('keydown', onKey);
+    const prevOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    return () => {
+      window.removeEventListener('keydown', onKey);
+      document.body.style.overflow = prevOverflow;
+    };
+  }, [item, onClose]);
+  if (!item) return null;
+  return (
+    <div role="dialog" aria-modal="true" aria-label={item.label || 'Image preview'}
+      onClick={onClose}
+      style={{
+        position: 'fixed', inset: 0, zIndex: 200,
+        background: 'rgba(29, 30, 39, 0.94)',
+        display: 'flex', alignItems: 'center', justifyContent: 'center',
+        padding: 'clamp(16px, 4vw, 64px)', cursor: 'zoom-out',
+      }}>
+      <img src={item.src} alt={item.label || ''}
+        style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain', borderRadius: 2 }} />
+      {item.label && (
+        <div style={{
+          position: 'absolute', bottom: 22, left: 24, right: 24, textAlign: 'center',
+          fontFamily: 'Archivo, sans-serif', fontSize: 11, fontWeight: 600,
+          letterSpacing: '0.12em', textTransform: 'uppercase',
+          color: 'rgba(237, 242, 244, 0.72)',
+        }}>{item.label}</div>
+      )}
+      <button onClick={onClose} aria-label="Close image preview"
+        style={{
+          position: 'absolute', top: 18, right: 22,
+          background: 'none', border: 'none', cursor: 'pointer',
+          fontFamily: 'Archivo, sans-serif', fontSize: 26, lineHeight: 1,
+          color: 'rgba(237, 242, 244, 0.85)', padding: 10,
+        }}>×</button>
+    </div>
+  );
+}
+
 /* ---------- Image placeholder (dashed box w/ label) ---------- */
 function ImagePlaceholder({ label, note, src, aspectRatio = '4 / 3', height }) {
+  const openLightbox = React.useContext(LightboxCtx);
   // Real image. With a height → cover banner (controlled). Without → natural full width.
   if (src) {
     return (
       <img src={src} alt={label || ''} loading="lazy"
-        style={{ width: '100%', height: height || 'auto', objectFit: height ? 'cover' : undefined, display: 'block', borderRadius: 2 }} />
+        onClick={openLightbox ? () => openLightbox({ src, label }) : undefined}
+        style={{
+          width: '100%', height: height || 'auto', objectFit: height ? 'cover' : undefined,
+          display: 'block', borderRadius: 2,
+          cursor: openLightbox ? 'zoom-in' : undefined,
+        }} />
     );
   }
   // Intentional empty-state panel (not a dashed "missing image" box).
@@ -1318,6 +1384,10 @@ function ProjectDetailView({ project }) {
   const currentIndex = PROJECTS.findIndex((p) => p.slug === project.slug);
   const nextProject = PROJECTS[(currentIndex + 1) % PROJECTS.length];
 
+  // Click-to-zoom lightbox for case-study images
+  const [lightbox, setLightbox] = useState(null);
+  const narrow = useIsNarrow();
+
   // Shared style helpers (matching the design system)
   const eyebrow = {
     fontFamily: 'Archivo, sans-serif', fontSize: 11, fontWeight: 600,
@@ -1370,6 +1440,7 @@ function ProjectDetailView({ project }) {
   );
 
   return (
+    <LightboxCtx.Provider value={setLightbox}>
     <main style={{ paddingTop: 'clamp(100px, 14vh, 160px)', paddingBottom: 96, ...(project.accent && { '--accent': project.accent }) }}>
       <div style={{ maxWidth: 'var(--maxw)', margin: '0 auto', paddingLeft: 'var(--gutter)', paddingRight: 'var(--gutter)' }}>
 
@@ -1394,7 +1465,7 @@ function ProjectDetailView({ project }) {
         {/* ── Hero: meta sidebar + title + blurb ── */}
         <div style={{
           display: 'grid',
-          gridTemplateColumns: 'minmax(0, 0.72fr) minmax(0, 1.7fr)',
+          gridTemplateColumns: narrow ? '1fr' : 'minmax(0, 0.72fr) minmax(0, 1.7fr)',
           gap: 'clamp(28px, 5vw, 72px)',
           alignItems: 'end',
           marginBottom: 'clamp(40px, 5vw, 72px)',
@@ -1498,7 +1569,7 @@ function ProjectDetailView({ project }) {
             <SectionLabel num="01">{project.problemLabel || 'The Problem'}</SectionLabel>
             <div style={{
               display: 'grid',
-              gridTemplateColumns: project.problemImage ? 'minmax(0, 1fr) minmax(0, 0.78fr)' : '1fr',
+              gridTemplateColumns: (narrow || !project.problemImage) ? '1fr' : 'minmax(0, 1fr) minmax(0, 0.78fr)',
               gap: 'clamp(32px, 5vw, 72px)',
               alignItems: 'center',
             }}>
@@ -1538,7 +1609,7 @@ function ProjectDetailView({ project }) {
                     border: '1px solid var(--hairline)', borderRadius: 2,
                     padding: 'clamp(26px, 3vw, 44px)',
                     display: 'grid',
-                    gridTemplateColumns: hasImgs ? 'minmax(0, 1fr) minmax(0, 1.2fr)' : '1fr',
+                    gridTemplateColumns: (narrow || !hasImgs) ? '1fr' : 'minmax(0, 1fr) minmax(0, 1.2fr)',
                     gap: 'clamp(28px, 4vw, 60px)',
                     alignItems: 'start',
                   }}>
@@ -1873,7 +1944,7 @@ function ProjectDetailView({ project }) {
                     fontSize: 11, letterSpacing: '0.14em', textTransform: 'uppercase',
                     color: 'var(--ink)', paddingTop: 3,
                   }}>{project.designDirection.focus.title}</div>
-                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 28 }}>
+                  <div style={{ display: 'grid', gridTemplateColumns: narrow ? '1fr' : '1fr 1fr', gap: 28 }}>
                     {project.designDirection.focus.reasons.map((r, i) => (
                       <div key={i}>
                         <div style={{
@@ -1946,7 +2017,7 @@ function ProjectDetailView({ project }) {
                   gridTemplateColumns: '1fr',
                   gap: 'clamp(16px, 2.5vw, 36px)',
                 }}>
-                  {project.product.images.map((im, i) => (
+                  {project.product.images.filter((im) => im.src).map((im, i) => (
                     <img key={i} src={im.src} alt={im.label || ''} loading="lazy" style={{ width: '100%', height: 'auto', display: 'block', borderRadius: 2 }} />
                   ))}
                 </div>
@@ -1988,7 +2059,7 @@ function ProjectDetailView({ project }) {
             )}
             {project.designSpec.images && project.designSpec.images.length > 0 ? (
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 'clamp(8px, 1.2vw, 16px)' }}>
-                {project.designSpec.images.map((img, i) => (
+                {project.designSpec.images.filter((img) => img.src).map((img, i) => (
                   <img key={i} src={img.src} alt={img.label || ''} loading="lazy"
                     style={{ width: '100%', height: 'auto', display: 'block', borderRadius: 2 }} />
                 ))}
@@ -2375,6 +2446,8 @@ function ProjectDetailView({ project }) {
 
       </div>
     </main>
+    <Lightbox item={lightbox} onClose={() => setLightbox(null)} />
+    </LightboxCtx.Provider>
   );
 }
 
@@ -2431,7 +2504,7 @@ function SectionHeader({ eyebrow, title, caption }) {
 
 /* ---------- About ---------- */
 const EXPERIENCE = [
-{ company: 'Pangolin', role: 'UX Researcher Intern', period: '2025.03 –\n2026.02' },
+{ company: 'Pangolin', role: 'UX Researcher Intern', period: '2025.03 – 2026.02' },
 { company: 'Logitech', role: 'Industrial Design Intern', period: '2024.03 – 2024.07' }];
 
 
@@ -2449,6 +2522,7 @@ const SKILLS = [
 
 
 function AboutSection() {
+  const narrow = useIsNarrow();
   return (
     <section id="about" style={{
       paddingLeft: 'var(--gutter)', paddingRight: 'var(--gutter)',
@@ -2456,7 +2530,7 @@ function AboutSection() {
     }}>
       <div style={{ maxWidth: 'var(--maxw)', margin: '0 auto', lineHeight: "1.5" }}>
         <div style={{
-          display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 64,
+          display: 'grid', gridTemplateColumns: narrow ? '1fr' : '1fr 1fr', gap: narrow ? 40 : 64,
           alignItems: 'start'
         }}>
           {/* Left column — title + bio */}
@@ -2662,6 +2736,8 @@ function ContactSection() {
 
 /* ---------- Scroll indicator ---------- */
 function ScrollIndicator() {
+  const narrow = useIsNarrow();
+  if (narrow) return null;
   return (
     <div style={{
       position: 'fixed', right: 18, top: '50%',

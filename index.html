@@ -30,6 +30,24 @@
   main > section:nth-child(2) { animation-delay: 0.15s; }
   main > section:nth-child(3) { animation-delay: 0.2s; }
   main > section:nth-child(4) { animation-delay: 0.25s; }
+  /* Keyboard focus — visible accent ring, keyboard-only (no ring on mouse click) */
+  a:focus-visible, button:focus-visible, [role="button"]:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 4px;
+    border-radius: 2px;
+  }
+  a:focus:not(:focus-visible), button:focus:not(:focus-visible), [role="button"]:focus:not(:focus-visible) {
+    outline: none;
+  }
+  /* Respect reduced-motion preference */
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
 </style>
 </head>
 <body>
