@@ -297,9 +297,9 @@ const PROJECTS = [
   period: '2023.05 – 2024.04',
   org: 'Graduation Thesis · Taiwan Textile Federation',
   title: 'Mere',
-  blurb: 'A smart nursing bra with integrated heating/cooling e-textile that lets breastfeeding mothers relieve engorgement on their own — backed by a 23-person survey and 5 in-depth interviews.',
+  blurb: 'A smart nursing bra with integrated heating/cooling e-textile that lets breastfeeding mothers relieve engorgement on their own — backed by an 18-person survey and 5 in-depth interviews.',
   tags: ['UX Research', 'E-Textile', 'Mixed Methods', 'Wearable', 'Product Design'],
-  insight: 'n=23 survey · n=5 interviews · 4 interaction opportunities',
+  insight: 'n=18 survey · n=5 interviews · 4 interaction opportunities',
   doodle: 'textile',
   images: {
     hero: {
@@ -324,7 +324,7 @@ const PROJECTS = [
     note: 'Traditional warm-compress tools / breastfeeding context. Wide shot, no text.',
   },
   methods: [
-    'Survey (n=23)',
+    'Survey (n=18)',
     'In-depth Interviews (n=5)',
     'Mixed-Methods Analysis',
     'Thematic Analysis',
@@ -337,8 +337,12 @@ const PROJECTS = [
     {
       name: 'Method 01',
       title: 'Survey',
-      meta: 'n=23',
+      meta: 'n=18',
       purpose: "To understand mothers' most pressing pain points and needs after birth, gather feedback on our initial feature concepts, and learn which features they'd want in the app.",
+      images: [
+        { label: 'Postpartum pain points, rated 1–5 · original survey results (Chinese)', src: 'assets/mere/survey-pain.jpg' },
+        { label: 'Hot/cold compress & massage frequency while nursing · grounds the thermal-care scope', src: 'assets/mere/survey-care.jpg' },
+      ],
     },
     {
       name: 'Method 02',
@@ -391,7 +395,7 @@ const PROJECTS = [
   ],
   scopeNote: 'Mothers raised several needs — heating, cooling, and EMS massage. Under project time constraints we prioritized the most-cited need, thermal care, and scoped the final physical prototype around heating and cooling.',
   findingsChart: {
-    label: 'Survey results chart (n=23)',
+    label: 'Survey results chart (n=18)',
     note: 'Bar / percentage chart you lay out manually: 75% breastfeeding pain · 42% inconvenient compress tools · 64% want soft, easy-clean materials.',
   },
   designImages: [
@@ -714,7 +718,7 @@ const PROJECTS = [
   accent: '#C8920E',
   period: '2026.03 – 2026.04',
   org: 'HCI Project',
-  title: 'Voice Shell',
+  title: 'Speaking Shell',
   blurb: "Glowing shells placed in front of paintings, each holding a stranger's voice — what they felt looking at the same artwork. You pick one up, listen, and leave yours.",
   tags: ['UX Research', 'Interaction Design', 'Concept'],
   insight: 'n=10 interviews · 5 visitor types · 3 design iterations',
@@ -728,11 +732,12 @@ const PROJECTS = [
   },
   // ── Case study detail ──
   role: 'Four-person team (2026.03 – 2026.04). I led the design and interview analysis, concept ideation, the web prototype, and defining the interaction model.',
-  overview: 'Voice Shell is a physical interaction for museums: a set of glowing shells set on the floor in front of an artwork, each holding one anonymous visitor’s spoken reaction to that same piece. You pick a shell up, hold it to your ear to hear a stranger, then open one to leave your own voice for whoever comes next. It turns looking — normally silent and one-directional — into an anonymous, asynchronous exchange between visitors.',
+  overview: 'Speaking Shell is a physical interaction for museums: a set of glowing shells set on the floor in front of an artwork, each holding one anonymous visitor’s spoken reaction to that same piece. You pick a shell up, hold it to your ear to hear a stranger, then open one to leave your own voice for whoever comes next. It turns looking — normally silent and one-directional — into an anonymous, asynchronous exchange between visitors.',
   concept: {
     tagline: 'Pick one up, listen, and leave yours.',
   },
   problem: 'In a gallery, people have rich, private reactions to what they see — and almost no way to share them, or to hear anyone else’s. The experience stays one-directional: visitor and artwork, never visitor and visitor. The most interesting layer of a show — how other people read the same painting — vanishes silently the moment they walk away.',
+  problemImage: { src: 'assets/voice-shell/problem.jpg', label: 'Visitors viewing alone — reactions stay private' },
   researchMethods: [
     {
       name: 'Phase 01',
@@ -777,8 +782,8 @@ const PROJECTS = [
   ],
   findingsIntro: 'The interviews pointed one direction: visitors are hungry to hear each other, but reluctant to speak — and what moves them is personal, not aesthetic.',
   findings: [
-    { title: '78% want to hear a stranger’s thoughts on the same artwork' },
-    { title: '33% would share — but only if it’s anonymous and quick' },
+    { title: '7 of 10 want to hear a stranger’s thoughts on the same artwork' },
+    { title: '3 of 10 would share — but only if it’s anonymous and quick' },
     { title: '100% connected to a work through personal experience or their own view — not its beauty' },
   ],
   insightGroups: {
@@ -824,7 +829,7 @@ const PROJECTS = [
         verdict: 'Too many objects — visual clutter and choice overload pulled attention off the work.',
       },
       {
-        name: 'Voice Shell',
+        name: 'Speaking Shell',
         what: 'A flip-open shell on the floor in front of the work — eight fixed shells, an intuitive gesture, two self-explaining states.',
         verdictType: 'kept',
         verdict: 'Eight stays calm, the gesture needs no instruction, the states explain themselves — all in the artwork’s space.',
@@ -1782,10 +1787,13 @@ function ProjectDetailView({ project }) {
               justifyItems: 'center',
             }}>
               {project.findings.map((f, i) => {
-                const m = (f.title || '').match(/^(\d+)%\s+(.*)$/);
-                const pct = m ? parseInt(m[1], 10) : 100;
-                const fig = m ? m[1] + '%' : '0' + (i + 1);
-                const ttl = m ? m[2] : f.title;
+                const mPct = (f.title || '').match(/^(\d+)%\s+(.*)$/);
+                const mFrac = (f.title || '').match(/^(\d+)\s+of\s+(\d+)\s+(.*)$/);
+                const pct = mPct ? parseInt(mPct[1], 10)
+                  : mFrac ? Math.round(parseInt(mFrac[1], 10) / parseInt(mFrac[2], 10) * 100)
+                  : 100;
+                const fig = mPct ? mPct[1] + '%' : mFrac ? `${mFrac[1]}/${mFrac[2]}` : '0' + (i + 1);
+                const ttl = mPct ? mPct[2] : mFrac ? mFrac[3] : f.title;
                 const R = 52, C = 2 * Math.PI * R;
                 return (
                   <div key={i} style={{ textAlign: 'center', maxWidth: 240 }}>
