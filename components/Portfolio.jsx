@@ -378,17 +378,17 @@ const PROJECTS = [
   findingsIntro: 'Across the survey and interviews, mothers described the same physical and emotional strain. Engorgement pain was near-universal, and existing relief routines were slow, two-handed, and hard to manage alone with a newborn.',
   findings: [
     {
-      title: '75% suffer engorgement pain and poor milk flow',
+      title: '13 of 18 suffer engorgement pain and poor milk flow',
       description: 'Engorgement pain was near-universal — yet relief meant slow, separate rituals.',
       design: 'Thermal therapy built into the garment — always on-hand, not a separate task.',
     },
     {
-      title: '55% want a smoother hot- & cold-compress routine for engorgement',
+      title: '10 of 18 want a smoother hot- & cold-compress routine for engorgement',
       description: 'Existing tools are slow, messy, and two-handed — hard to use holding a newborn.',
       design: 'Heating e-textile in the bra makes the routine hands-free and self-operable.',
     },
     {
-      title: '80% want an easy-to-store, easy-to-use compress product',
+      title: '14 of 18 want an easy-to-store, easy-to-use compress product',
       description: 'Comfort and hygiene ranked alongside function — nothing stiff or hard to wash.',
       design: 'Skin-friendly e-textile with electronics that detach from a washable layer.',
     },
@@ -784,7 +784,7 @@ const PROJECTS = [
   findings: [
     { title: '7 of 10 want to hear a stranger’s thoughts on the same artwork' },
     { title: '3 of 10 would share — but only if it’s anonymous and quick' },
-    { title: '100% connected to a work through personal experience or their own view — not its beauty' },
+    { title: '10 of 10 connected to a work through personal experience or their own view — not its beauty' },
   ],
   insightGroups: {
     intro: 'Across interviews, observation and the workshop, seven insights held — four about the visitor, three about the interaction.',
