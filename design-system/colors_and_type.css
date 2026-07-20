@@ -6,20 +6,20 @@
 @import url('https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@400;700;800;900&family=Archivo:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&display=swap');
 
 :root {
-  /* ---------- Color: paper / ink ---------- */
-  --paper:           #EDF2F4;   /* Anti-flash white */
-  --paper-deep:      #E2E7EA;   /* slightly deeper surface */
-  --ink:             #1D1E27;   /* Raisin black */
-  --ink-2:           #4B4E53;   /* Davy's gray — body prose */
-  --ink-3:           #6A6D72;   /* meta, captions, dates */
-  --ink-4:           #9EA2A7;   /* disabled / placeholder */
-  --hairline:        rgba(29, 30, 39, 0.14);   /* 1px section rules */
-  --capsule-border:  rgba(29, 30, 39, 0.25);   /* pill outlines */
+  /* ---------- Color: paper / ink (mono — 純墨) ---------- */
+  --paper:           #F7F7F5;   /* warm paper white */
+  --paper-deep:      #EFEFEC;   /* slightly deeper surface */
+  --ink:             #141414;   /* near-black, neutral */
+  --ink-2:           #4A4A48;   /* body prose */
+  --ink-3:           #6E6E6C;   /* meta, captions, dates */
+  --ink-4:           #A0A09E;   /* disabled / placeholder */
+  --hairline:        rgba(20, 20, 20, 0.14);   /* 1px section rules */
+  --capsule-border:  rgba(20, 20, 20, 0.25);   /* pill outlines */
 
-  /* ---------- Color: accents ---------- */
-  --accent:          #C80018;   /* Fire engine red — primary accent */
-  --accent-green:    #C80018;   /* status marker → red */
-  --accent-red:      #C80018;   /* kept for compat */
+  /* ---------- Color: accents (mono — accent = ink) ---------- */
+  --accent:          #141414;
+  --accent-green:    #141414;
+  --accent-red:      #141414;   /* kept for compat */
 
   /* ---------- Semantic foreground / background ---------- */
   --fg-1:            var(--ink);
@@ -91,17 +91,17 @@
 /* ---------- Dark mode ---------- */
 :root[data-theme="dark"],
 .theme-dark {
-  --paper:           #1D1E27;   /* Raisin black */
-  --paper-deep:      #25262F;   /* slightly lighter surface */
-  --ink:             #EDF2F4;   /* Anti-flash white */
-  --ink-2:           #C0C4CB;
-  --ink-3:           #7A7E85;
-  --ink-4:           #4B4E53;   /* Davy's gray */
-  --hairline:        rgba(237, 242, 244, 0.14);
-  --capsule-border:  rgba(237, 242, 244, 0.25);
-  --accent:          #C80018;
-  --accent-green:    #C80018;
-  --accent-red:      #C80018;
+  --paper:           #161616;   /* neutral near-black */
+  --paper-deep:      #1F1F1E;   /* slightly lighter surface */
+  --ink:             #F7F7F5;   /* paper white */
+  --ink-2:           #C2C2C0;
+  --ink-3:           #7E7E7C;
+  --ink-4:           #4C4C4A;
+  --hairline:        rgba(247, 247, 245, 0.14);
+  --capsule-border:  rgba(247, 247, 245, 0.25);
+  --accent:          #F7F7F5;
+  --accent-green:    #F7F7F5;
+  --accent-red:      #F7F7F5;
 }
 
 /* =============================================================
@@ -212,8 +212,9 @@
 }
 
 /* =============================================================
-   Tag — square-cornered label (case-study pages).
-   Brand preference: square over rounded; quieter than .capsule.
+   Tag — rounded label (case-study pages).
+   Brand preference: rounded over square (decided 2026-07-17);
+   quieter than .capsule (no border), same pill silhouette.
    ============================================================= */
 .tag {
   display: inline-flex;
@@ -222,7 +223,7 @@
   gap: var(--sp-2);
   padding: 6px 12px;
   border: none;
-  border-radius: 2px;
+  border-radius: var(--radius-pill);
   font-family: var(--font-sans);
   font-size: var(--fs-caption);
   font-weight: 500;
@@ -241,12 +242,9 @@
 }
 
 .dot {
-  width: 0; height: 0;
-  background: transparent;
-  border-radius: 0;
-  border-top: 4px solid transparent;
-  border-bottom: 4px solid transparent;
-  border-left: 7px solid var(--accent);
+  width: 7px; height: 7px;
+  background: var(--accent);
+  border-radius: 50%;
   display: inline-block;
   box-shadow: none;
 }

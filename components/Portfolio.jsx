@@ -166,7 +166,7 @@ function PortfolioNav({ dark, onToggleDark }) {
     <nav style={{
       position: 'fixed', top: 20, left: 'var(--gutter)', right: 'var(--gutter)',
       zIndex: 50, display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-      padding: '12px 22px',
+      padding: '12px clamp(12px, 3vw, 22px)',
       background: dark ? 'rgba(29,30,39,0.55)' : 'rgba(237,242,244,0.55)',
       backdropFilter: 'blur(36px) saturate(200%)',
       WebkitBackdropFilter: 'blur(36px) saturate(200%)',
@@ -182,7 +182,7 @@ function PortfolioNav({ dark, onToggleDark }) {
         color: 'var(--ink)', textDecoration: 'none'
       }}>NL</a>
 
-      <div style={{ display: 'flex', alignItems: 'center', gap: 28 }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 'clamp(10px, 3.5vw, 28px)' }}>
         {items.map((it) =>
         <a key={it.name} href={it.href} style={{
           fontFamily: 'Archivo, sans-serif', fontSize: 11, fontWeight: 600,
@@ -192,7 +192,7 @@ function PortfolioNav({ dark, onToggleDark }) {
         )}
         <button onClick={onToggleDark} aria-label="Toggle dark mode" style={{
           display: 'inline-flex', alignItems: 'center', gap: 8,
-          padding: '6px 14px', marginLeft: 6,
+          padding: '6px clamp(8px, 2vw, 14px)', marginLeft: 'clamp(0px, 1vw, 6px)',
           border: '1px solid var(--capsule-border)', borderRadius: 9999,
           background: 'transparent',
           fontFamily: 'Archivo, sans-serif', fontSize: 11, fontWeight: 600,
@@ -210,32 +210,360 @@ function PortfolioNav({ dark, onToggleDark }) {
 
 }
 
+/* ---------- Ink blur — soft blurred ink blob that trails the cursor (hero background) ---------- */
+function InkBlur() {
+  const ref = React.useRef(null);
+  React.useEffect(() => {
+    const canvas = ref.current; if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    const fine = window.matchMedia('(pointer: fine)').matches;
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    let w = 0, h = 0, raf = 0;
+    let x = null, y = null, tx = null, ty = null;
+    let last = null; // last drawn state, for theme-change redraws
+
+    const inkRgb = () => {
+      const hex = (getComputedStyle(document.documentElement).getPropertyValue('--ink').trim() || '#141414');
+      const n = parseInt(hex.slice(1), 16);
+      return [(n >> 16) & 255, (n >> 8) & 255, n & 255];
+    };
+    const draw = (cx, cy, radius, alpha) => {
+      last = { cx, cy, radius, alpha };
+      ctx.clearRect(0, 0, w, h);
+      const [r, g, b] = inkRgb();
+      const grad = ctx.createRadialGradient(cx, cy, 0, cx, cy, radius);
+      grad.addColorStop(0, 'rgba(' + r + ',' + g + ',' + b + ',' + alpha + ')');
+      grad.addColorStop(0.55, 'rgba(' + r + ',' + g + ',' + b + ',' + (alpha * 0.4) + ')');
+      grad.addColorStop(1, 'rgba(' + r + ',' + g + ',' + b + ',0)');
+      ctx.fillStyle = grad;
+      ctx.fillRect(0, 0, w, h);
+    };
+    const restingBlob = () => draw(w * 0.72, h * 0.42, Math.min(w, h) * 0.55, 0.10);
+    const resize = () => {
+      const r = canvas.parentElement.getBoundingClientRect();
+      w = r.width; h = r.height;
+      canvas.width = w * dpr; canvas.height = h * dpr;
+      canvas.style.width = w + 'px'; canvas.style.height = h + 'px';
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      if (last) draw(last.cx, last.cy, last.radius, last.alpha); else restingBlob();
+    };
+    resize();
+    window.addEventListener('resize', resize);
+
+    // Redraw with the new ink colour when the theme flips
+    const themeObs = new MutationObserver(() => { if (last) draw(last.cx, last.cy, last.radius, last.alpha); });
+    themeObs.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+
+    let cleanupMove = null;
+    if (fine && !reduced) {
+      const loop = () => {
+        raf = requestAnimationFrame(() => {
+          raf = 0;
+          x += (tx - x) * 0.09; y += (ty - y) * 0.09;
+          draw(x, y, 240, 0.12);
+          if (Math.abs(tx - x) > 0.5 || Math.abs(ty - y) > 0.5) loop();
+        });
+      };
+      const onMove = (e) => {
+        const r = canvas.getBoundingClientRect();
+        tx = e.clientX - r.left; ty = e.clientY - r.top;
+        if (x === null) { x = tx; y = ty; }
+        if (!raf) loop();
+      };
+      window.addEventListener('pointermove', onMove, { passive: true });
+      cleanupMove = () => window.removeEventListener('pointermove', onMove);
+    }
+    return () => {
+      if (cleanupMove) cleanupMove();
+      window.removeEventListener('resize', resize);
+      themeObs.disconnect();
+      if (raf) cancelAnimationFrame(raf);
+    };
+  }, []);
+  return <canvas ref={ref} aria-hidden="true" style={{ position: 'absolute', inset: 0, zIndex: 0, pointerEvents: 'none' }} />;
+}
+
+/* ---------- Shape blur — React Bits ShapeBlur (VAR 0), ported for no-build + global THREE ----------
+   Source: reactbits.dev/animations/shape-blur. Changes from upstream: global THREE instead of
+   import, u_color uniform (ink token, follows theme) instead of hardcoded white. */
+const SHAPE_BLUR_VERT = `
+varying vec2 v_texcoord;
+void main() {
+    gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+    v_texcoord = uv;
+}`;
+const SHAPE_BLUR_FRAG = `
+varying vec2 v_texcoord;
+uniform vec2 u_mouse;
+uniform vec2 u_resolution;
+uniform float u_pixelRatio;
+uniform vec3 u_color;
+uniform float u_shapeSize;
+uniform float u_roundness;
+uniform float u_borderSize;
+uniform float u_circleSize;
+uniform float u_circleEdge;
+
+#ifndef PI
+#define PI 3.1415926535897932384626433832795
+#endif
+#ifndef VAR
+#define VAR 0
+#endif
+
+vec2 coord(in vec2 p) {
+    p = p / u_resolution.xy;
+    if (u_resolution.x > u_resolution.y) {
+        p.x *= u_resolution.x / u_resolution.y;
+        p.x += (u_resolution.y - u_resolution.x) / u_resolution.y / 2.0;
+    } else {
+        p.y *= u_resolution.y / u_resolution.x;
+        p.y += (u_resolution.x - u_resolution.y) / u_resolution.x / 2.0;
+    }
+    p -= 0.5;
+    p *= vec2(-1.0, 1.0);
+    return p;
+}
+#define st0 coord(gl_FragCoord.xy)
+#define mx coord(u_mouse * u_pixelRatio)
+
+float sdRoundRect(vec2 p, vec2 b, float r) {
+    vec2 d = abs(p - 0.5) * 4.2 - b + vec2(r);
+    return min(max(d.x, d.y), 0.0) + length(max(d, 0.0)) - r;
+}
+float sdCircle(in vec2 st, in vec2 center) {
+    return length(st - center) * 2.0;
+}
+float aastep(float threshold, float value) {
+    float afwidth = length(vec2(dFdx(value), dFdy(value))) * 0.70710678118654757;
+    return smoothstep(threshold - afwidth, threshold + afwidth, value);
+}
+float fill(float x, float size, float edge) {
+    return 1.0 - smoothstep(size - edge, size + edge, x);
+}
+float strokeAA(float x, float size, float w, float edge) {
+    float afwidth = length(vec2(dFdx(x), dFdy(x))) * 0.70710678;
+    float d = smoothstep(size - edge - afwidth, size + edge + afwidth, x + w * 0.5)
+            - smoothstep(size - edge - afwidth, size + edge + afwidth, x - w * 0.5);
+    return clamp(d, 0.0, 1.0);
+}
+
+void main() {
+    vec2 st = st0 + 0.5;
+    vec2 posMouse = mx * vec2(1., -1.) + 0.5;
+    float sdfCircle = fill(sdCircle(st, posMouse), u_circleSize, u_circleEdge);
+    /* circle stroke variant (upstream VAR 2) */
+    float sdf = sdCircle(st, vec2(0.5));
+    sdf = strokeAA(sdf, 0.58, 0.02, sdfCircle) * 4.0;
+    gl_FragColor = vec4(u_color, sdf);
+}`;
+
+function ShapeBlurRB({ pixelRatioProp = 2, shapeSize = 1.2, roundness = 0.4, borderSize = 0.05, circleSize = 0.3, circleEdge = 0.5 }) {
+  const mountRef = React.useRef(null);
+  React.useEffect(() => {
+    const mount = mountRef.current;
+    if (!mount || typeof THREE === 'undefined') return;
+
+    let active = true;
+    let animationFrameId;
+    let time = 0, lastTime = 0;
+
+    const vMouse = new THREE.Vector2();
+    const vMouseDamp = new THREE.Vector2();
+    const vResolution = new THREE.Vector2();
+    let w = 1, h = 1;
+
+    const inkColor = () => new THREE.Color(
+      (getComputedStyle(document.documentElement).getPropertyValue('--ink').trim() || '#141414')
+    );
+
+    const scene = new THREE.Scene();
+    const camera = new THREE.OrthographicCamera();
+    camera.position.z = 1;
+
+    const renderer = new THREE.WebGLRenderer({ alpha: true });
+    renderer.setClearColor(0x000000, 0);
+    mount.appendChild(renderer.domElement);
+
+    const geo = new THREE.PlaneGeometry(1, 1);
+    const material = new THREE.ShaderMaterial({
+      vertexShader: SHAPE_BLUR_VERT,
+      fragmentShader: SHAPE_BLUR_FRAG,
+      uniforms: {
+        u_mouse: { value: vMouseDamp },
+        u_resolution: { value: vResolution },
+        u_pixelRatio: { value: pixelRatioProp },
+        u_color: { value: inkColor() },
+        u_shapeSize: { value: shapeSize },
+        u_roundness: { value: roundness },
+        u_borderSize: { value: borderSize },
+        u_circleSize: { value: circleSize },
+        u_circleEdge: { value: circleEdge }
+      },
+      defines: { VAR: 0 },
+      transparent: true
+    });
+
+    const quad = new THREE.Mesh(geo, material);
+    scene.add(quad);
+
+    const onPointerMove = (e) => {
+      // Map the full viewport onto the shape's space: the interaction follows the
+      // mouse from anywhere on the page — no proximity needed, never a static circle.
+      const rect = mount.getBoundingClientRect();
+      vMouse.set(
+        (e.clientX / window.innerWidth) * rect.width,
+        (e.clientY / window.innerHeight) * rect.height
+      );
+    };
+    document.addEventListener('mousemove', onPointerMove);
+    document.addEventListener('pointermove', onPointerMove);
+
+    const resize = () => {
+      if (!active) return;
+      w = mount.clientWidth; h = mount.clientHeight;
+      const dpr = Math.min(window.devicePixelRatio, 2);
+      renderer.setSize(w, h);
+      renderer.setPixelRatio(dpr);
+      camera.left = -w / 2; camera.right = w / 2;
+      camera.top = h / 2; camera.bottom = -h / 2;
+      camera.updateProjectionMatrix();
+      quad.scale.set(w, h, 1);
+      vResolution.set(w, h).multiplyScalar(dpr);
+      material.uniforms.u_pixelRatio.value = dpr;
+    };
+    resize();
+    window.addEventListener('resize', resize);
+    const ro = new ResizeObserver(() => { if (active) resize(); });
+    ro.observe(mount);
+
+    const themeObs = new MutationObserver(() => {
+      material.uniforms.u_color.value = inkColor();
+    });
+    themeObs.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+
+    const update = () => {
+      if (!active) return;
+      time = performance.now() * 0.001;
+      const dt = time - lastTime;
+      lastTime = time;
+      ['x', 'y'].forEach((k) => {
+        vMouseDamp[k] = THREE.MathUtils.damp(vMouseDamp[k], vMouse[k], 8, dt);
+      });
+      renderer.render(scene, camera);
+      animationFrameId = requestAnimationFrame(update);
+    };
+    update();
+
+    return () => {
+      active = false;
+      cancelAnimationFrame(animationFrameId);
+      window.removeEventListener('resize', resize);
+      ro.disconnect();
+      themeObs.disconnect();
+      document.removeEventListener('mousemove', onPointerMove);
+      document.removeEventListener('pointermove', onPointerMove);
+      if (mount.contains(renderer.domElement)) mount.removeChild(renderer.domElement);
+      renderer.dispose();
+      renderer.forceContextLoss();
+    };
+  }, [pixelRatioProp, shapeSize, roundness, borderSize, circleSize, circleEdge]);
+  return <div ref={mountRef} style={{ width: '100%', height: '100%' }} />;
+}
+
+/* ---------- Hero field — original ShapeBlur when possible, static ink blob otherwise ---------- */
+function HeroField() {
+  const fine = window.matchMedia('(pointer: fine)').matches;
+  const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const hasThree = typeof THREE !== 'undefined';
+  if (fine && !reduced && hasThree) {
+    return (
+      <div aria-hidden="true" style={{
+        position: 'absolute', zIndex: 0, pointerEvents: 'none',
+        top: '50%', transform: 'translateY(-52%)', right: 'var(--gutter)',
+        width: 'min(42vw, 600px)', aspectRatio: '1 / 1'
+      }}>
+        <ShapeBlurRB />
+      </div>
+    );
+  }
+  return <InkBlur />;
+}
+
+/* ---------- Custom cursor — ink dot, ring on interactive hover ---------- */
+function CustomCursor() {
+  const dotRef = React.useRef(null);
+  React.useEffect(() => {
+    if (!window.matchMedia('(pointer: fine)').matches) return;
+    document.documentElement.classList.add('has-custom-cursor');
+    const move = (e) => {
+      const d = dotRef.current; if (!d) return;
+      d.style.left = e.clientX + 'px';
+      d.style.top = e.clientY + 'px';
+      const hit = e.target && e.target.closest && e.target.closest('a, button, [role="button"], article');
+      d.classList.toggle('cursor--hover', !!hit);
+    };
+    window.addEventListener('pointermove', move, { passive: true });
+    return () => {
+      window.removeEventListener('pointermove', move);
+      document.documentElement.classList.remove('has-custom-cursor');
+    };
+  }, []);
+  return (
+    <React.Fragment>
+      <style>{`
+        .has-custom-cursor, .has-custom-cursor * { cursor: none !important; }
+        .custom-cursor {
+          position: fixed; top: -100px; left: -100px; width: 8px; height: 8px;
+          border-radius: 50%; background: var(--ink); border: 1.5px solid transparent;
+          transform: translate(-50%, -50%); pointer-events: none; z-index: 9999;
+          transition: width 160ms ease, height 160ms ease, background 160ms ease, border-color 160ms ease;
+        }
+        .custom-cursor.cursor--hover { width: 26px; height: 26px; background: transparent; border-color: var(--ink); }
+        @media (pointer: coarse) { .custom-cursor { display: none; } }
+      `}</style>
+      <div ref={dotRef} className="custom-cursor" aria-hidden="true" />
+    </React.Fragment>
+  );
+}
+
 /* ---------- Hero ---------- */
 function Hero() {
   return (
     <section id="top" style={{
-      paddingTop: 'clamp(140px, 18vh, 200px)',
-      paddingBottom: 'clamp(96px, 14vh, 160px)',
+      position: 'relative', overflow: 'hidden',
+      minHeight: '100svh', boxSizing: 'border-box',
+      display: 'flex', flexDirection: 'column',
+      paddingTop: 'clamp(120px, 16vh, 180px)',
+      paddingBottom: 'clamp(40px, 6vh, 72px)',
       paddingLeft: 'var(--gutter)', paddingRight: 'var(--gutter)'
     }}>
-      <div style={{ maxWidth: 'var(--maxw)', margin: '0 auto' }}>
-        {/* Eyebrow */}
+      <HeroField />
+      <div style={{
+        maxWidth: 'var(--maxw)', margin: '0 auto', width: '100%',
+        position: 'relative', zIndex: 1,
+        flex: 1, display: 'flex', flexDirection: 'column'
+      }}>
+        {/* Eyebrow — name */}
         <div style={{
           fontFamily: 'Archivo, sans-serif', fontSize: 11, fontWeight: 600,
           letterSpacing: '0.14em', textTransform: 'uppercase',
           color: 'var(--fg-3)', marginBottom: 28
-        }}>UX/UI · INDUSTRIAL DESIGNER · PORTFOLIO '26</div>
+        }}>Nicole · Yu Ching Lin</div>
 
-        {/* Display name — particle canvas */}
-        <ParticleText text="Nicole Lin" />
+        {/* Display title — left half; right half stays open for the ink-blur field */}
+        <h1 style={{
+          fontFamily: "'Big Shoulders Display', Helvetica, sans-serif", fontWeight: 800,
+          fontSize: 'clamp(72px, 12vw, 190px)', lineHeight: 0.88, letterSpacing: '-0.02em',
+          margin: 0, color: 'var(--ink)', maxWidth: '68%', minWidth: 300
+        }}>UX &amp; Product<br />Design</h1>
 
         {/* Masthead baseline row */}
         <div style={{
-          display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start',
+          display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end',
           flexWrap: 'wrap', gap: 40,
-          marginTop: 52,
-          borderTop: '1px solid var(--hairline)',
-          paddingTop: 28
+          marginTop: 'auto', paddingTop: 48
         }}>
           {/* Left: role descriptor */}
           <p style={{
@@ -243,13 +571,12 @@ function Hero() {
             fontFamily: 'Archivo, sans-serif', fontSize: 17, lineHeight: 1.5,
             color: 'var(--fg-2)', letterSpacing: '-0.005em'
           }}>Research-led design across wearables, interfaces, and the physical products in between.</p>
-          {/* Right: status capsules */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 10, alignItems: 'flex-end', paddingTop: 2 }}>
-            <span className="capsule capsule--eyebrow">
-              <span className="dot" /> Open to Werkstudent / Internship
-            </span>
-            <span className="capsule capsule--eyebrow">Munich · Augsburg, Germany</span>
-          </div>
+          {/* Right: location, plain text */}
+          <span style={{
+            fontFamily: 'Archivo, sans-serif', fontSize: 11, fontWeight: 600,
+            letterSpacing: '0.14em', textTransform: 'uppercase', color: 'var(--fg-3)',
+            whiteSpace: 'nowrap'
+          }}>Munich · Augsburg</span>
         </div>
       </div>
     </section>);
@@ -296,10 +623,11 @@ const PROJECTS = [
   thumb: 'assets/mere/thumb-main.jpg',
   period: '2023.05 – 2024.04',
   org: 'Graduation Thesis · Taiwan Textile Federation',
+  context: 'A smart nursing bra for relieving breast engorgement at home.',
   title: 'Mere',
-  blurb: 'A smart nursing bra with integrated heating/cooling e-textile that lets breastfeeding mothers relieve engorgement on their own — backed by an 18-person survey and 5 in-depth interviews.',
-  tags: ['UX Research', 'E-Textile', 'Mixed Methods', 'Wearable', 'Product Design'],
-  insight: 'n=18 survey · n=5 interviews · 4 interaction opportunities',
+  blurb: 'Integrated heating/cooling e-textile lets breastfeeding mothers manage engorgement on their own terms — and every design decision traces back to a specific finding, from an 18-person survey, 5 interviews, and a 3-user test.',
+  tags: ['UX Research', 'Product Design', 'Wearable'],
+  insight: 'n=18 survey · n=5 interviews · every decision evidence-traced',
   doodle: 'textile',
   images: {
     hero: {
@@ -309,28 +637,22 @@ const PROJECTS = [
     },
   },
   // ── Case study detail ──
-  role: 'Two-person graduation project · I led UX research and physical product design — interview design, survey, thematic analysis, and 3D modeling.',
-  overview: 'Mere is a smart nursing bra with integrated e-textile that delivers heating and cooling therapy, so a mother can manage breastfeeding engorgement on her own.',
+  role: 'Two-person graduation project. I led UX research and physical product design — interview design, survey, thematic analysis, and prototyping; my teammate led branding and vendor liaison with the Taiwan Textile Federation.',
+  overview: 'Mere is a smart nursing bra with integrated e-textile that delivers heating and cooling therapy, so a mother can manage breastfeeding engorgement on her own. The validated prototype was exhibited at Taiwan’s Young Designers’ Exhibition.',
   concept: {
     tagline: 'Feel the care. Cherish your moment.',
     text: 'Mère is a smart nursing bra that integrates e-textile technology, designed specifically for postpartum mothers.',
     formula: ['Nursing Bra', 'E-Textile', 'Temperature Control'],
     result: 'A smoother breastfeeding process',
   },
+  problemLabel: 'Postpartum care almost always centers the baby — Mère asks who is caring for the mother.',
   problem: 'In the postpartum period, milk engorgement and blocked ducts during breastfeeding often cause breast pain and make nursing difficult. Left unaddressed, this physical discomfort can build into emotional stress — and, in some cases, contribute to postpartum depression.',
   problemImage: { src: 'assets/mere/problem.jpg', label: 'Postpartum breastfeeding' },
-  contextImage: {
-    label: 'Context — the current routine',
-    note: 'Traditional warm-compress tools / breastfeeding context. Wide shot, no text.',
-  },
   methods: [
     'Survey (n=18)',
     'In-depth Interviews (n=5)',
-    'Mixed-Methods Analysis',
     'Thematic Analysis',
-    'Affinity Mapping',
     'Usability Testing (n=3)',
-    '3D Modeling',
     'Physical Prototyping',
   ],
   researchMethods: [
@@ -338,17 +660,13 @@ const PROJECTS = [
       name: 'Method 01',
       title: 'Survey',
       meta: 'n=18',
-      purpose: "To understand mothers' most pressing pain points and needs after birth, gather feedback on our initial feature concepts, and learn which features they'd want in the app.",
-      images: [
-        { label: 'Postpartum pain points, rated 1–5 · original survey results (Chinese)', src: 'assets/mere/survey-pain.jpg' },
-        { label: 'Hot/cold compress & massage frequency while nursing · grounds the thermal-care scope', src: 'assets/mere/survey-care.jpg' },
-      ],
+      purpose: "To understand mothers' most pressing pain points and needs after birth, gather feedback on our initial feature concepts, and learn which features they'd want in the app — results quantified in the findings below.",
     },
     {
       name: 'Method 02',
       title: 'Interviews',
       meta: 'n=5',
-      purpose: "After narrowing the focus to hot- and cold-compress therapy, to study mothers' habits and the friction points they hit throughout that routine.",
+      purpose: "After narrowing the focus to hot- and cold-compress therapy, to study mothers' habits and the friction points they hit throughout that routine — synthesised into the pain points below.",
     },
   ],
   painMatrix: [
@@ -371,67 +689,44 @@ const PROJECTS = [
       src: 'assets/mere/pain-3.png',
     },
   ],
-  methodsImages: [
-    { label: 'Affinity mapping', note: 'Interview insights clustered into themes.' },
-    { label: 'Research process', note: 'Survey + interview flow, or session photos.' },
-  ],
-  findingsIntro: 'Across the survey and interviews, mothers described the same physical and emotional strain. Engorgement pain was near-universal, and existing relief routines were slow, two-handed, and hard to manage alone with a newborn.',
+  findingsIntro: 'Across the survey and interviews, mothers described the same physical and emotional strain. Engorgement pain was near-universal, and existing relief routines were slow, two-handed, and hard to manage alone with a newborn — every design decision below traces back to one of these three findings.',
   findings: [
     {
-      title: '13 of 18 suffer engorgement pain and poor milk flow',
-      description: 'Engorgement pain was near-universal — yet relief meant slow, separate rituals.',
-      design: 'Thermal therapy built into the garment — always on-hand, not a separate task.',
+      title: '13 of 18 suffer engorgement pain and poor milk flow — F1',
+      description: 'F1 — Engorgement pain was near-universal, and mothers often breastfeed alone for privacy, unable to care for the baby and prepare relief tools at the same time.',
+      design: 'F1 → Thermal therapy built into the garment — always on-hand, not a separate task.',
     },
     {
-      title: '10 of 18 want a smoother hot- & cold-compress routine for engorgement',
-      description: 'Existing tools are slow, messy, and two-handed — hard to use holding a newborn.',
-      design: 'Heating e-textile in the bra makes the routine hands-free and self-operable.',
+      title: '10 of 18 want a smoother hot- & cold-compress routine — F2',
+      description: 'F2 — Existing tools are slow, messy, and two-handed — hard to use holding a newborn.',
+      design: 'F2 → Heating e-textile in the bra makes the routine hands-free and self-operable.',
     },
     {
-      title: '14 of 18 want an easy-to-store, easy-to-use compress product',
-      description: 'Comfort and hygiene ranked alongside function — nothing stiff or hard to wash.',
-      design: 'Skin-friendly e-textile with electronics that detach from a washable layer.',
+      title: '14 of 18 want an easy-to-store, easy-to-use compress product — F3',
+      description: 'F3 — Comfort and hygiene ranked alongside function — nothing stiff or hard to wash.',
+      design: 'F3 → Skin-friendly e-textile with electronics that detach from a washable layer.',
     },
-  ],
-  scopeNote: 'Mothers raised several needs — heating, cooling, and EMS massage. Under project time constraints we prioritized the most-cited need, thermal care, and scoped the final physical prototype around heating and cooling.',
-  findingsChart: {
-    label: 'Survey results chart (n=18)',
-    note: 'Bar / percentage chart you lay out manually: 75% breastfeeding pain · 42% inconvenient compress tools · 64% want soft, easy-clean materials.',
-  },
-  designImages: [
-    { label: 'Heating e-textile layer', note: 'The integrated thermal textile, up close.' },
-    { label: 'Front-zipper access', note: 'Self-operable opening for the heating pad.' },
-    { label: 'Washable construction', note: 'Electronics separated from the fabric layer.' },
   ],
   product: {
-    text: 'Mere is a complete set: the bra, thermal pads, and a clip-on controller — designed so a mother can run warm- or cold-compress therapy without separate tools.',
+    text: 'Scoped to thermal care first. Mère is a complete set: the bra, thermal pads, and a clip-on controller — designed so a mother can run warm- or cold-compress therapy without separate tools, and without help.',
     features: [
       'Temperature-controlled heating & cooling',
-      'Machine-washable fabric layer',
+      'Machine-washable fabric layer (F3)',
       'App-based session tracking',
     ],
     images: [
-      { src: 'assets/mere/intro-0.jpg', label: 'Mère' },
-      { src: 'assets/mere/intro-1.jpg', label: 'Mère' },
-      { src: 'assets/mere/intro-2.jpg', label: 'Mère' },
-      { src: 'assets/mere/intro-3.jpg', label: 'Mère' },
+      { src: 'assets/mere/intro-0.jpg', label: 'Mère — full set' },
+      { src: 'assets/mere/detail-2.jpg', label: 'Mère — worn, opening the pad pocket' },
+      { src: 'assets/mere/detail-1.jpg', label: 'Mère — worn in context, nursing' },
+      { src: 'assets/mere/detail-3.jpg', label: 'Mère — fabric detail' },
+      { src: 'assets/mere/detail-4.jpg', label: 'Mère — material swatches' },
     ],
   },
   app: {
-    text: 'A companion app visualises live temperature, logs each care session, and alerts mothers when a side runs too warm — helping prevent inflammation.',
+    text: 'A companion app visualises live temperature, logs each care session, and alerts mothers when a side runs too warm — a system concept, not an engineered build, that helps prevent inflammation.',
     images: [
       { src: 'assets/mere/app-1.jpg', label: 'Mère app' },
       { src: 'assets/mere/app-2.jpg', label: 'Mère app' },
-    ],
-  },
-  details: {
-    hero: { src: 'assets/mere/detail-1.jpg', label: 'Mère detail' },
-    images: [
-      { src: 'assets/mere/detail-2.jpg' },
-      { src: 'assets/mere/detail-3.jpg' },
-      { src: 'assets/mere/detail-4.jpg' },
-      { src: 'assets/mere/detail-5.jpg' },
-      { src: 'assets/mere/detail-6.jpg' },
     ],
   },
   anatomy: {
@@ -444,8 +739,7 @@ const PROJECTS = [
       { name: 'Soft textile layer', desc: 'Sits gently against sensitive skin.', icon: 'textile' },
     ],
     images: [
-      { label: 'Pad — exploded view', note: 'Layered diagram of the pad construction. Lay out part labels manually.' },
-      { label: 'Pad — in the bra', note: 'The pad seated in the front pocket of the bra. Clean detail shot.' },
+      { src: 'assets/mere/intro-1.jpg', label: 'Pad construction — exploded view and in-bra detail' },
     ],
   },
   controller: {
@@ -456,33 +750,12 @@ const PROJECTS = [
       'Detachable for washing',
     ],
     images: [
-      { label: 'Controller — detail', note: 'Clean shot of the clip-on controller.' },
-      { label: 'Detach, then wash', note: 'Controller removed from the bra before washing. No text.' },
+      { src: 'assets/mere/intro-2.jpg', label: 'Controller — detail and wash sequence' },
     ],
   },
   usage: {
     text: 'Three stages — warm to encourage flow, breastfeed, then cool to soothe.',
-    steps: [
-      { name: 'Hot · 40°C', desc: 'Warm compress 5–15 min to ease engorgement.', icon: 'hot' },
-      { name: 'Breastfeed', desc: 'Feed with the warmed, softened breast.', icon: 'baby' },
-      { name: 'Cold · 15°C', desc: 'Cold compress 15 min to reduce swelling.', icon: 'cold' },
-    ],
-    flow: [
-      'Pull the zipper',
-      'Install the heating pad',
-      'Breastfeed',
-      'Install the cold-compress pad',
-    ],
-    diagram: { label: 'Usage flow diagram', note: 'Step-by-step routine illustration. Lay out step labels manually.' },
-  },
-  appConcept: {
-    text: 'The companion app monitors live temperature, records session history, and alerts if a side runs too warm — helping mothers prevent inflammation. Designed as a system concept, not an engineered build.',
-    images: [
-      { label: 'App concept — Splash', note: 'Opening / welcome screen.' },
-      { label: 'App concept — Care history', note: 'Past sessions, ~15-min logs.' },
-      { label: 'App concept — Live session', note: 'Live temperature, e.g. 25°C.' },
-      { label: 'App concept — Alert', note: 'Skin-sensitivity reminder (Left / Right side).' },
-    ],
+    image: { src: 'assets/mere/usage-process.jpg', label: 'Usage process — warm compress, breastfeed, cold compress' },
   },
   userTesting: {
     setup: 'n=3 — one informed participant, two blind. Each completed the heating routine independently.',
@@ -497,33 +770,24 @@ const PROJECTS = [
       'Temperature dial was over-sensitive — startling against already-sensitive skin',
       'Controller placement was not intuitive — required looking down to see the interface',
     ],
-    photos: [
-      { label: 'Testing session', note: 'Mother completing the heating routine unaided.' },
-      { label: 'Zipper access issue', note: 'Detail of the too-small front opening.' },
-      { label: 'Control interaction', note: 'Reaching / looking down at the temperature dial.' },
-    ],
   },
-  outcome: 'Mere was exhibited at the Young Designers’ Exhibition (新一代設計展), where the public could experience the smart textile firsthand — including EMS massage and heating/cooling — while the validated heating prototype was tested with mothers as described above.',
-  outcomeImages: [
-    { label: 'Mère in use — postpartum care', src: 'assets/mere/outcome.jpg' },
-  ],
-  reflection: 'Testing surfaced that physical ergonomics — zipper range, dial sensitivity, controller placement — mattered as much as the thermal function itself, and were only visible once mothers used the product unaided.',
   designDirection: {
+    intro: 'How might we turn engorgement relief into something a mother can do alone, on the spot, with both hands free? Mothers raised several needs — heating, cooling, and EMS massage — and time constraints meant choosing one.',
     opportunities: [
       {
         title: 'Pressure Guidance',
-        signal: 'Incorrect massage force is a key cause of physical pain',
-        opportunity: 'Textile pressure sensors could give real-time feedback on force and direction',
+        signal: 'Incorrect massage force is a key cause of physical pain — textile pressure sensors could give real-time feedback.',
+        opportunity: 'Not pursued — added hardware complexity beyond project scope.',
       },
       {
         title: 'Embodied Interaction',
-        signal: 'The care happens directly on the body',
-        opportunity: 'The bra itself becomes the interface, delivering hot- and cold-compress therapy without external tools',
+        signal: 'Care happens directly on the body — the bra itself can become the hands-free interface.',
+        opportunity: 'Chosen: built hot/cold thermal care into the garment.',
       },
       {
         title: 'App Breastfeeding Tracking',
-        signal: 'Care is easy to lose track of, and inflammation escalates fast',
-        opportunity: 'An app logs each feeding and care session, helping mothers spot patterns and catch problems early',
+        signal: 'Care is easy to lose track of, and inflammation escalates fast.',
+        opportunity: 'Chosen: an app logs sessions and flags abnormal temperature early.',
       },
     ],
     focus: {
@@ -548,9 +812,10 @@ const PROJECTS = [
   accent: '#F39D34',
   period: '2025.03 – 2026.02',
   org: 'UX Research Internship · Pangolin',
+  context: 'User research behind the next iteration of two convertible carry bags.',
   title: 'Pangolin',
-  blurb: 'A solo UX-research internship where I designed, ran, and analysed sample-feedback interviews across two carry products’ second iteration — turning four-quadrant audience studies and region-by-region teardowns into prioritised recommendations for PM and designers.',
-  tags: ['UX Research', 'User Interviews', 'Audience Segmentation', 'Qualitative + Quantitative', 'Design Thinking'],
+  blurb: 'Working solo, I designed, ran, and analysed 25 sample-feedback interviews — turning four-quadrant audience studies and region-by-region teardowns into prioritised recommendations for PM and designers.',
+  tags: ['UX Research', 'Mixed Methods', 'Industry'],
   insight: '25 interviews · 2 four-quadrant audience studies · validated → retired a product hypothesis',
   doodle: 'tent',
   images: {
@@ -567,7 +832,7 @@ const PROJECTS = [
     tagline: 'Validate the audience before refining the product.',
   },
   problemLabel: 'Research Objective',
-  problem: 'Both carry products were entering a second iteration. Rather than redesigning parts, the brief was to interrogate the audience model and the product bets behind it — before any feature was touched.',
+  problem: 'Both carry products were entering a second iteration. Rather than redesigning parts, the brief was to interrogate the audience model and the product bets behind it — before any feature was touched. The findings changed real decisions: on the convertible bag, the interviews showed the secondary "toiletry-bag" positioning did not survive real use across almost every segment, and the team dropped it to refocus on the core small ↔ large convertible use case.',
   objectiveQuestions: [
     'Do the four hypothesised audience quadrants hold — and are their weighting and definitions right?',
     'What does each segment actually want — their goals, behaviours, pain points, and the words they use to describe them?',
@@ -606,7 +871,7 @@ const PROJECTS = [
           { label: 'Affinity board 3', src: 'assets/pangolin/affinity/3.jpg' },
         ],
         imagesCaption: 'Affinity boards from the interviews (original working notes).',
-        image: { label: 'Per-segment analysis (Frequent Overnighter shown)', src: 'assets/pangolin/segments.jpg' },
+        image: { label: 'Per-segment analysis (Regular Overnighter shown)', src: 'assets/pangolin/segments.jpg' },
         caption: 'Per-segment analysis sheet · AI-translated to English.',
       },
       {
@@ -708,6 +973,7 @@ const PROJECTS = [
       { title: 'Cross-disciplinary judgment as a research tool', text: 'Carrying product design, development, and business lenses alongside UX let me evaluate each finding for feasibility and brand fit, not just user value. That cross-disciplinary view is what turned raw interview data into recommendations stakeholders could act on directly.' },
       { title: 'AI collaboration requires a designed protocol', text: 'Unstructured AI use introduced two failure modes I had to design around: inconsistent extraction standards across team members, and AI stripping context to reach surface-level conclusions. I built a fixed extraction framework — defined criteria first, AI for aggregation, then my own review for context integrity. The second run was markedly faster because the protocol already existed.' },
       { title: 'Precision is a communication skill', text: 'From a PM review after the first report, I learned that vague synthesis language creates ambiguity for anyone without full interview context. I moved to Must / Should / Nice-to-have ratings and colour-coded segments to make priority legible at a glance. Precise wording matters as much as precise findings — a single imprecise term can shift how a team interprets a recommendation.' },
+      { title: 'What I’d do differently', text: 'Both the extraction protocol and the Must / Should / Nice-to-have framework were built reactively — after the first product’s report exposed the gap. Next time I’d design the AI-extraction protocol and the priority-rating scale before round one, so the phone-carry study started with the same rigor the convertible bag only reached on its second pass.' },
     ],
   },
 },
@@ -718,16 +984,18 @@ const PROJECTS = [
   accent: '#C8920E',
   period: '2026.03 – 2026.04',
   org: 'HCI Project',
+  context: 'An interactive gallery installation where strangers exchange voice notes about art.',
   title: 'Speaking Shell',
-  blurb: "Glowing shells placed in front of paintings, each holding a stranger's voice — what they felt looking at the same artwork. You pick one up, listen, and leave yours.",
-  tags: ['UX Research', 'Interaction Design', 'Concept'],
+  blurb: 'Glowing shells placed in front of paintings — you pick one up, hear what someone else felt looking at the same artwork, and leave your own.',
+  tags: ['Exploratory Research', 'Interaction Design', 'HCI'],
   insight: 'n=10 interviews · 5 visitor types · 3 design iterations',
   doodle: 'museum',
+  thumb: 'assets/voice-shell/cover-thumb.jpg',
   images: {
     hero: {
-      label: 'Hero — glowing shells in front of an artwork',
+      label: 'Hero — listening to a shell, and speaking into one',
       note: 'Lead with a hand sketch or the AI spatial scene. 16:9 or 4:3, no text overlaid.',
-      src: 'assets/voice-shell/hero.jpg',
+      src: 'assets/voice-shell/cover-hero.jpg',
     },
   },
   // ── Case study detail ──
@@ -736,6 +1004,7 @@ const PROJECTS = [
   concept: {
     tagline: 'Pick one up, listen, and leave yours.',
   },
+  problemLabel: 'Visitors never hear each other',
   problem: 'In a gallery, people have rich, private reactions to what they see — and almost no way to share them, or to hear anyone else’s. The experience stays one-directional: visitor and artwork, never visitor and visitor. The most interesting layer of a show — how other people read the same painting — vanishes silently the moment they walk away.',
   problemImage: { src: 'assets/voice-shell/problem.jpg', label: 'Visitors viewing alone — reactions stay private' },
   researchMethods: [
@@ -864,13 +1133,6 @@ const PROJECTS = [
       { src: 'assets/voice-shell/howitworks-06.jpg' },
     ],
   },
-  prototype: {
-    text: 'A mouse-driven prototype of the white-museum build lets you walk the full first-person flow — approach to trigger the whispers, hand-near to light a shell, pick up to listen, open to record.',
-    label: 'Interactive prototype — white museum build',
-    note: 'Screenshot placeholder. Embeddable build to be slotted in later.',
-    caption: 'Mouse prototype: walk up, hear the whispers, pick up a shell, leave your voice. (Live embed coming.)',
-    link: null,
-  },
   userTesting: {
     participants: 'n=6',
     method: 'Structured observation + think-aloud (2026.06). Brief concept intro → two shell-state images + questions → TouchDesigner-simulated proximity and recording interaction with a physical low-fi prototype.',
@@ -889,22 +1151,413 @@ const PROJECTS = [
       'Recording discoverability is low: only 1 of 5 found the record function unaided — an explicit cue (icon, colour, audio) is required.',
       'Privacy concern (2 of 6): participants wanted to know exactly when recording started and whether the voice was saved.',
     ],
-    photos: [
-      { label: 'Testing session — shell states shown to participant', note: 'From the test session folder.' },
-      { label: 'TouchDesigner proximity simulation in use', note: 'From the test session folder.' },
+  },
+  // Reflection removed 2026-07-20 (user decision): Reflection now runs on Pangolin only.
+},
+{
+  idx: '04',
+  slug: 'texttune',
+  // Muted blue sampled from the TextTune prototype's accent — distinct from the site's red so
+  // the product's own brand colour reads correctly in the interface screenshots.
+  accent: '#5E7A94',
+  period: '2026.05 – 2026.07',
+  org: 'HCI Research Project',
+  context: 'A reading tool that adapts each paragraph to how difficult it feels.',
+  title: 'TextTune',
+  blurb: 'Text is flat, but reading never is. TextTune zooms a text like a map — from 5% mind-map to 150% original with margin notes — tuning each paragraph to how difficult it feels, on a difficulty instrument I built.',
+  tags: ['UX Research', 'Prototyping', 'HCI'],
+  insight: '5-dimension rubric · 3 readers × 2 genres · consensus vs. personal difficulty',
+  doodle: 'textile',
+  thumb: 'assets/texttune/texttune-cover-01b.jpg',
+  images: {
+    hero: {
+      label: 'Hero — TextTune',
+      note: '',
+      src: 'assets/texttune/texttune-cover-02c.jpg',
+    },
+  },
+  // ── Case study detail ──
+  role: 'Three-person HCI research team. I designed the difficulty instrument, analysed the multi-reader results, and built and tested the prototype.',
+  concept: {
+    tagline: 'Tune the text, not the reader.',
+  },
+  // ── Opening hero beats — the one deliberate exception to standard-field rendering
+  //    (user-decided Option B, 2026-07-15): two large-type beats + the product
+  //    definition line, shown right after the hero image, before the standard sections.
+  //    Every other section below uses the same fields/renderer as the other case pages.
+  texttuneOpening: {
+    lines: [
+      'A text ships in one version.',
+      'But a reader shows up in a hundred states',
+      '— different background, different day, different paragraph.',
+    ],
+    productLine: "TextTune adapts a text's presentation paragraph by paragraph — from 5% to 150% — based on how difficult each paragraph actually feels.",
+  },
+  // The Problem section is retired (2026-07-16 polish pass) — its intro text now
+  // opens Building the Instrument via the generic researchMethodsIntro field
+  // (new, renderer-supported below; unset on every other project so they're unaffected).
+  // methodsLabel keeps the instrument-design framing for the section heading.
+  methodsLabel: 'Building the Instrument',
+  researchMethodsIntro: 'Before any interface, the text had to become measurable. I built a five-dimension rubric — Lexical, Syntactic/Stance, Propositional/Quantitative, Background knowledge, and Argumentative transparency — and used it to score a text paragraph by paragraph, 1–10 per dimension, with a free-text note explaining each score. An instrument is only as good as the data it produces — so we read.',
+  researchMethods: [
+    {
+      name: 'Decision 01',
+      title: 'Why five dimensions, not one score',
+      purpose: 'A single "hard/easy" rating conflates distinct sources of friction — a paragraph can be lexically simple but argumentatively opaque, or dense with numbers but easy to follow. Splitting the rubric surfaces which kind of difficulty is driving each spike, because different causes need different fixes.',
+    },
+    {
+      name: 'Decision 02',
+      title: 'Why per-paragraph, 1–10, plus notes',
+      purpose: 'A whole-text score (a Flesch-Kincaid grade level) can’t show where a reader hits a hard patch inside an otherwise easy text. Scoring every paragraph — and asking readers to explain the score in their own words — turns "this text is hard" into a curve with named causes at each peak.',
+    },
+  ],
+  // §3 Key Findings — findingsIntro only renders alongside project.findings (ring charts),
+  // which texttune doesn't use, so the intro text and chart are carried by insightGroups
+  // instead (matches the group's intro/groups/chart shape used elsewhere, e.g. Speaking Shell);
+  // AI comparison is the second group.
+  findingsChart: {
+    src: 'assets/texttune/difficulty-curve-multireader.png',
+    label: 'Difficulty curve — 3 readers, academic paper (20 paragraphs)',
+    note: 'Per-reader curves plus the cross-reader consensus line.',
+  },
+  // §3 Insights — restructured 2026-07-16 to exactly three reader-facing findings,
+  // each a claim + 2–3 sentences of evidence. AI-overlay content was cut as a
+  // planned-not-run method note, not a finding.
+  insightGroups: {
+    intro: 'Three readers each scored the same 20-paragraph academic paper (Design Frictions on Social Media) on the five-dimension rubric, and a 15-paragraph magazine feature (The Guardian) was scored on the same rubric — comparing how difficulty behaves across two genres.',
+    groups: [
+      {
+        label: 'What the readings taught us',
+        items: [
+          {
+            title: 'Readers bump into hard patches and easy patches within the same text — over and over.',
+            text: 'The paper’s difficulty is a mountain concentrated in its technical core (Methods/Results); the magazine’s is a flat floor with three isolated spikes tied to attribution and cultural background, not vocabulary. The one peak all three readers agreed on — the statistics/methods paragraphs (p12, p14) — also had the smallest disagreement of the whole text (SD as low as 0.42), the closest thing to text-intrinsic difficulty.',
+          },
+          {
+            title: 'What makes a passage hard differs per reader — it hides in five different dimensions of the writing.',
+            text: 'Several early paragraphs looked easy on average (~3/10) but had high disagreement between readers (SD 1.1–1.4) — one reader was climbing alone through the introduction while another’s flat low scores cancelled it out in the mean. Disagreement (SD), not the mean, is the signal for personal difficulty — and the five-dimension rubric (Lexical, Syntactic/Stance, Propositional/Quantitative, Background knowledge, Argumentative transparency) is what lets a peak be traced to a specific cause instead of a vague "this is hard."',
+          },
+          {
+            title: 'Readers distrust rewrites — they fear losing the real thing.',
+            text: 'Early testing surfaced this directly: readers were wary of any rewrite because they worried it would quietly drop or distort the source. That fear, more than the difficulty data itself, is what shaped the interface — 100% had to stay a fixed, always-reachable anchor to the original text, not just one stop among many.',
+          },
+        ],
+      },
     ],
   },
-  methodReflection: {
-    intro: 'A first observational study (n=6) confirmed the closed shape as the stronger attractor and revealed that affordance — not the concept — is the next design problem to solve.',
-    points: [
-      { title: 'Make the state mapping explicit', text: 'The closed/open → listen/record mapping has no shared convention. The next iteration adds an icon, colour, or text cue on each shell — proximity invites, but the state must be legible.' },
-      { title: "Break the don't touch norm", text: "A plinth, a floor label, or audio feedback on pick-up is needed to overcome the museum default. The design's current silence reads as exhibit/not-interaction." },
-      { title: 'Does voice build connection?', text: "Validate whether hearing a stranger's voice shifts how connected visitors feel to the artwork and to each other." },
-      { title: 'Lifecycle parameters', text: 'Tune the eviction rule — how many shells, how old, and how fast — in a live museum setting.' },
+  // §4 How Might We — bridge from the three insights into the interface response.
+  // Continuation style (like FocusAnchor): the section label already reads
+  // "How Might We…", so the item completes that sentence instead of repeating it.
+  howMightWe: [
+    "let readers tune a text's difficulty the moment they hit a wall — so they can move freely between versions without ever losing sight of the original?",
+  ],
+  // §5 The Product — video demo first (user-placed), then the interactive dial.
+  // §5 The Product — from measurement to intervention. Intro trimmed 2026-07-16:
+  // the "readers distrust rewrites" narrative now lives in insight #3 and the HMW
+  // above, so this only needs to state what the dial actually does.
+  product: {
+    concept: {
+      headline: 'Tune the text, zoom in from mind-map to margin notes',
+      image: { src: 'assets/texttune/concept-overview.png', label: 'The tuning range — 5% mind-map, 100% original (anchored), 150% original plus notes' },
+      points: [
+        { title: 'Zoom like a map', text: 'The gesture teaches itself — the same pinch you already use every day.' },
+        { title: '13 discrete stops', text: 'From 5% to 150%, each a deliberate presentation of the same text.' },
+        { title: '100% is the anchor', text: 'The original is always one stop away — never rewritten out of reach.' },
+      ],
+    },
+    text: 'The interface gives the reader a dial, not a single "simplify" toggle — driven by pinch-zoom: a continuous range from 5% (mind-map-level compression) to 100% (the original text, anchored) to 150% (the original text plus margin notes), moving across five rewrite dimensions — Vocabulary, Sentence length, Number, Tone, and Concreteness. 100% always anchors to the original.',
+    gesture: {
+      items: [
+        { title: 'Zoom out', text: 'The text recedes — through plainer language down to its mind map.' },
+        { title: 'Pinch to tune', text: 'Settle anywhere on the range; each paragraph re-renders at that level.' },
+        { title: 'Zoom in', text: 'Back to the original — and past it, into margin notes.' },
+      ],
+      note: 'The dial has no buttons — the gesture is the interface. The same pinch you already use on a map, repurposed for meaning.',
+      hint: 'On a trackpad: pinch, or Ctrl + scroll.',
+    },
+    video: {
+      src: 'assets/texttune/texttune-demo.mp4',
+      poster: 'assets/texttune/texttune-demo-poster.jpg',
+      caption: '45-second walkthrough — the whole dial is driven by pinch-zoom.',
+      link: 'https://tyler25-blip.github.io/TextTune/',
+    },
+    images: [
+      { src: 'assets/texttune/interface-shot.png', label: 'TextTune reader — gradient scale in use' },
+      { src: 'assets/texttune/panel-145.png', label: '145% — original text plus margin notes' },
+      { src: 'assets/texttune/mindmap-5pct.png', label: '5% — mind-map-level compression' },
+    ],
+  },
+  // §6 Reflection — intentionally REMOVED for now (user decision 2026-07-17: the
+  // limits-list framing lacked a sense of learning; a rewritten reflection may
+  // return later). Previous content is recoverable from git history /
+  // Portfolio.jsx.bak-20260717b. Do not re-add without the user's go-ahead.
+},
+{
+  idx: '05',
+  slug: 'focusanchor',
+  // Warm terracotta sampled from the product's own neumorphic accent colour.
+  accent: '#E8734A',
+  doodle: 'hinge',
+  period: '2026.04 – 2026.06',
+  org: 'TH Augsburg · Innovation & Entrepreneurship',
+  context: 'A focus Chrome extension for ADHD users that never blocks or shames.',
+  title: 'FocusAnchor',
+  blurb: 'Research said the industry playbook — streaks, blocking, guilt — was harming the very users it claimed to help. So we shipped the opposite.',
+  tags: ['UX Research', 'Product Strategy', 'Shipped'],
+  insight: '5/5-pattern interviews (n=5) · Kano reverse requirements · live Chrome extension (Claude API)',
+  thumb: 'assets/focusanchor/cover-thumb.jpg',
+  images: {
+    hero: {
+      label: 'FocusAnchor — a calm focus tool for the ADHD brain',
+      note: 'Cover image.',
+      src: 'assets/focusanchor/cover-hero.jpg',
+    },
+  },
+  // ── Case study detail ──
+  role: 'Two-person team-taught venture project (2026). I owned part of the business analysis — the Kano study and market positioning — ran the user testing, and refined the extension; my teammate built and shipped the core.',
+  overview: "FocusAnchor is a calm Chrome extension for ADHD brains: it breaks any task into laughably small steps and gently redirects wandering tabs — never blocking, never punishing. The two of us ran it as a class venture project, and the interesting part isn't the extension itself — it's the argument underneath it: mainstream productivity tools' \"engagement features\" are, for this audience, actively harmful.",
+  concept: {
+    tagline: 'The only browser extension that works with your ADHD brain — not against it.',
+  },
+  problemLabel: '"I just need to look up a word. Then in thirty minutes I\'m watching a video on how Norwegians build wooden cabins."',
+  problem: 'That\'s not laziness; it\'s a measurable executive-function deficit (Barkley). An estimated 366M adults worldwide live with ADHD — 6.76% adult prevalence (Song et al., 2021) — and almost every productivity tool on the market was built for neurotypical brains. We went to find out why they fail.',
+  problemImage: { src: 'assets/focusanchor/problem-procrastination.png', label: 'Knowing the task, not starting — executive-function paralysis' },
+  methods: [
+    'Semi-structured interviews (n=5, qualitative)',
+    'Literature review',
+    'Value Proposition Canvas',
+    'Kano model',
+    'Business Model Canvas',
+  ],
+  researchMethods: [
+    {
+      name: 'Method 01',
+      title: 'Interviews',
+      meta: 'n=5, qual.',
+      purpose: 'Semi-structured, 5-question protocol with ADHD adults, listening for where existing productivity tools broke down and why — synthesised into the three failure patterns below.',
+    },
+    {
+      name: 'Method 02',
+      title: 'Literature review',
+      meta: 'desk research',
+      purpose: 'Grounded the interview patterns in the executive-function literature (Barkley; de Zwaan, 2012) and in prior evidence that punishment-style design backfires (Desrochers, 2019; Campbell, 2023, CHI).',
+    },
+    {
+      name: 'Method 03',
+      title: 'VPC · Kano · BMC',
+      meta: 'synthesis',
+      purpose: 'A Value Proposition Canvas and Kano analysis turned the interview findings into a reverse-requirement insight — see Key Insights — and a Business Model Canvas scoped the freemium model.',
+    },
+  ],
+  findingsIntro: 'Across five qualitative interviews, the same three failure patterns kept surfacing — small sample, but a consistent pattern within it.',
+  findings: [
+    {
+      title: 'Task initiation paralysis (5/5)',
+      description: '"I could start any second. I just… don\'t." All five participants described knowing exactly what to do and still not starting.',
+      design: 'Break any goal into steps small enough that the first one is almost funny to skip.',
+    },
+    {
+      title: 'Time blindness (5/5)',
+      description: '"Sat down in Figma at 2pm, looked up and it was 8." Every participant lost track of time mid-task, with no natural checkpoint to notice.',
+      design: 'Use every new tab as a gentle, recurring checkpoint — never a hard interruption.',
+    },
+    {
+      title: 'Punishment backfires (4/5)',
+      description: 'Guilt-driven uninstalls: four of five had abandoned a blocking or streak-based app after it made them feel worse, not better.',
+      design: 'Design a Kano reverse requirement: remove blocking and streaks entirely rather than tune them.',
+    },
+  ],
+  insightGroups: {
+    intro: 'The market\'s blind spot: what mainstream tools call "engagement features" — streaks, leaderboards, blocking — read in this data as actively harmful to ADHD users. That\'s a Kano reverse requirement, and it\'s the one insight the whole product argument rests on.',
+    groups: [
+      {
+        label: 'The blind spot',
+        items: [
+          { title: '"The dead tree felt like surveillance"', text: 'A Forest user we interviewed deleted the app after its guilt-based streak mechanic backfired — direct evidence that gamified accountability reads as punishment to this audience, not motivation.' },
+          { title: 'Reverse requirement, not a tuning problem', text: 'Kano analysis on the interview data placed streaks, leaderboards, and blocking as reverse requirements: adding more of them makes the product worse for ADHD users, not better. The fix isn\'t softer blocking — it\'s no blocking.' },
+        ],
+      },
+      {
+        label: 'The product boundary',
+        items: [
+          { title: 'Participant D taught us who this isn\'t for', text: 'One interviewee wanted gamified accountability — streaks, leaderboards, the exact mechanics the other four rejected. She\'s not our user, and excluding her deliberately is what let the "never blocks" promise stay uncompromised for everyone else.' },
+        ],
+      },
+    ],
+  },
+  howMightWe: [
+    'help someone start — without ever blocking, punishing, or watching them?',
+  ],
+  product: {
+    text: 'Two modules, one promise: never a wall. Storage-only permissions\n— no tracking, no browsing-history access.',
+    features: [
+      'AI task decomposition (Claude API)',
+      'Gentle intention interceptor, 3 exits, never a block',
+      'Storage-only permissions — no tracking',
+    ],
+    images: [
+      { src: 'assets/focusanchor/product-mod-1.png', label: '1 · AI Task Decomposition', caption: 'You type a vague goal. Claude breaks it into 4–8 tiny steps — the first one laughably small, because starting is the hard part.' },
+      { src: 'assets/focusanchor/product-mod-2.png', label: '2 · Intention Interceptor', caption: 'Every new tab gently asks what you were doing. It never walls you off — you\'re always one calm tap from moving.' },
+    ],
+    cta: {
+      href: 'https://drive.google.com/drive/folders/1gqIisgZT8vTpz2J5y5Y6gW_CmeOSXgS9?usp=sharing',
+      label: 'Download the extension →',
+      note: 'Chrome · manual install — not yet on the Web Store',
+    },
+  },
+  usage: {
+    video: 'assets/focusanchor/promo.mp4',
+    videoCaption: 'Promo — the full flow in 52 seconds. Sound on optional.',
+    frames: [
+      { src: 'assets/focusanchor/flow-01-goal.png', caption: 'The report is due tomorrow. You type the goal — that\'s all FocusAnchor needs.' },
+      { src: 'assets/focusanchor/flow-02-steps.png', caption: 'Claude breaks it into five tiny steps. The first is laughably small — starting is the hard part.' },
+      { src: 'assets/focusanchor/flow-03-checkin.png', caption: 'Mid-task, you open a new tab to find a reference — a gentle check-in appears. It never blocks.' },
+      { src: 'assets/focusanchor/flow-04-lookup.png', caption: 'You choose "Look something up" — a real need is a real need, so it lets you through.' },
+      { src: 'assets/focusanchor/flow-05-pill.png', caption: 'The floating pill follows you to the feed, keeping the next step in sight until you head back.' },
+    ],
+  },
+  userTesting: {
+    setup: 'MVP is live and functional (extension-v3, Chrome) — storage-only permissions were a deliberate trust decision, not a default. A 10-user beta is scheduled for autumn 2026; effectiveness has not yet been validated with beta data, so this section reports build status, not outcomes.',
+    positives: [
+      'Interview-stage willingness to pay: €3–5/month — "a cup of coffee, if it actually works" (qualitative, n=5)',
+      'Extension is live and functional in Chrome today',
+    ],
+    negatives: [
+      'No beta data yet — the 10-user beta (autumn 2026) is the next real test of whether the never-blocks approach holds up in daily use',
+      'Sample is small and qualitative (n=5) — directional, not conclusive',
     ],
   },
 },
+{
+  slug: 'snapwear',
+  accent: '#B85C7A',
+  doodle: 'textile',
+  period: '2025.09 – 2025.10',
+  org: 'Self-Initiated Product Project',
+  context: 'A product-centric beauty app that turns scattered platform research into one cited answer.',
+  title: 'SnapWear',
+  blurb: 'An end-to-end Figma UI built on a defined design system — designed to collapse a 26-minute in-store platform hop into one cited Advice Card.',
+  tags: ['UI Design', 'Figma', 'Journey Mapping'],
+  insight: 'Survey (n=12) · journey mapping · competitive analysis · end-to-end Figma prototype',
+  thumb: 'assets/snapwear/cover-card.jpg',
+  images: {
+    hero: {
+      label: 'SnapWear — snap it, match it, wear it',
+      note: 'Cover image.',
+      src: 'assets/snapwear/hero.jpg',
+    },
+  },
+  // ── Case study detail ──
+  role: 'Solo project — research, UI design, and design system, start to finish.',
+  overview: 'SnapWear is a product-centric beauty-review app: point your camera at a product on a store shelf — or search it — and get one cited Advice Card, a suitability score tied to your own skin profile, instead of a feed of mixed opinions to scroll through.',
+  concept: {
+    tagline: 'Snap it, match it, wear it.',
+  },
+  problemLabel: '"I already struggle to decide. For foundation especially, I end up checking reviews everywhere — half an hour\'s gone, crouched at the shelf."',
+  problemImage: { src: 'assets/snapwear/journey.jpg', label: 'The in-store decision journey — shelf to Reddit to YouTube to Google and back' },
+  methods: [
+    'Survey (n=12, convenience sample)',
+    'Journey mapping',
+    'Competitive analysis',
+  ],
+  researchMethodsIntro: 'The sample is small and self-selected — 12 people from a friends-and-acquaintances convenience sample. I\'m reading it as directional, not conclusive: enough to sharpen the problem, not enough to prove the solution.',
+  researchMethods: [
+    {
+      name: 'Method 01',
+      title: 'Survey',
+      meta: 'n=12',
+      purpose: 'A 10–12 question survey targeting three questions: where in-store decision friction lives, where information breaks down across platforms, and whether a "people like me" comparison would be trusted. Produced the 26-minute / 3-platform / 5.5-confidence baseline above.',
+    },
+    {
+      name: 'Method 02',
+      title: 'Journey mapping',
+      meta: 'qualitative',
+      purpose: 'Mapped the shelf-to-decision journey — pick up, check Reddit, check YouTube, check Google, back to shelf — to locate exactly where shoppers stalled or gave up. That structure carries through directly to the interface.',
+    },
+    {
+      name: 'Method 03',
+      title: 'Competitive analysis',
+      meta: 'desk research',
+      purpose: 'Reviewed existing beauty-review and comparison apps to confirm the gap: most are feed-first, browsed like social media. None collapse research into one cited, product-centric answer.',
+    },
+  ],
+  statRings: {
+    intro: 'The survey was built around three questions — where friction lives, where information breaks down, and whether a "people like me" comparison is trusted. Only one of the three carries a number that means what it looks like; the other two are read qualitatively.',
+    items: [
+      {
+        figure: '26 min',
+        sub: '(n=12) Average in-store research time',
+        note: '8 of 12 said information was scattered, not missing — lost between apps, not absent.',
+      },
+      {
+        figure: '3',
+        sub: '(n=12) Platforms switched per decision',
+        note: 'Hesitation is category-dependent — foundation and function-first products take longest, because claims and effectiveness language vary by seller.',
+      },
+      {
+        figure: '5.5 / 10',
+        sub: '(n=12) Self-reported decision confidence',
+        note: 'Respondents wanted proof from "people like me" — surfaced qualitatively, treated as a design assumption to validate, not a measured finding.',
+      },
+    ],
+  },
+  howMightWe: [
+    'bring every piece of product information a decision needs into one place — cutting decision time and raising purchase confidence?',
+  ],
+  product: {
+    concept: {
+      headline: 'Wireframe to prototype',
+      image: { src: 'assets/snapwear/overview-composite.jpg', label: 'SnapWear MVP overview' },
+      imageCaption: 'From lo-fi wireframes to the final UI: the four MVP moves — personalized recommendations, product-centric review hub, quick compare, and the community data flywheel — annotated on the screens they live in.',
+    },
+    text: 'Twenty-six minutes of scattered platform-hopping, collapsed into one card: a suitability score, the claims behind it, and where they came from. I built this product-centric — one product, one page, one verdict — instead of feed-centric, because a feed is built to be browsed, and browsing was exactly the friction this research was trying to remove. Everything below works backward from that one card.',
+    features: [
+      'Cited AI Advice Card (skin-profile-powered)',
+      'Side-by-side compare with match scores',
+      'Guided review flow → community data flywheel',
+    ],
+    narrativeImages: [
+      { src: 'assets/snapwear/main-flow.jpg', label: 'Main flow, start to finish', caption: 'The main flow, start to finish: home → scan → advice → compare → decide. Every screen after this one works backward from that path.' },
+      { src: 'assets/snapwear/search.jpg', label: 'Product-centric search', caption: 'Product-centric search — browse by category or scan in-store; results ranked by skin-profile match, filterable by brand and price.' },
+      { src: 'assets/snapwear/personalize.jpg', label: 'Skin profile & review hub', caption: 'Skin profile setup feeds the "people like me" engine; internal wear-tests and external platform reviews sit in one hub, with a guided posting flow — wear timeline, shade, verdict — that keeps contributions structured.' },
+    ],
+    images: [
+      { src: 'assets/snapwear/flow-02-advice.jpg', label: 'Advice Card detail', caption: 'Score, the factors behind it, and a stated confidence level — including an honest "shade may run slightly light" caveat when the data doesn\'t fully support the claim. AI explainability, not just a number.' },
+      { src: 'assets/snapwear/design-system.jpg', label: 'Design system board', caption: 'Tokens and reusable components keep every screen consistent.' },
+    ],
+    cta: {
+      href: 'https://www.figma.com/proto/zeuYV5rio6elynVkeBrflL/Untitled?node-id=125-643&t=7YDYQ2qKGO9XUBlO-1',
+      label: 'View the Figma prototype →',
+      note: 'Click-through prototype',
+    },
+  },
+},
 ];
+
+/* Homepage order (2026-07-17): industry work leads, exploratory Speaking Shell closes.
+   idx is renumbered from this sequence — edit the slugs here to reorder, nothing else. */
+const PROJECT_SEQUENCE = ['pangolin', 'mere', 'snapwear', 'texttune', 'focusanchor', 'voice-shell'];
+PROJECTS.sort((a, b) => PROJECT_SEQUENCE.indexOf(a.slug) - PROJECT_SEQUENCE.indexOf(b.slug));
+PROJECTS.forEach((p, i) => { p.idx = String(i + 1).padStart(2, '0'); });
+
+
+/* ---------- Scroll reveal — fade/rise once when scrolled into view ---------- */
+function Reveal({ children, delay = 0 }) {
+  const ref = React.useRef(null);
+  React.useEffect(() => {
+    const el = ref.current; if (!el) return;
+    if (!('IntersectionObserver' in window)) { el.classList.add('is-in'); return; }
+    let ioAlive = false; // IO delivers an initial callback in healthy browsers
+    const io = new IntersectionObserver((entries) => {
+      ioAlive = true;
+      if (entries[0].isIntersecting) { el.classList.add('is-in'); io.disconnect(); }
+    }, { threshold: 0.12, rootMargin: '0px 0px -8% 0px' });
+    io.observe(el);
+    const failsafe = setTimeout(() => { if (!ioAlive) el.classList.add('is-in'); }, 3000);
+    return () => { io.disconnect(); clearTimeout(failsafe); };
+  }, []);
+  return <div ref={ref} className="reveal" style={delay ? { transitionDelay: delay + 'ms' } : undefined}>{children}</div>;
+}
 
 
 /* ---------- Hand-drawn doodles (one per project) ---------- */
@@ -1074,7 +1727,7 @@ function ProjectCard({ p, rotate, onOpen }) {
           letterSpacing: '0.16em', textTransform: 'uppercase',
           color: 'rgba(255,255,255,0.5)', marginBottom: 14
         }}>
-          <span>№ {p.idx} · {p.org}</span>
+          <span>{p.context || p.org}</span>
           <span>{p.period}</span>
         </div>
 
@@ -1114,14 +1767,13 @@ function ProjectCard({ p, rotate, onOpen }) {
         {/* Insight pinned to bottom */}
         <div style={{
           marginTop: 'auto', paddingTop: 14,
-          borderTop: '1px dashed rgba(255,255,255,0.2)',
+          borderTop: '1px solid rgba(255,255,255,0.2)',
           display: 'flex', justifyContent: 'space-between', alignItems: 'baseline',
           fontFamily: 'Archivo, sans-serif',
           fontSize: 11, fontWeight: 600, letterSpacing: '0.08em',
           color: 'rgba(255,255,255,0.7)', textTransform: 'uppercase'
         }}>
-          <span>{p.insight}</span>
-          <span style={{ fontSize: 14 }}>View case study ↗</span>
+          <span style={{ fontSize: 14, marginLeft: 'auto' }}>View case study ↗</span>
         </div>
       </div>
     </article>);
@@ -1153,7 +1805,7 @@ function ProjectRow({ p, onOpen, last }) {
         cursor: 'pointer',
       }}>
       {/* Hero image (falls back to the doodle if no hero is set) */}
-      <div style={{ overflow: 'hidden', borderRadius: 2, aspectRatio: '4 / 3', background: 'var(--paper-deep)' }}>
+      <div style={{ overflow: 'hidden', borderRadius: 12, aspectRatio: '4 / 3', background: 'var(--paper-deep)' }}>
         {heroSrc ? (
           <img src={heroSrc} alt={p.title} loading="lazy"
             style={{
@@ -1174,7 +1826,7 @@ function ProjectRow({ p, onOpen, last }) {
           fontFamily: 'Archivo, sans-serif', fontSize: 11, fontWeight: 600,
           letterSpacing: '0.14em', textTransform: 'uppercase', color: 'var(--fg-3)', marginBottom: 16,
         }}>
-          <span>№ {p.idx} · {p.org}</span>
+          <span>{p.context || p.org}</span>
           <span style={{ whiteSpace: 'nowrap' }}>{p.period}</span>
         </div>
         <h3 style={{
@@ -1191,12 +1843,11 @@ function ProjectRow({ p, onOpen, last }) {
         </div>
         <div style={{
           display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', gap: 16,
-          paddingTop: 16, borderTop: '1px dashed var(--hairline)',
+          paddingTop: 16, borderTop: '1px solid var(--hairline)',
           fontFamily: 'Archivo, sans-serif', fontSize: 11, fontWeight: 600, letterSpacing: '0.08em',
           textTransform: 'uppercase', color: 'var(--fg-3)',
         }}>
-          <span>{p.insight}</span>
-          <span style={{ color: 'var(--ink)', fontSize: 13, whiteSpace: 'nowrap' }}>
+          <span style={{ color: 'var(--ink)', fontSize: 13, whiteSpace: 'nowrap', marginLeft: 'auto' }}>
             View case study{' '}
             <span style={{ display: 'inline-block', transform: hover ? 'translateX(4px)' : 'translateX(0)', transition: 'transform 240ms ease' }}>↗</span>
           </span>
@@ -1231,7 +1882,7 @@ function Lightbox({ item, onClose }) {
         padding: 'clamp(16px, 4vw, 64px)', cursor: 'zoom-out',
       }}>
       <img src={item.src} alt={item.label || ''}
-        style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain', borderRadius: 2 }} />
+        style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain', borderRadius: 12 }} />
       {item.label && (
         <div style={{
           position: 'absolute', bottom: 22, left: 24, right: 24, textAlign: 'center',
@@ -1261,7 +1912,7 @@ function ImagePlaceholder({ label, note, src, aspectRatio = '4 / 3', height }) {
         onClick={openLightbox ? () => openLightbox({ src, label }) : undefined}
         style={{
           width: '100%', height: height || 'auto', objectFit: height ? 'cover' : undefined,
-          display: 'block', borderRadius: 2,
+          display: 'block', borderRadius: 12,
           cursor: openLightbox ? 'zoom-in' : undefined,
         }} />
     );
@@ -1276,7 +1927,7 @@ function ImagePlaceholder({ label, note, src, aspectRatio = '4 / 3', height }) {
       position: 'relative',
       background: 'var(--paper-deep)',
       border: '1px solid var(--hairline)',
-      borderRadius: 2,
+      borderRadius: 12,
       overflow: 'hidden',
       aspectRatio: height ? undefined : aspectRatio,
       height: height || undefined,
@@ -1310,13 +1961,131 @@ function ImageGrid({ images, minCol = 220, aspectRatio = '4 / 3', maxWidth }) {
   return (
     <div style={{
       display: 'grid',
-      gridTemplateColumns: `repeat(auto-fit, minmax(${minCol}px, 1fr))`,
+      gridTemplateColumns: `repeat(auto-fit, minmax(min(${minCol}px, 100%), 1fr))`,
       gap: 20,
       maxWidth: maxWidth || undefined
     }}>
       {images.map((im, i) => (
         <ImagePlaceholder key={i} label={im.label} note={im.note} src={im.src} aspectRatio={aspectRatio} />
       ))}
+    </div>
+  );
+}
+
+/* ---------- Usage stepper: one large frame, click through a scenario ---------- */
+function UsageStepper({ frames }) {
+  const [idx, setIdx] = useState(0);
+  const f = frames[idx];
+  const btn = (off) => ({
+    fontFamily: 'Archivo, sans-serif', fontWeight: 700, fontSize: 11,
+    letterSpacing: '0.12em', textTransform: 'uppercase',
+    padding: '9px 18px', borderRadius: 999,
+    border: '1px solid var(--capsule-border)', background: 'transparent',
+    color: off ? 'var(--fg-4)' : 'var(--ink)', cursor: off ? 'default' : 'pointer',
+  });
+  return (
+    <div style={{ maxWidth: 860, margin: '0 auto' }}>
+      <p style={{ fontFamily: 'Archivo, sans-serif', fontSize: 'clamp(16px, 1.7vw, 19px)', lineHeight: 1.5, color: 'var(--fg-1)', margin: '0 0 18px', minHeight: 58 }}>
+        <span style={{ color: 'var(--accent)', fontWeight: 700, marginRight: 10 }}>{idx + 1}/{frames.length}</span>
+        {f.caption}
+      </p>
+      <img key={idx} className="usage-frame-img" src={f.src} alt={f.caption || ''}
+        style={{ width: '100%', height: 'auto', display: 'block', borderRadius: 12, border: '1px solid var(--hairline)' }} />
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: 18 }}>
+        <button className="usage-stepper-back" onClick={() => setIdx(Math.max(0, idx - 1))} disabled={idx === 0} style={btn(idx === 0)}>← Back</button>
+        <div style={{ display: 'flex', gap: 8 }}>
+          {frames.map((_, i) => (
+            <span key={i} onClick={() => setIdx(i)} style={{ width: 8, height: 8, borderRadius: '50%', cursor: 'pointer', background: i === idx ? 'var(--accent)' : 'var(--fg-4)' }} />
+          ))}
+        </div>
+        <button className="usage-stepper-next" onClick={() => setIdx(Math.min(frames.length - 1, idx + 1))} disabled={idx === frames.length - 1} style={btn(idx === frames.length - 1)}>Next →</button>
+      </div>
+    </div>
+  );
+}
+
+/* ---------- Product gallery: big image + thumbnail strip, autoplay + manual ---------- */
+function ProductGallery({ images }) {
+  const openLightbox = React.useContext(LightboxCtx);
+  const [active, setActive] = useState(0);
+  const [paused, setPaused] = useState(false);
+  const timerRef = useRef(null);
+  const count = images ? images.length : 0;
+  // Stable key so the autoplay interval doesn't reset on every unrelated re-render
+  // (the caller passes a freshly-filtered array each render).
+  const imagesKey = images ? images.map((im) => im.src).join('|') : '';
+
+  useEffect(() => {
+    if (count <= 1 || paused) return;
+    timerRef.current = setInterval(() => {
+      setActive((i) => (i + 1) % count);
+    }, 5000);
+    return () => clearInterval(timerRef.current);
+  }, [imagesKey, count, paused]);
+
+  if (!images || !images.length) return null;
+  const im = images[active];
+
+  return (
+    <div
+      onMouseEnter={() => setPaused(true)}
+      onMouseLeave={() => setPaused(false)}
+    >
+      <div style={{ marginBottom: 12 }}>
+        <img
+          src={im.src}
+          alt={im.label || ''}
+          loading="lazy"
+          onClick={openLightbox ? () => openLightbox({ src: im.src, label: im.label }) : undefined}
+          style={{
+            width: '100%', aspectRatio: '16 / 9', objectFit: 'cover',
+            display: 'block', borderRadius: 12,
+            cursor: openLightbox ? 'zoom-in' : undefined,
+          }}
+        />
+      </div>
+      {images.length > 1 && (
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+          <button
+            type="button"
+            aria-label="Previous image"
+            onClick={() => setActive((i) => (i - 1 + images.length) % images.length)}
+            style={{
+              flexShrink: 0, width: 28, height: 28, display: 'flex', alignItems: 'center', justifyContent: 'center',
+              background: 'transparent', border: '1px solid var(--hairline)', borderRadius: 12,
+              color: 'var(--fg-2)', cursor: 'pointer', fontFamily: 'Archivo, sans-serif', fontSize: 15, lineHeight: 1,
+            }}
+          >‹</button>
+          <div style={{ display: 'grid', gridTemplateColumns: `repeat(${images.length}, 1fr)`, gap: 8, flex: 1 }}>
+            {images.map((t, i) => (
+              <img
+                key={i}
+                src={t.src}
+                alt={t.label || ''}
+                loading="lazy"
+                onClick={() => setActive(i)}
+                style={{
+                  width: '100%', aspectRatio: '4 / 3', objectFit: 'cover', display: 'block', borderRadius: 12,
+                  cursor: 'pointer',
+                  border: i === active ? '1px solid var(--ink)' : '1px solid var(--hairline)',
+                  opacity: i === active ? 1 : 0.62,
+                  transition: 'opacity 180ms ease',
+                }}
+              />
+            ))}
+          </div>
+          <button
+            type="button"
+            aria-label="Next image"
+            onClick={() => setActive((i) => (i + 1) % images.length)}
+            style={{
+              flexShrink: 0, width: 28, height: 28, display: 'flex', alignItems: 'center', justifyContent: 'center',
+              background: 'transparent', border: '1px solid var(--hairline)', borderRadius: 12,
+              color: 'var(--fg-2)', cursor: 'pointer', fontFamily: 'Archivo, sans-serif', fontSize: 15, lineHeight: 1,
+            }}
+          >›</button>
+        </div>
+      )}
     </div>
   );
 }
@@ -1380,6 +2149,494 @@ function BandBreakdown({ data }) {
 /* =============================================================
    PROJECT DETAIL VIEW
    ============================================================= */
+// ── TextTune "difficulty dial" — a concept demo of how one paragraph looks at
+//    four points on the dial. The product itself is a continuous range; this
+//    interactive shows only four anchor points so the idea reads at a glance.
+//    Example text is the REAL prototype content (Tyler's gradient-reader build,
+//    tyler25-blip.github.io/TextTune): the same Introduction paragraph from the
+//    Semantic Reader paper (Head et al.), pulled from the prototype's own
+//    per-level rewrite data at levels 5 / 100 / 125. 5% uses the mind-map asset.
+function TextTuneDial() {
+  const narrow = useIsNarrow(760);
+  // Concept labels replace exact percentages on the left rail (2026-07-16 polish —
+  // the rail communicates position on the dial, not a number to memorise). Exact
+  // stop numbers are kept as small print inside the right-hand detail panel only.
+  const REWRITE_DIMENSIONS = ['Vocabulary', 'Sentence length', 'Number', 'Tone', 'Concreteness'];
+  const ANCHORS = [
+    {
+      pct: 5, stop: 1,
+      concept: 'Mind map',
+      band: 'map',
+      name: 'Mind map',
+      blurb: 'The whole passage compressed to its concept map — structure before sentences.',
+      kind: 'image',
+      src: 'assets/texttune/mindmap-5pct.png',
+    },
+    {
+      pct: 25, stop: 2,
+      concept: 'Below 100%',
+      band: 'below',
+      name: 'Compressed rewrite',
+      blurb: 'Rewritten shorter and plainer. The claim survives; the jargon is spent.',
+      kind: 'text',
+      text: 'Research papers are dense, and there are more of them every year. Finding a paper got easy once search engines came along. But reading one still means staring at a flat PDF, almost the same as decades ago. A team of researchers wondered if AI could fix this, making papers easier to read and more accessible, without even changing the PDF. They call their effort the Semantic Reader Project, and they built ten small tools to test the idea.',
+      // Highlight spans map 1:1 (by array position) to compareHighlights below —
+      // marking "this says the same thing as that", not attributing to a specific
+      // rewrite dimension (that would be fabricated precision).
+      highlights: ['Research papers are dense', 'Finding a paper got easy once search engines came along', 'staring at a flat PDF, almost the same as decades ago'],
+      // Same three claims, located inside the 100% original text (ANCHORS[originalAnchorIdx].text)
+      // — used to highlight the "original, for comparison" block with the matching phrases.
+      compareHighlights: ['exponential growth of scientific publication', 'Academic search engines help scholars discover research papers', 'based on a static PDF format, has remained largely unchanged for many decades'],
+    },
+    {
+      pct: 100, stop: 7,
+      concept: '100% — Original',
+      band: 'original',
+      name: 'Original, anchored',
+      blurb: 'The source text, word for word. The dial always returns here, so adjusting difficulty never means losing the real thing.',
+      kind: 'text',
+      text: 'The exponential growth of scientific publication and increasing interdisciplinary nature of scientific progress makes it increasingly hard for scholars to keep up with the latest developments. Academic search engines help scholars discover research papers, and automated summarization helps scholars triage between them. But when it comes to actually reading research papers, the process, based on a static PDF format, has remained largely unchanged for many decades. This is a problem because digesting technical research papers is difficult.',
+      highlights: ['exponential growth of scientific publication', 'Academic search engines help scholars discover research papers', 'based on a static PDF format, has remained largely unchanged for many decades'],
+    },
+    {
+      pct: 145, stop: 12,
+      concept: 'Above 100%',
+      band: 'above',
+      name: 'Original + margin notes',
+      blurb: 'The original text, unchanged, with glosses for the hard terms alongside.',
+      kind: 'text',
+      text: 'The exponential growth of scientific publication and increasing interdisciplinary nature of scientific progress makes it increasingly hard for scholars to keep up with the latest developments. Academic search engines help scholars discover research papers, and automated summarization helps scholars triage between them. But when it comes to actually reading research papers, the process, based on a static PDF format, has remained largely unchanged for many decades. This is a problem because digesting technical research papers is difficult.',
+      notes: [
+        { anchor: 'interdisciplinary nature', gloss: 'research increasingly draws on and connects multiple different fields at once' },
+      ],
+    },
+  ];
+  const [sel, setSel] = useState(2); // default: 100% (original, anchored)
+  const cur = ANCHORS[sel];
+
+  // Render body text with note anchors underlined so the margin-note idea is legible.
+  const renderText = (text, notes) => {
+    if (!notes || notes.length === 0) return text;
+    let parts = [text];
+    notes.forEach((n, ni) => {
+      const next = [];
+      parts.forEach((part) => {
+        if (typeof part !== 'string') { next.push(part); return; }
+        const idx = part.indexOf(n.anchor);
+        if (idx === -1) { next.push(part); return; }
+        next.push(part.slice(0, idx));
+        next.push(
+          <span key={'a' + ni} style={{
+            borderBottom: '1.5px solid var(--accent)', color: 'var(--ink)', fontWeight: 600,
+          }}>{n.anchor}</span>
+        );
+        next.push(part.slice(idx + n.anchor.length));
+      });
+      parts = next;
+    });
+    return parts;
+  };
+
+  // Render body text with cross-version highlight spans (low-opacity accent background) —
+  // marks "this phrase corresponds to a phrase in the other version", not a dimension label.
+  const renderHighlighted = (text, highlights) => {
+    if (!highlights || highlights.length === 0) return text;
+    let parts = [text];
+    highlights.forEach((phrase, hi) => {
+      const next = [];
+      parts.forEach((part) => {
+        if (typeof part !== 'string') { next.push(part); return; }
+        const idx = part.indexOf(phrase);
+        if (idx === -1) { next.push(part); return; }
+        next.push(part.slice(0, idx));
+        next.push(
+          <span key={'h' + hi} style={{
+            background: 'color-mix(in srgb, var(--accent) 20%, transparent)',
+            borderRadius: 4, padding: '0 2px',
+          }}>{phrase}</span>
+        );
+        next.push(part.slice(idx + phrase.length));
+      });
+      parts = next;
+    });
+    return parts;
+  };
+
+  // 13-stop dial, matching the prototype's own scale exactly (see interface-shot.png):
+  // a slim vertical track with a tick per stop, top chip = "Map", fill running dark
+  // top (simplest) → deep (richest) to echo the prototype's own gradient direction.
+  const ALL_STOPS = [5, 25, 45, 55, 75, 85, 100, 105, 115, 125, 135, 145, 150];
+  const TRACK_H = 260;
+  // Values below are copied from the real TextTune prototype bundle
+  // (tyler25-blip.github.io/TextTune, assets/index-IF5ZACez.js — un-minified inline
+  // styles), not eyeballed. Rail: width 5, radius 3, sunken + inset neu shadow.
+  const TRACK_W = 6;
+  // Neumorphic shadow literals from the prototype CSS (index-DA-mbK1V.css)
+  const NEU_RAISED_SM = '-3px -3px 7px rgba(255,255,255,0.88), 3px 3px 7px rgba(170,170,174,0.42)';
+  const NEU_IN_SM = 'inset 2px 2px 5px rgba(170,170,174,0.42), inset -2px -2px 5px rgba(255,255,255,0.88)';
+  const rawY = (stopIdx1based) => ((stopIdx1based - 1) / (ALL_STOPS.length - 1)) * TRACK_H;
+
+  // Concept-only axis labels — no exact stop percentages (2026-07-16 revision per
+  // Nicole's sketch: "below 100" and "above 100" are ranges, not single points, so
+  // they read as ranges, not numbers to memorise). 100% keeps its label since it is
+  // a genuine fixed point on the dial, not a range.
+  const RANGE_LABEL = {
+    below: '5%–95% (compressed)',
+    original: '100% — Original',
+    above: '105%–150% (original + notes)',
+  };
+
+  // The four concept zones as *segments* on the track, not point-anchors:
+  //   map    → the top chip only (no track segment)
+  //   below  → the track from just under stop 1 to just above stop "100"
+  //   original → a single fixed point at the "100" tick
+  //   above  → the track from just below "100" to the bottom
+  // Segment boundaries sit at the true proportional stop position of 100% (rawY of
+  // its index in ALL_STOPS), so "below" and "above" cover the real below/above range.
+  const stop100Idx = ALL_STOPS.indexOf(100) + 1; // 1-based index into ALL_STOPS
+  const y100 = rawY(stop100Idx);
+  const SEG_GAP = 3; // px gap so the 100% point and the segments read as visually distinct
+
+  const belowAnchorIdx = ANCHORS.findIndex((a) => a.band === 'below');
+  const originalAnchorIdx = ANCHORS.findIndex((a) => a.band === 'original');
+  const aboveAnchorIdx = ANCHORS.findIndex((a) => a.band === 'above');
+
+  const VerticalAxis = () => (
+    <div role="group" aria-label="Difficulty dial — Mind map, below 100%, 100%, above 100%"
+      style={{ display: 'grid', gap: 10 }}>
+      <div style={{
+        fontFamily: 'Archivo, sans-serif', fontSize: 11, fontWeight: 600,
+        letterSpacing: '0.14em', textTransform: 'uppercase', color: 'var(--fg-3)',
+      }}>The dial, four selectable zones</div>
+
+      {/* Top: Map chip — copied 1:1 from the TextTune prototype bundle (component l1):
+          span 22×22, borderRadius 6, NO border (neumorphic: raised shadow unselected,
+          inset shadow selected), 12×12 three-node SVG (stroke 1.3, fill none), "Map"
+          label 13px (weight 500 faint unselected / 600 accent selected), gap 10.
+          Portfolio addition: the chip's horizontal centre is aligned to the track's
+          centre line below (marginLeft -(22-TRACK_W)/2), per Nicole's request. */}
+      <div style={{ display: 'flex', gap: 10, alignItems: 'center' }}>
+        <button
+          type="button"
+          onClick={() => setSel(0)}
+          aria-pressed={sel === 0}
+          data-testid="segment-map"
+          style={{
+            width: 22, height: 22, flexShrink: 0,
+            marginLeft: -(22 - TRACK_W) / 2,
+            display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
+            borderRadius: 999, padding: 0, cursor: 'pointer',
+            background: 'var(--paper)', border: 'none',
+            boxShadow: sel === 0 ? NEU_IN_SM : NEU_RAISED_SM,
+            transition: 'box-shadow 0.15s',
+          }}>
+          {/* mindmap glyph — exact prototype geometry: viewBox 0 0 12 12, stroke 1.3,
+              circles (6,2.6)(2.6,9)(9.4,9) r1.4, lines 6,4→3.2,7.7 and 6,4→8.8,7.7 */}
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true"
+            stroke={sel === 0 ? 'var(--accent)' : 'var(--fg-3)'} strokeWidth="1.3"
+            style={{ flexShrink: 0, display: 'block', transition: 'stroke 0.15s' }}>
+            <circle cx="6" cy="2.6" r="1.4" />
+            <circle cx="2.6" cy="9" r="1.4" />
+            <circle cx="9.4" cy="9" r="1.4" />
+            <line x1="6" y1="4" x2="3.2" y2="7.7" />
+            <line x1="6" y1="4" x2="8.8" y2="7.7" />
+          </svg>
+        </button>
+        <button
+          type="button"
+          onClick={() => setSel(0)}
+          aria-pressed={sel === 0}
+          data-testid="segment-map-label"
+          style={{
+            textAlign: 'left', background: 'none', border: 'none', cursor: 'pointer', padding: '2px 0',
+          }}>
+          <div style={{
+            fontFamily: 'Archivo, sans-serif',
+            fontWeight: sel === 0 ? 600 : 500, fontSize: 13,
+            lineHeight: 1.25, color: sel === 0 ? 'var(--accent)' : 'var(--fg-3)',
+            transition: 'color 0.15s',
+          }}>Map</div>
+        </button>
+      </div>
+
+      {/* Track: 13 real ticks for scale honesty, but the clickable targets are two
+          whole segments (below/above) plus one fixed point (100%) — selecting a
+          segment highlights its full run on the track, not a single dot. */}
+      <div style={{ display: 'flex', gap: 14, paddingTop: 4 }}>
+        <div style={{ position: 'relative', width: TRACK_W, height: TRACK_H, flexShrink: 0 }}>
+          {/* Base track — TextTune prototype rail: borderRadius 3, vertical
+              gradient fill (light → dark, top → bottom), copied from the
+              prototype bundle (assets/index-IF5ZACez.js): linear-gradient(var(--accent-soft), var(--accent)).
+              No border. Inset shadow dropped — reads muddy over a gradient fill. */}
+          <div aria-hidden="true" style={{
+            position: 'absolute', inset: 0, borderRadius: 8,
+            background: 'linear-gradient(color-mix(in srgb, var(--accent) 50%, #fff), var(--accent))',
+          }} />
+          {/* No tick marks along the run — the prototype only marks the fixed
+              100% point (below); intermediate stops are implicit in the gradient. */}
+
+          {/* Below-100 segment — clickable, fills the whole top run when selected */}
+          <button
+            type="button"
+            onClick={() => setSel(belowAnchorIdx)}
+            aria-pressed={sel === belowAnchorIdx}
+            aria-label="Below 100 percent — compressed range"
+            data-testid="segment-below"
+            style={{
+              position: 'absolute', left: -4.5, top: 0, width: 15, height: Math.max(0, y100 - SEG_GAP),
+              borderRadius: 8, cursor: 'pointer', border: 'none', padding: 0,
+              // prototype indicates selection with a solid FILL only — no border, no
+              // inset ring. (verified: prototype marker is a filled block + shadow-sm.)
+              background: sel === belowAnchorIdx ? 'color-mix(in srgb, var(--accent) 55%, transparent)' : 'transparent',
+              transition: 'background 0.15s',
+            }}
+          />
+
+          {/* Above-100 segment — clickable, fills the whole bottom run when selected */}
+          <button
+            type="button"
+            onClick={() => setSel(aboveAnchorIdx)}
+            aria-pressed={sel === aboveAnchorIdx}
+            aria-label="Above 100 percent — original with margin notes range"
+            data-testid="segment-above"
+            style={{
+              position: 'absolute', left: -4.5, top: y100 + SEG_GAP, width: 15,
+              height: Math.max(0, TRACK_H - y100 - SEG_GAP),
+              borderRadius: 8, cursor: 'pointer', border: 'none', padding: 0,
+              // solid fill only — no border / inset ring (prototype idiom)
+              background: sel === aboveAnchorIdx ? 'color-mix(in srgb, var(--accent) 55%, transparent)' : 'transparent',
+              transition: 'background 0.15s',
+            }}
+          />
+
+          {/* 100% — a fixed point, drawn in the prototype's qx line idiom, but with
+              the asymmetric left-short/right-long shape from the prototype bundle:
+              the line's left end sits just left of the rail centre (a short stub)
+              and the line extends mostly to the right. Selected = total 30w / 3h /
+              accent; unselected = total 12w / 2h / fg-3. Left stub stays ~3-4px in
+              both states; the right side carries the length change. The button hit
+              area is unchanged (generous, rail-centred) for click/tap ergonomics. */}
+          <button
+            type="button"
+            onClick={() => setSel(originalAnchorIdx)}
+            aria-pressed={sel === originalAnchorIdx}
+            aria-label="100 percent — original"
+            data-testid="segment-original"
+            style={{
+              position: 'absolute', left: -14, top: y100 - 10,
+              width: 34, height: 20, cursor: 'pointer',
+              background: 'none', border: 'none', padding: 0, zIndex: 2,
+              display: 'flex', alignItems: 'center', justifyContent: 'flex-start',
+            }}>
+            <span aria-hidden="true" style={{
+              display: 'block',
+              marginLeft: 14 - 4, // rail centre (button centre - 3px left stub)
+              width: sel === originalAnchorIdx ? 30 : 12,
+              height: sel === originalAnchorIdx ? 3 : 2,
+              borderRadius: 12,
+              background: sel === originalAnchorIdx ? 'var(--accent)' : 'var(--fg-3)',
+              transition: 'background 0.15s, height 0.15s, width 0.15s, margin-left 0.15s',
+            }} />
+          </button>
+        </div>
+
+        {/* Axis-side labels — ranges for the segments, a fixed label for 100%,
+            no exact stop percentages (5%/25%/145% never appear here). */}
+        <div style={{ position: 'relative', height: TRACK_H, flex: 1 }}>
+          <button
+            type="button"
+            onClick={() => setSel(belowAnchorIdx)}
+            aria-pressed={sel === belowAnchorIdx}
+            style={{
+              position: 'absolute', left: 0, top: Math.max(0, y100 - SEG_GAP) / 2 - 14,
+              textAlign: 'left', background: 'none', border: 'none', cursor: 'pointer', padding: '2px 0',
+            }}>
+            <div style={{
+              fontFamily: 'Archivo, sans-serif', fontWeight: 700, fontSize: 12.5,
+              lineHeight: 1.25, color: sel === belowAnchorIdx ? 'var(--ink)' : 'var(--fg-3)',
+              transition: 'color 0.15s',
+            }}>{RANGE_LABEL.below}</div>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => setSel(originalAnchorIdx)}
+            aria-pressed={sel === originalAnchorIdx}
+            style={{
+              position: 'absolute', left: 0, top: y100 - 9,
+              textAlign: 'left', background: 'none', border: 'none', cursor: 'pointer', padding: '2px 0',
+            }}>
+            <div style={{
+              fontFamily: 'Archivo, sans-serif', fontWeight: 700, fontSize: 12.5,
+              lineHeight: 1.25, color: sel === originalAnchorIdx ? 'var(--ink)' : 'var(--fg-3)',
+              transition: 'color 0.15s',
+            }}>{RANGE_LABEL.original}</div>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => setSel(aboveAnchorIdx)}
+            aria-pressed={sel === aboveAnchorIdx}
+            style={{
+              position: 'absolute', left: 0,
+              top: y100 + SEG_GAP + Math.max(0, TRACK_H - y100 - SEG_GAP) / 2 - 14,
+              textAlign: 'left', background: 'none', border: 'none', cursor: 'pointer', padding: '2px 0',
+            }}>
+            <div style={{
+              fontFamily: 'Archivo, sans-serif', fontWeight: 700, fontSize: 12.5,
+              lineHeight: 1.25, color: sel === aboveAnchorIdx ? 'var(--ink)' : 'var(--fg-3)',
+              transition: 'color 0.15s',
+            }}>{RANGE_LABEL.above}</div>
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+
+  return (
+    <div>
+      <div style={{
+        display: 'grid',
+        gridTemplateColumns: narrow ? '1fr' : 'minmax(0, 0.42fr) minmax(0, 1fr)',
+        gap: 'clamp(20px, 3vw, 44px)', alignItems: 'start',
+      }}>
+        {/* Left: vertical tick-mark axis, matching the prototype's own scale UI */}
+        <VerticalAxis />
+
+        {/* Right: the selected stop's explanation + the same paragraph at that stop */}
+        <div style={{
+          border: '1px solid var(--hairline)', borderRadius: 12,
+          padding: 'clamp(22px, 2.6vw, 36px)', minHeight: narrow ? 0 : 300,
+        }}>
+          <div style={{
+            display: 'flex', alignItems: 'baseline', gap: 12, marginBottom: 16,
+            flexWrap: 'wrap',
+          }}>
+            <span style={{
+              fontFamily: "'Big Shoulders Display', Helvetica, sans-serif", fontWeight: 800,
+              fontSize: 'clamp(18px, 2vw, 24px)', lineHeight: 1, color: 'var(--ink)',
+              letterSpacing: '-0.01em',
+            }}>{cur.name}</span>
+          </div>
+          <p style={{
+            fontFamily: 'Archivo, sans-serif', fontSize: 14.5, lineHeight: 1.55,
+            color: 'var(--fg-2)', margin: '0 0 8px 0', maxWidth: 620,
+          }}>{cur.blurb}</p>
+          <div style={{
+            fontFamily: 'Archivo, sans-serif', fontSize: 11.5, color: 'var(--fg-3)',
+            marginBottom: 20,
+          }}>{cur.pct}% on the dial</div>
+
+          {cur.kind === 'image' ? (
+            <img src={cur.src} alt="TextTune 5% view — mind-map compression of the passage"
+              loading="lazy"
+              style={{ width: '100%', height: 'auto', display: 'block', borderRadius: 12, border: '1px solid var(--hairline)' }} />
+          ) : (
+            <>
+            <div style={{
+              display: 'grid',
+              gridTemplateColumns: (cur.notes || (cur.band === 'below' && !narrow)) ? 'minmax(0, 1fr) minmax(150px, 0.44fr)' : '1fr',
+              gap: 'clamp(16px, 2vw, 28px)',
+            }}>
+              <p style={{
+                fontFamily: 'Archivo, sans-serif', fontSize: 'clamp(15px, 1.6vw, 18px)',
+                lineHeight: 1.65, color: 'var(--fg-1)', margin: 0,
+              }}>{cur.notes ? renderText(cur.text, cur.notes) : renderHighlighted(cur.text, cur.highlights)}</p>
+
+              {/* Margin notes (145% stop) */}
+              {cur.notes && cur.notes.length > 0 && (
+                <div style={{
+                  borderLeft: narrow ? 'none' : '1px solid var(--hairline)',
+                  borderTop: narrow ? '1px solid var(--hairline)' : 'none',
+                  paddingLeft: narrow ? 0 : 'clamp(14px, 1.6vw, 20px)',
+                  paddingTop: narrow ? 16 : 0,
+                  display: 'grid', gap: 14, alignContent: 'start',
+                }}>
+                  <div style={{
+                    fontFamily: 'Archivo, sans-serif', fontSize: 10.5, fontWeight: 600,
+                    letterSpacing: '0.14em', textTransform: 'uppercase', color: 'var(--fg-3)',
+                  }}>Margin notes</div>
+                  {cur.notes.map((n, ni) => (
+                    <div key={ni}>
+                      <div style={{ fontFamily: 'Archivo, sans-serif', fontWeight: 700, fontSize: 13.5, color: 'var(--accent)', marginBottom: 3 }}>{n.anchor}</div>
+                      <div style={{ fontFamily: 'Archivo, sans-serif', fontSize: 13, lineHeight: 1.5, color: 'var(--fg-2)' }}>{n.gloss}</div>
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              {/* Five rewrite-dimension list (45% stop only, req #7) — a plain list of the
+                  dimensions the rewrite can move along, not a per-span attribution. */}
+              {cur.band === 'below' && (
+                <div style={{
+                  borderLeft: narrow ? 'none' : '1px solid var(--hairline)',
+                  borderTop: narrow ? '1px solid var(--hairline)' : 'none',
+                  paddingLeft: narrow ? 0 : 'clamp(14px, 1.6vw, 20px)',
+                  paddingTop: narrow ? 16 : 0,
+                  display: 'grid', gap: 10, alignContent: 'start',
+                }}>
+                  <div style={{
+                    fontFamily: 'Archivo, sans-serif', fontSize: 10.5, fontWeight: 600,
+                    letterSpacing: '0.14em', textTransform: 'uppercase', color: 'var(--fg-3)',
+                  }}>Rewrite dimensions</div>
+                  {REWRITE_DIMENSIONS.map((d, di) => (
+                    <div key={di} style={{ display: 'flex', alignItems: 'baseline', gap: 8 }}>
+                      <span style={{ fontFamily: "'Big Shoulders Display', Helvetica, sans-serif", fontWeight: 900, fontSize: 13, color: 'var(--accent)' }}>{di + 1}</span>
+                      <span style={{ fontFamily: 'Archivo, sans-serif', fontSize: 13, color: 'var(--fg-2)' }}>{d}</span>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            {/* Original, for comparison — full-width, directly under the compressed
+                example so the gap between stops is visible at a glance, not just
+                described. Below-100 band only (req: pair the compressed stop with
+                the 100% source in the same view). */}
+            {cur.band === 'below' && (
+              <div style={{
+                marginTop: 'clamp(16px, 2vw, 22px)', paddingTop: 'clamp(14px, 1.8vw, 18px)',
+                borderTop: '1px solid var(--hairline)',
+              }}>
+                <div style={{
+                  fontFamily: 'Archivo, sans-serif', fontSize: 10.5, fontWeight: 600,
+                  letterSpacing: '0.14em', textTransform: 'uppercase', color: 'var(--fg-3)',
+                  marginBottom: 8,
+                }}>The original, for comparison — 100%</div>
+                <p style={{
+                  fontFamily: 'Archivo, sans-serif', fontSize: 13.5, lineHeight: 1.55,
+                  color: 'var(--fg-3)', margin: 0, maxWidth: 620,
+                }}>{renderHighlighted(ANCHORS.find((a) => a.band === 'original').text, cur.compareHighlights)}</p>
+              </div>
+            )}
+            </>
+          )}
+        </div>
+      </div>
+      {/* Caption — kept as a grid sibling of the axis/card row above (same column
+          template) so its text sits in the right-hand column and its left edge
+          lines up exactly with the card's inner content (card padding-left applied
+          here too), instead of the grid's outer edge. Narrow layout collapses to a
+          single column like the row above, so alignment holds at both widths. */}
+      <div style={{
+        display: 'grid',
+        gridTemplateColumns: narrow ? '1fr' : 'minmax(0, 0.42fr) minmax(0, 1fr)',
+        gap: 'clamp(20px, 3vw, 44px)',
+        marginTop: 'clamp(16px, 2vw, 22px)',
+      }}>
+        {!narrow && <div aria-hidden="true" />}
+        <div style={{
+          fontFamily: 'Archivo, sans-serif', fontSize: 12.5, lineHeight: 1.5,
+          color: 'var(--fg-3)', maxWidth: 720,
+          paddingLeft: 'clamp(22px, 2.6vw, 36px)', paddingRight: 'clamp(22px, 2.6vw, 36px)',
+        }}>
+          The same paragraph (the Introduction, from the Semantic Reader paper used in the prototype) shown at four points on the dial — real output from the linked prototype, not a mock-up. Highlighted phrases mark where the two versions say the same thing, not which rewrite dimension changed them.
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function ProjectDetailView({ project }) {
   // Scroll to top when detail view loads
   useEffect(() => {
@@ -1542,13 +2799,13 @@ function ProjectDetailView({ project }) {
                   {project.concept.formula.map((part, i) => (
                     <React.Fragment key={part}>
                       {i > 0 && (<span style={{ fontFamily: 'Archivo, sans-serif', fontWeight: 700, fontSize: 16, color: 'var(--paper)', opacity: 0.55 }}>+</span>)}
-                      <span style={{ fontFamily: 'Archivo, sans-serif', fontSize: 13, fontWeight: 500, letterSpacing: '0.02em', padding: '6px 12px', borderRadius: 2, color: 'var(--paper)', border: '1px solid rgba(237,242,244,0.32)' }}>{part}</span>
+                      <span style={{ fontFamily: 'Archivo, sans-serif', fontSize: 13, fontWeight: 500, letterSpacing: '0.02em', padding: '6px 12px', borderRadius: 999, color: 'var(--paper)', border: '1px solid rgba(237,242,244,0.32)' }}>{part}</span>
                     </React.Fragment>
                   ))}
                   {project.concept.result && (
                     <React.Fragment>
                       <span style={{ fontFamily: 'Archivo, sans-serif', fontWeight: 700, fontSize: 16, color: 'var(--accent)' }}>=</span>
-                      <span style={{ fontFamily: 'Archivo, sans-serif', fontSize: 13, fontWeight: 700, letterSpacing: '0.02em', padding: '6px 12px', borderRadius: 2, color: 'var(--ink)', background: 'var(--paper)' }}>{project.concept.result}</span>
+                      <span style={{ fontFamily: 'Archivo, sans-serif', fontSize: 13, fontWeight: 700, letterSpacing: '0.02em', padding: '6px 12px', borderRadius: 999, color: 'var(--ink)', background: 'var(--paper)' }}>{project.concept.result}</span>
                     </React.Fragment>
                   )}
                 </div>
@@ -1567,20 +2824,50 @@ function ProjectDetailView({ project }) {
           </div>
         )}
 
+        {/* ══════════════════════════════════════════════════════════════════
+            TextTune — opening hero beats only (slug-gated exception, user-decided
+            Option B, 2026-07-15). Every other section below this uses the same
+            standard fields/renderer as the other case pages (see project.problem,
+            researchMethods, insightGroups, product, methodReflection above).
+           ══════════════════════════════════════════════════════════════════ */}
+        {project.slug === 'texttune' && project.texttuneOpening && (
+          <div style={{ marginBottom: 'clamp(80px, 13vw, 168px)' }}>
+            <div style={{ display: 'grid', gap: 'clamp(20px, 3vw, 32px)', maxWidth: 760, marginBottom: 'clamp(32px, 4vw, 48px)' }}>
+              {project.texttuneOpening.lines.map((line, i) => (
+                <p key={i} style={{
+                  fontFamily: "'Big Shoulders Display', Helvetica, sans-serif",
+                  fontWeight: 800,
+                  fontSize: 'clamp(30px, 4vw, 46px)',
+                  lineHeight: 1.1, letterSpacing: '-0.02em',
+                  color: 'var(--ink)',
+                  margin: 0,
+                }}>{line}</p>
+              ))}
+            </div>
+            <div style={{ borderTop: '1px solid var(--hairline)', paddingTop: 'clamp(20px, 2.6vw, 32px)' }}>
+              <p style={{ ...bodyText, fontSize: 'clamp(17px, 1.7vw, 20px)', maxWidth: 680 }}>{project.texttuneOpening.productLine}</p>
+            </div>
+          </div>
+        )}
 
-        {/* ── The Problem — full page (text + image) ── */}
-        {project.problem && (
+        {/* ── The Problem — full page (text + image). Falls back to image-only
+             (full width) when a project carries no problem body text, just a
+             quote label + supporting image — e.g. SnapWear. ── */}
+        {(project.problem || project.problemImage) && (
           <div style={{ marginBottom: 'clamp(80px, 13vw, 168px)' }}>
             <SectionLabel num="01">{project.problemLabel || 'The Problem'}</SectionLabel>
             <div style={{
               display: 'grid',
-              gridTemplateColumns: (narrow || !project.problemImage) ? '1fr' : 'minmax(0, 1fr) minmax(0, 0.78fr)',
+              gridTemplateColumns: (narrow || !project.problemImage || !project.problem) ? '1fr' : 'minmax(0, 1fr) minmax(0, 0.78fr)',
               gap: 'clamp(32px, 5vw, 72px)',
               alignItems: 'center',
             }}>
-              <p style={{ ...bodyText, fontSize: 'clamp(19px, 2.1vw, 27px)', lineHeight: 1.5, maxWidth: 600 }}>{project.problem}</p>
+              {project.problem && (
+                <p style={{ ...bodyText, fontSize: 'clamp(19px, 2.1vw, 27px)', lineHeight: 1.5, maxWidth: 600 }}>{project.problem}</p>
+              )}
               {project.problemImage && (
-                <ImagePlaceholder src={project.problemImage.src} label={project.problemImage.label} height={'clamp(320px, 38vw, 460px)'} />
+                <ImagePlaceholder src={project.problemImage.src} label={project.problemImage.label}
+                  height={project.problem ? 'clamp(320px, 38vw, 460px)' : 'clamp(360px, 44vw, 560px)'} />
               )}
             </div>
             {project.objectiveQuestions && project.objectiveQuestions.length > 0 && (
@@ -1605,13 +2892,16 @@ function ProjectDetailView({ project }) {
         {/* ── Research Methods — full page: title + two method boxes ── */}
         {project.researchMethods && project.researchMethods.length > 0 && (
           <div style={{ marginBottom: 'clamp(80px, 13vw, 168px)' }}>
-            <SectionLabel num="02">Research Methods</SectionLabel>
+            <SectionLabel num="02">{project.methodsLabel || 'Research Methods'}</SectionLabel>
+            {project.researchMethodsIntro && (
+              <p style={{ ...bodyText, fontSize: 'clamp(17px, 1.8vw, 21px)', maxWidth: 780, marginBottom: 'clamp(32px, 4.5vw, 52px)' }}>{project.researchMethodsIntro}</p>
+            )}
             <div style={{ display: 'grid', gap: 'clamp(12px, 1.5vw, 20px)' }}>
               {project.researchMethods.map((m, i) => {
                 const hasImgs = (m.images && m.images.length > 0) || m.image;
                 return (
                   <div key={i} style={{
-                    border: '1px solid var(--hairline)', borderRadius: 2,
+                    border: '1px solid var(--hairline)', borderRadius: 12,
                     padding: 'clamp(26px, 3vw, 44px)',
                     display: 'grid',
                     gridTemplateColumns: (narrow || !hasImgs) ? '1fr' : 'minmax(0, 1fr) minmax(0, 1.2fr)',
@@ -1716,7 +3006,7 @@ function ProjectDetailView({ project }) {
                         {s.prefs && (
                           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: 'clamp(14px, 1.6vw, 20px)' }}>
                             {s.prefs.map((p, pi) => (
-                              <div key={pi} style={{ border: '1px solid var(--hairline)', borderRadius: 2, padding: 'clamp(16px, 1.8vw, 22px)' }}>
+                              <div key={pi} style={{ border: '1px solid var(--hairline)', borderRadius: 12, padding: 'clamp(16px, 1.8vw, 22px)' }}>
                                 <div style={{ fontFamily: 'Archivo, sans-serif', fontWeight: 700, fontSize: 14, color: 'var(--fg-1)', marginBottom: 8 }}>{p.label}</div>
                                 <div style={{ fontFamily: 'Archivo, sans-serif', fontSize: 13, lineHeight: 1.5, color: 'var(--fg-2)' }}>{p.note}</div>
                               </div>
@@ -1779,9 +3069,9 @@ function ProjectDetailView({ project }) {
             {project.findingsIntro && (
               <p style={{ ...bodyText, fontSize: 17, maxWidth: 760, marginBottom: 'clamp(44px, 6vw, 80px)' }}>{project.findingsIntro}</p>
             )}
-            <div style={{
+            <div className="findings-grid" style={{
               display: 'grid',
-              gridTemplateColumns: `repeat(${project.findings.length}, minmax(0, 1fr))`,
+              '--fcount': project.findings.length,
               columnGap: 'clamp(24px, 4vw, 56px)',
               rowGap: 24,
               justifyItems: 'center',
@@ -1813,12 +3103,64 @@ function ProjectDetailView({ project }) {
         )}
 
 
-        {/* ── Seven Insights — grouped grid (visitor / interaction) ── */}
+        {/* ── Stat rings — three big-number findings, each inside a decorative
+             ring (not a progress arc — these numbers aren't percentages, so the
+             ring is a pure circle-selection mark, matching the same SVG-ring
+             visual language as the Key Findings rings above). SnapWear only. ── */}
+        {project.statRings && project.statRings.items && project.statRings.items.length > 0 && (
+          <div style={{ marginBottom: 'clamp(80px, 13vw, 168px)' }}>
+            <SectionLabel>{(() => {
+              const n = project.statRings.items.length;
+              const words = ['Zero', 'One', 'Two', 'Three', 'Four', 'Five', 'Six'];
+              return `${words[n] || n} Insights`;
+            })()}</SectionLabel>
+            {project.statRings.intro && (
+              <p style={{ ...bodyText, fontSize: 17, maxWidth: 760, marginBottom: 'clamp(44px, 6vw, 80px)' }}>{project.statRings.intro}</p>
+            )}
+            <div style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
+              columnGap: 'clamp(24px, 4vw, 56px)', rowGap: 'clamp(40px, 5vw, 64px)',
+            }}>
+              {project.statRings.items.map((s, i) => {
+                const R = 52, C = 2 * Math.PI * R;
+                const figSize = s.figure.length > 5 ? 22 : 30;
+                return (
+                  <div key={i} style={{ textAlign: 'center' }}>
+                    <svg viewBox="0 0 120 120" style={{ width: 'clamp(140px, 15vw, 190px)', height: 'auto', display: 'block', margin: '0 auto' }}>
+                      <circle cx="60" cy="60" r={R} fill="none" stroke="var(--accent)" strokeWidth="9" />
+                      <text x="60" y="62" textAnchor="middle" dominantBaseline="middle"
+                        fontFamily="'Big Shoulders Display', Helvetica, sans-serif" fontWeight="900" fontSize={figSize} fill="var(--ink)">{s.figure}</text>
+                    </svg>
+                    <div style={{ fontFamily: 'Archivo, sans-serif', fontWeight: 700, fontSize: 15.5, color: 'var(--fg-1)', lineHeight: 1.35, marginTop: 18 }}>{s.sub}</div>
+                    {s.note && (
+                      <p style={{ fontFamily: 'Archivo, sans-serif', fontSize: 14.5, lineHeight: 1.55, color: 'var(--fg-2)', margin: '10px auto 0', maxWidth: 280 }}>{s.note}</p>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        )}
+
+        {/* ── Insights — grouped grid, heading counts the actual items ── */}
         {project.insightGroups && (
           <div style={{ marginBottom: 'clamp(80px, 13vw, 168px)' }}>
-            <SectionLabel>Seven Insights</SectionLabel>
+            <SectionLabel>{(() => {
+              const n = project.insightGroups.groups.reduce((sum, g) => sum + g.items.length, 0);
+              const words = ['Zero', 'One', 'Two', 'Three', 'Four', 'Five', 'Six', 'Seven', 'Eight', 'Nine', 'Ten', 'Eleven', 'Twelve'];
+              return `${words[n] || n} Insights`;
+            })()}</SectionLabel>
             {project.insightGroups.intro && (
               <p style={{ ...bodyText, fontSize: 17, maxWidth: 760, marginBottom: 'clamp(36px, 5vw, 64px)' }}>{project.insightGroups.intro}</p>
+            )}
+            {project.findingsChart && (
+              <div style={{ marginBottom: 'clamp(40px, 5.5vw, 64px)' }}>
+                <ImagePlaceholder src={project.findingsChart.src} label={project.findingsChart.label} note={project.findingsChart.note} aspectRatio={'16 / 9'} />
+                {project.findingsChart.note && (
+                  <div style={{ fontFamily: 'Archivo, sans-serif', fontSize: 12.5, color: 'var(--fg-3)', marginTop: 10 }}>{project.findingsChart.note}</div>
+                )}
+              </div>
             )}
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: 'clamp(32px, 5vw, 72px)' }}>
               {project.insightGroups.groups.map((g, gi) => (
@@ -1852,8 +3194,10 @@ function ProjectDetailView({ project }) {
                   padding: 'clamp(20px, 2.6vw, 34px) 0',
                   borderBottom: i < project.howMightWe.length - 1 ? '1px solid var(--hairline)' : 'none',
                 }}>
-                  <span style={{ fontFamily: "'Big Shoulders Display', Helvetica, sans-serif", fontWeight: 900, fontSize: 'clamp(24px, 3vw, 40px)', color: 'var(--accent)', lineHeight: 1, flexShrink: 0 }}>{String(i + 1).padStart(2, '0')}</span>
-                  <span style={{ fontFamily: "'Big Shoulders Display', Helvetica, sans-serif", fontWeight: 700, fontSize: 'clamp(22px, 3vw, 40px)', color: 'var(--ink)', lineHeight: 1.12, letterSpacing: '-0.01em' }}>{q}</span>
+                  {project.howMightWe.length > 1 && (
+                    <span style={{ fontFamily: "'Big Shoulders Display', Helvetica, sans-serif", fontWeight: 900, fontSize: 'clamp(24px, 3vw, 40px)', color: 'var(--accent)', lineHeight: 1, flexShrink: 0 }}>{String(i + 1).padStart(2, '0')}</span>
+                  )}
+                  <span style={{ fontFamily: "'Big Shoulders Display', Helvetica, sans-serif", fontWeight: 700, fontSize: 'clamp(22px, 3vw, 40px)', color: project.howMightWe.length === 1 ? 'var(--accent)' : 'var(--ink)', lineHeight: 1.12, letterSpacing: '-0.01em' }}>{q}</span>
                 </div>
               ))}
             </div>
@@ -1990,7 +3334,7 @@ function ProjectDetailView({ project }) {
                   <div key={i} style={{ borderTop: `2px solid ${kept ? 'var(--accent)' : 'var(--hairline)'}`, paddingTop: 'clamp(16px, 2vw, 22px)' }}>
                     <div style={{ display: 'flex', alignItems: 'baseline', gap: 10, marginBottom: 10 }}>
                       <span style={{ fontFamily: "'Big Shoulders Display', Helvetica, sans-serif", fontWeight: 900, fontSize: 'clamp(22px, 2.6vw, 32px)', color: 'var(--accent)', lineHeight: 1 }}>{String(i + 1).padStart(2, '0')}</span>
-                      <span style={{ fontFamily: 'Archivo, sans-serif', fontWeight: 700, fontSize: 9.5, letterSpacing: '0.14em', textTransform: 'uppercase', padding: '3px 9px', borderRadius: 2, color: kept ? 'var(--paper)' : 'var(--fg-3)', background: kept ? 'var(--accent)' : 'var(--paper-deep)' }}>{kept ? 'Final' : 'Dropped'}</span>
+                      <span style={{ fontFamily: 'Archivo, sans-serif', fontWeight: 700, fontSize: 9.5, letterSpacing: '0.14em', textTransform: 'uppercase', padding: '3px 9px', borderRadius: 999, color: kept ? 'var(--paper)' : 'var(--fg-3)', background: kept ? 'var(--accent)' : 'var(--paper-deep)' }}>{kept ? 'Final' : 'Dropped'}</span>
                     </div>
                     <h3 style={{ fontFamily: "'Big Shoulders Display', Helvetica, sans-serif", fontWeight: 800, fontSize: 'clamp(20px, 2.2vw, 28px)', color: 'var(--ink)', margin: '0 0 12px', lineHeight: 1.05, letterSpacing: '-0.01em' }}>{it.name}</h3>
                     {it.what && <p style={{ fontFamily: 'Archivo, sans-serif', fontSize: 14, lineHeight: 1.5, color: 'var(--fg-2)', margin: '0 0 12px' }}>{it.what}</p>}
@@ -2011,23 +3355,178 @@ function ProjectDetailView({ project }) {
           <div>
             <div style={{ marginBottom: 80 }}>
               <SectionLabel num="06">The Product</SectionLabel>
-              <p style={{ ...bodyText, marginBottom: project.product.features ? 24 : 28 }}>{project.product.text}</p>
+              {project.product.concept && (
+                <div style={{ marginBottom: 'clamp(48px, 6vw, 80px)' }}>
+                  <h3 style={{
+                    fontFamily: "'Big Shoulders Display', Helvetica, sans-serif", fontWeight: 800,
+                    fontSize: 'clamp(28px, 3.4vw, 44px)', lineHeight: 1.05, letterSpacing: '-0.015em',
+                    color: 'var(--ink)', margin: '0 0 clamp(24px, 3vw, 40px) 0', maxWidth: 720,
+                  }}>{project.product.concept.headline}</h3>
+                  <img src={project.product.concept.image.src} alt={project.product.concept.image.label || ''} loading="lazy"
+                    style={{ width: '100%', height: 'auto', display: 'block', borderRadius: 12, border: '1px solid var(--hairline)', marginBottom: project.product.concept.imageCaption ? 16 : 'clamp(24px, 3vw, 40px)' }} />
+                  {project.product.concept.imageCaption && (
+                    <p style={{ fontFamily: 'Archivo, sans-serif', fontSize: 15, lineHeight: 1.6, color: 'var(--fg-2)', maxWidth: 640, margin: '0 0 clamp(24px, 3vw, 40px) 0' }}>{project.product.concept.imageCaption}</p>
+                  )}
+                  {project.product.concept.points && project.product.concept.points.length > 0 && (
+                    <div style={{
+                      display: 'grid',
+                      gridTemplateColumns: 'repeat(auto-fit, minmax(min(200px, 100%), 1fr))',
+                      gap: 'clamp(20px, 3vw, 36px)',
+                    }}>
+                      {project.product.concept.points.map((pt) => (
+                        <div key={pt.title} style={{ borderTop: '2px solid var(--ink)', paddingTop: 14 }}>
+                          <div style={{ fontFamily: 'Archivo, sans-serif', fontWeight: 700, fontSize: 15.5, color: 'var(--ink)', marginBottom: 6 }}>{pt.title}</div>
+                          <p style={{ fontFamily: 'Archivo, sans-serif', fontSize: 14, lineHeight: 1.55, color: 'var(--fg-2)', margin: 0 }}>{pt.text}</p>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              )}
+              <p style={{ ...bodyText, whiteSpace: 'pre-line',
+                ...(project.product.images && project.product.images.some((im) => im.caption)
+                  ? { fontSize: 'clamp(20px, 2vw, 24px)', lineHeight: 1.45, marginBottom: project.product.features ? 28 : 32 }
+                  : { marginBottom: project.product.features ? 24 : 28 }) }}>{project.product.text}</p>
               {project.product.features && project.product.features.length > 0 && (
-                <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, marginBottom: project.product.images ? 36 : 0 }}>
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: 10, marginBottom: project.product.images ? (project.product.images.some((im) => im.caption) ? 'clamp(56px, 7vw, 88px)' : 36) : 0 }}>
                   {project.product.features.map((f) => (
                     <span key={f} className="tag">{f}</span>
                   ))}
                 </div>
               )}
-              {project.product.images && project.product.images.length > 0 && (
+              {/* Large narrative images with captions — replaces the old usage
+                  stepper's step-by-step story for SnapWear. */}
+              {project.product.narrativeImages && project.product.narrativeImages.length > 0 && (
+                <div style={{ display: 'grid', gap: 'clamp(48px, 6vw, 88px)', marginBottom: 'clamp(48px, 6vw, 80px)' }}>
+                  {project.product.narrativeImages.map((im, i) => (
+                    <div key={i}>
+                      <img src={im.src} alt={im.label || ''} loading="lazy"
+                        style={{ width: '100%', height: 'auto', display: 'block', borderRadius: 12, border: '1px solid var(--hairline)', marginBottom: 16 }} />
+                      {im.caption && (
+                        <p style={{ fontFamily: 'Archivo, sans-serif', fontSize: 15, lineHeight: 1.6, color: 'var(--fg-2)', maxWidth: 640, margin: 0 }}>{im.caption}</p>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              )}
+              {project.product.gesture && (
+                <div style={{ marginBottom: 'clamp(36px, 5vw, 56px)' }}>
+                  <div style={{
+                    display: 'grid',
+                    gridTemplateColumns: 'repeat(auto-fit, minmax(min(200px, 100%), 1fr))',
+                    gap: 'clamp(20px, 3vw, 36px)',
+                    marginBottom: 'clamp(24px, 3vw, 36px)',
+                  }}>
+                    {project.product.gesture.items.map((g) => (
+                      <div key={g.title} style={{ borderTop: '2px solid var(--ink)', paddingTop: 14 }}>
+                        <div style={{ fontFamily: 'Archivo, sans-serif', fontWeight: 700, fontSize: 15.5, color: 'var(--ink)', marginBottom: 6 }}>{g.title}</div>
+                        <p style={{ fontFamily: 'Archivo, sans-serif', fontSize: 14, lineHeight: 1.55, color: 'var(--fg-2)', margin: 0 }}>{g.text}</p>
+                      </div>
+                    ))}
+                  </div>
+                  {project.product.gesture.note && (
+                    <p style={{
+                      fontFamily: "'Big Shoulders Display', Helvetica, sans-serif", fontWeight: 700, fontStyle: 'italic',
+                      fontSize: 'clamp(18px, 2vw, 24px)', color: 'var(--fg-3)', margin: 0, maxWidth: 640,
+                    }}>{project.product.gesture.note}</p>
+                  )}
+                  {project.product.gesture.hint && (
+                    <div style={{ fontFamily: 'Archivo, sans-serif', fontSize: 12, color: 'var(--fg-3)', marginTop: 8 }}>{project.product.gesture.hint}</div>
+                  )}
+                </div>
+              )}
+              {project.product.video && (
+                <div style={{ marginBottom: 'clamp(40px, 6vw, 72px)' }}>
+                  <video
+                    controls
+                    preload="metadata"
+                    playsInline
+                    poster={project.product.video.poster}
+                    src={project.product.video.src}
+                    style={{ width: '100%', display: 'block', borderRadius: 12, background: 'var(--paper-deep)' }}
+                  />
+                  <div style={{
+                    display: 'flex', justifyContent: 'space-between', alignItems: 'baseline',
+                    flexWrap: 'wrap', gap: 12, marginTop: 12,
+                  }}>
+                    {project.product.video.caption && (
+                      <div style={{ fontFamily: 'Archivo, sans-serif', fontSize: 12.5, lineHeight: 1.5, color: 'var(--fg-3)' }}>{project.product.video.caption}</div>
+                    )}
+                    {project.product.video.link && (
+                      <a href={project.product.video.link} target="_blank" rel="noreferrer" style={{
+                        fontFamily: 'Archivo, sans-serif', fontWeight: 700, fontSize: 12,
+                        letterSpacing: '0.12em', textTransform: 'uppercase', color: 'var(--accent)',
+                      }}>Open the prototype →</a>
+                    )}
+                  </div>
+                </div>
+              )}
+              {project.slug === 'texttune' ? (
+                <TextTuneDial />
+              ) : project.slug === 'mere' && project.product.images && project.product.images.length > 1 ? (
+                <ProductGallery images={project.product.images.filter((im) => im.src)} />
+              ) : project.slug === 'snapwear' && project.product.images && project.product.images.length > 0 ? (
+                // Two explicit grid rows (captions, then images) so both images
+                // share one top edge and one bottom edge, regardless of caption
+                // line-count differences between the two cards.
                 <div style={{
                   display: 'grid',
-                  gridTemplateColumns: '1fr',
-                  gap: 'clamp(16px, 2.5vw, 36px)',
+                  gridTemplateColumns: 'repeat(auto-fit, minmax(min(280px, 100%), 1fr))',
+                  gridAutoRows: 'auto', columnGap: 'clamp(28px, 4.5vw, 72px)', rowGap: 'clamp(20px, 2.5vw, 32px)',
                 }}>
                   {project.product.images.filter((im) => im.src).map((im, i) => (
-                    <img key={i} src={im.src} alt={im.label || ''} loading="lazy" style={{ width: '100%', height: 'auto', display: 'block', borderRadius: 2 }} />
+                    <div key={'cap' + i} style={{ gridRow: 1, textAlign: 'center', alignSelf: 'end' }}>
+                      {im.caption && (
+                        <div>
+                          <div style={{ fontFamily: 'Archivo, sans-serif', fontWeight: 700, fontSize: 'clamp(17px, 1.6vw, 20px)', lineHeight: 1.25, letterSpacing: '-0.01em', color: 'var(--fg-1)', marginBottom: 12 }}>{im.label}</div>
+                          <p style={{ fontFamily: 'Archivo, sans-serif', fontSize: 15, lineHeight: 1.6, color: 'var(--fg-2)', maxWidth: '44ch', margin: '0 auto' }}>{im.caption}</p>
+                        </div>
+                      )}
+                    </div>
                   ))}
+                  {project.product.images.filter((im) => im.src).map((im, i) => (
+                    <div key={'img' + i} style={{ gridRow: 2, height: 'clamp(320px, 34vw, 460px)', display: 'flex', alignItems: 'flex-start', justifyContent: 'center' }}>
+                      <img src={im.src} alt={im.label || ''} loading="lazy" style={{ width: '100%', height: '100%', objectFit: 'contain', display: 'block', borderRadius: 12 }} />
+                    </div>
+                  ))}
+                </div>
+              ) : project.product.images && project.product.images.length > 0 && (
+                <div style={{
+                  display: 'grid',
+                  gridTemplateColumns: project.product.images.filter((im) => im.src).length > 1
+                    ? 'repeat(auto-fit, minmax(min(280px, 100%), 1fr))' : '1fr',
+                  gap: 'clamp(28px, 4.5vw, 72px)',
+                }}>
+                  {project.product.images.filter((im) => im.src).map((im, i) => (
+                    <div key={i}>
+                      {im.caption && (
+                        <div style={{ minHeight: 124, marginBottom: 'clamp(20px, 2.5vw, 32px)', textAlign: 'center' }}>
+                          <div style={{ fontFamily: 'Archivo, sans-serif', fontWeight: 700, fontSize: 'clamp(17px, 1.6vw, 20px)', lineHeight: 1.25, letterSpacing: '-0.01em', color: 'var(--fg-1)', marginBottom: 12 }}>{im.label}</div>
+                          <p style={{ fontFamily: 'Archivo, sans-serif', fontSize: 15, lineHeight: 1.6, color: 'var(--fg-2)', maxWidth: '44ch', margin: '0 auto' }}>{im.caption}</p>
+                        </div>
+                      )}
+                      {project.slug === 'snapwear' ? (
+                        <div style={{ height: 'clamp(320px, 34vw, 460px)', display: 'flex', alignItems: 'flex-start', justifyContent: 'center' }}>
+                          <img src={im.src} alt={im.label || ''} loading="lazy" style={{ width: '100%', height: '100%', objectFit: 'contain', display: 'block', borderRadius: 12 }} />
+                        </div>
+                      ) : (
+                        <img src={im.src} alt={im.label || ''} loading="lazy" style={{ width: '100%', height: 'auto', display: 'block', borderRadius: 12 }} />
+                      )}
+                    </div>
+                  ))}
+                </div>
+              )}
+              {project.product.cta && (
+                <div style={{ marginTop: 'clamp(36px, 5vw, 56px)', textAlign: 'center' }}>
+                  <a href={project.product.cta.href} target="_blank" rel="noreferrer" style={{
+                    display: 'inline-block', padding: '13px 30px', borderRadius: 999,
+                    background: 'var(--accent)', color: '#fff', textDecoration: 'none',
+                    fontFamily: 'Archivo, sans-serif', fontWeight: 700, fontSize: 12.5,
+                    letterSpacing: '0.12em', textTransform: 'uppercase',
+                  }}>{project.product.cta.label}</a>
+                  {project.product.cta.note && (
+                    <div style={{ fontFamily: 'Archivo, sans-serif', fontSize: 12.5, color: 'var(--fg-3)', marginTop: 10 }}>{project.product.cta.note}</div>
+                  )}
                 </div>
               )}
             </div>
@@ -2069,7 +3568,7 @@ function ProjectDetailView({ project }) {
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 'clamp(8px, 1.2vw, 16px)' }}>
                 {project.designSpec.images.filter((img) => img.src).map((img, i) => (
                   <img key={i} src={img.src} alt={img.label || ''} loading="lazy"
-                    style={{ width: '100%', height: 'auto', display: 'block', borderRadius: 2 }} />
+                    style={{ width: '100%', height: 'auto', display: 'block', borderRadius: 12 }} />
                 ))}
               </div>
             ) : project.designSpec.rows && (
@@ -2113,34 +3612,19 @@ function ProjectDetailView({ project }) {
           </div>
         )}
 
-        {/* ── The App ── */}
-        {project.app && (
-          <div style={{ marginBottom: 'clamp(80px, 13vw, 168px)' }}>
-            <SectionLabel num="07">The App</SectionLabel>
-            {project.app.text && <p style={{ ...bodyText, maxWidth: 680, marginBottom: 'clamp(32px, 4vw, 56px)' }}>{project.app.text}</p>}
-            {project.app.images && project.app.images.length > 0 && (
-              <div style={{ display: 'grid', gridTemplateColumns: `repeat(${project.app.images.length}, minmax(0, 1fr))`, gap: 'clamp(12px, 1.5vw, 20px)' }}>
-                {project.app.images.map((im, i) => (
-                  <img key={i} src={im.src} alt={im.label || ''} loading="lazy" style={{ width: '100%', height: 'auto', display: 'block', borderRadius: 2 }} />
-                ))}
-              </div>
-            )}
-          </div>
-        )}
-
         {/* ── Details — big image + row ── */}
         {project.details && (
           <div style={{ marginBottom: 'clamp(48px, 8vw, 96px)' }}>
             <SectionLabel num="08">Details</SectionLabel>
             {project.details.hero && (
               <div style={{ marginBottom: 'clamp(12px, 1.5vw, 20px)' }}>
-                <img src={project.details.hero.src} alt={project.details.hero.label || ''} loading="lazy" style={{ width: '100%', height: 'auto', display: 'block', borderRadius: 2 }} />
+                <img src={project.details.hero.src} alt={project.details.hero.label || ''} loading="lazy" style={{ width: '100%', height: 'auto', display: 'block', borderRadius: 12 }} />
               </div>
             )}
             {project.details.images && project.details.images.length > 0 && (
               <div style={{ display: 'grid', gridTemplateColumns: `repeat(${project.details.images.length}, minmax(0, 1fr))`, gap: 'clamp(10px, 1.2vw, 16px)' }}>
                 {project.details.images.map((im, i) => (
-                  <img key={i} src={im.src} alt={im.label || ''} loading="lazy" style={{ width: '100%', height: 'auto', display: 'block', borderRadius: 2 }} />
+                  <img key={i} src={im.src} alt={im.label || ''} loading="lazy" style={{ width: '100%', height: 'auto', display: 'block', borderRadius: 12 }} />
                 ))}
               </div>
             )}
@@ -2148,7 +3632,7 @@ function ProjectDetailView({ project }) {
         )}
 
         {/* ── Anatomy: heating / cooling pad ── */}
-        {SHOW_DETAIL && project.anatomy && (
+        {project.anatomy && (
           <div>
             <div style={{ marginBottom: 80 }}>
               <div style={eyebrow}>{project.anatomy.title || 'Anatomy'}</div>
@@ -2192,7 +3676,7 @@ function ProjectDetailView({ project }) {
         )}
 
         {/* ── Controller ── */}
-        {SHOW_DETAIL && project.controller && (
+        {project.controller && (
           <div>
             <div style={{ marginBottom: 80 }}>
               <div style={eyebrow}>The Controller</div>
@@ -2212,11 +3696,27 @@ function ProjectDetailView({ project }) {
         )}
 
         {/* ── How It Works ── */}
-        {SHOW_DETAIL && project.usage && (
+        {project.usage && (
           <div>
             <div style={{ marginBottom: 80 }}>
               <div style={eyebrow}>How It Works</div>
-              <p style={{ ...bodyText, marginBottom: 32 }}>{project.usage.text}</p>
+              {project.usage.text && (
+                <p style={{ ...bodyText, marginBottom: 32 }}>{project.usage.text}</p>
+              )}
+              {project.usage.video && (
+                <div style={{ maxWidth: 860, margin: '0 auto', marginBottom: 'clamp(44px, 6vw, 72px)' }}>
+                  <video controls playsInline preload="metadata"
+                    style={{ width: '100%', height: 'auto', display: 'block', borderRadius: 12, border: '1px solid var(--hairline)', background: 'var(--paper-deep)' }}>
+                    <source src={project.usage.video} type="video/mp4" />
+                  </video>
+                  {project.usage.videoCaption && (
+                    <div style={{ fontFamily: 'Archivo, sans-serif', fontSize: 12.5, lineHeight: 1.5, color: 'var(--fg-3)', marginTop: 10 }}>{project.usage.videoCaption}</div>
+                  )}
+                </div>
+              )}
+              {project.usage.frames && project.usage.frames.length > 0 && (
+                <UsageStepper frames={project.usage.frames} />
+              )}
               {project.usage.steps && project.usage.steps.length > 0 && (
                 <div style={{
                   display: 'grid',
@@ -2230,6 +3730,9 @@ function ProjectDetailView({ project }) {
                       padding: '22px 24px',
                       background: 'var(--paper-deep)',
                     }}>
+                      {s.img && (
+                        <img src={s.img} alt={s.name} loading="lazy" style={{ width: '100%', aspectRatio: '4 / 3', objectFit: 'cover', display: 'block', borderRadius: 12, marginBottom: 16 }} />
+                      )}
                       {s.icon && (
                         <div style={{ marginBottom: 12 }}>{ICONS[s.icon]}</div>
                       )}
@@ -2273,6 +3776,12 @@ function ProjectDetailView({ project }) {
                   ))}
                 </div>
               )}
+              {project.usage.image && (
+                <ImagePlaceholder
+                  src={project.usage.image.src}
+                  label={project.usage.image.label}
+                />
+              )}
               {project.usage.diagram && (
                 <ImagePlaceholder
                   label={project.usage.diagram.label}
@@ -2282,6 +3791,21 @@ function ProjectDetailView({ project }) {
               )}
             </div>
               </div>
+        )}
+
+        {/* ── The App (moved after usage for the Mère §6 order: gallery → pad → controller → usage → app) ── */}
+        {project.app && (
+          <div style={{ marginBottom: 'clamp(80px, 13vw, 168px)' }}>
+            <SectionLabel num="07">The App</SectionLabel>
+            {project.app.text && <p style={{ ...bodyText, maxWidth: 680, marginBottom: 'clamp(32px, 4vw, 56px)' }}>{project.app.text}</p>}
+            {project.app.images && project.app.images.length > 0 && (
+              <div style={{ display: 'grid', gridTemplateColumns: `repeat(${project.app.images.length}, minmax(0, 1fr))`, gap: 'clamp(12px, 1.5vw, 20px)' }}>
+                {project.app.images.map((im, i) => (
+                  <img key={i} src={im.src} alt={im.label || ''} loading="lazy" style={{ width: '100%', height: 'auto', display: 'block', borderRadius: 12 }} />
+                ))}
+              </div>
+            )}
+          </div>
         )}
 
         {/* ── Companion App (concept) ── */}
@@ -2411,7 +3935,7 @@ function ProjectDetailView({ project }) {
         <a href={`#work/${nextProject.slug}`} style={{ textDecoration: 'none', display: 'block' }}>
           <div style={{
             border: '1.5px solid var(--ink)',
-            borderRadius: 6,
+            borderRadius: 16,
             padding: '28px 32px',
             display: 'flex',
             justifyContent: 'space-between',
@@ -2468,10 +3992,15 @@ function WorkSection() {
       marginTop: 'clamp(120px, 16vh, 200px)'
     }}>
       <div style={{ maxWidth: 'var(--maxw)', margin: '0 auto' }}>
-        <SectionHeader eyebrow="Sketchbook" title="Work" caption={`${PROJECTS.length} projects · 2024 – 2026`} />
+        <SectionHeader eyebrow="Selected Work" title="Work" caption={(() => {
+          const years = PROJECTS.flatMap((p) => p.period.match(/\d{4}/g) || []).map(Number);
+          return `${PROJECTS.length} projects · ${Math.min(...years)} – ${Math.max(...years)}`;
+        })()} />
         <div style={{ marginTop: 8, paddingBottom: 24 }}>
           {PROJECTS.map((p, i) => (
-            <ProjectRow key={p.idx} p={p} onOpen={onOpen} last={i === PROJECTS.length - 1} />
+            <Reveal key={p.slug}>
+              <ProjectRow p={p} onOpen={onOpen} last={i === PROJECTS.length - 1} />
+            </Reveal>
           ))}
         </div>
       </div>
@@ -2522,11 +4051,12 @@ const EDUCATION = [
 { label: 'B.S. Industrial Design · NTUST', period: '2020 – 2024' }];
 
 
-const SKILLS = [
-'UX Research', 'User Interviews', 'Usability Testing', 'Affinity Mapping',
-'Survey Design', 'Qualitative Analysis', 'Figma', 'Prototyping',
-'Interaction Design', 'Industrial Design', 'Physical Products', 'E-Textile',
-'HCI', 'Design Research', 'Sketching', '3D Modeling'];
+const SKILL_GROUPS = [
+  { label: 'UX Methods', items: ['User Research', 'User Interviews', 'Usability Testing', 'Survey Design', 'Personas', 'Journey Mapping', 'Affinity Mapping', 'Qualitative Analysis', 'Prototyping'] },
+  { label: 'Design', items: ['Figma', 'Rhino', 'Framer', 'KeyShot', '3D Modeling', 'Physical Prototyping', 'Marvelous Designer'] },
+  { label: 'Development', items: ['HTML', 'CSS', 'JavaScript', 'Python', 'AI-assisted Dev'] },
+  { label: 'Languages', items: ['Mandarin — native', 'English — C1'] },
+];
 
 
 function AboutSection() {
@@ -2625,23 +4155,6 @@ function AboutSection() {
               </div>
             </div>
 
-            {/* Skills */}
-            <div style={{ marginTop: 56 }}>
-              <div style={{
-                fontFamily: 'Archivo, sans-serif', fontSize: 11, fontWeight: 600,
-                letterSpacing: '0.14em', textTransform: 'uppercase',
-                color: 'var(--fg-3)', marginBottom: 18
-              }}>Skills</div>
-              <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
-                {SKILLS.map((s) =>
-                <span key={s} className="capsule" style={{
-                  fontSize: '11px',
-                  padding: '4px 10px',
-                  letterSpacing: '0.02em'
-                }}>{s}</span>
-                )}
-              </div>
-            </div>
           </div>
         </div>
       </div>
@@ -2677,6 +4190,54 @@ function Row({ company, role, period }) {
 }
 
 /* ---------- Contact ---------- */
+/* ---------- Skills — toolkit columns (own full section) ---------- */
+function SkillsSection() {
+  const narrow = useIsNarrow();
+  return (
+    <section id="skills" style={{
+      paddingLeft: 'var(--gutter)', paddingRight: 'var(--gutter)',
+      marginTop: 'clamp(120px, 16vh, 200px)'
+    }}>
+      <div style={{ maxWidth: 'var(--maxw)', margin: '0 auto' }}>
+        <Reveal>
+          <div style={{
+            fontFamily: 'Archivo, sans-serif', fontSize: 11, fontWeight: 600,
+            letterSpacing: '0.14em', textTransform: 'uppercase',
+            color: 'var(--fg-3)', marginBottom: 24
+          }}>Toolkit</div>
+          <h2 style={{
+            fontFamily: "'Big Shoulders Display', Helvetica, sans-serif", fontWeight: 800,
+            fontSize: 'clamp(36px, 5vw, 72px)', lineHeight: 1.02, letterSpacing: '-0.02em',
+            margin: '0 0 clamp(40px, 6vw, 72px) 0', color: 'var(--ink)', maxWidth: 560
+          }}>Ask, make, measure, repeat.</h2>
+          <div style={{
+            display: 'grid',
+            gridTemplateColumns: narrow ? 'repeat(2, 1fr)' : 'repeat(4, 1fr)',
+            gap: 'clamp(28px, 4vw, 48px)'
+          }}>
+            {SKILL_GROUPS.map((g) => (
+              <div key={g.label} style={{ borderTop: '1px solid var(--hairline)', paddingTop: 18 }}>
+                <div style={{
+                  fontFamily: 'Archivo, sans-serif', fontSize: 10.5, fontWeight: 600,
+                  letterSpacing: '0.14em', textTransform: 'uppercase',
+                  color: 'var(--fg-3)', marginBottom: 16
+                }}>{g.label}</div>
+                <div style={{ display: 'grid', gap: 9 }}>
+                  {g.items.map((s) => (
+                    <div key={s} style={{
+                      fontFamily: 'Archivo, sans-serif', fontSize: 13.5,
+                      color: 'var(--fg-2)', lineHeight: 1.4
+                    }}>{s}</div>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
+        </Reveal>
+      </div>
+    </section>);
+}
+
 function ContactSection() {
   const socials = [
   { label: 'Email', value: 'babalimao5244@gmail.com', href: 'mailto:babalimao5244@gmail.com' },
@@ -2696,14 +4257,18 @@ function ContactSection() {
           color: 'var(--fg-3)', marginBottom: 24
         }}>Get in touch</div>
 
-        {/* Display heading */}
-        <h2 style={{
-          fontFamily: "'Big Shoulders Display', Helvetica, sans-serif",
-          fontWeight: 900,
-          fontSize: 'clamp(96px, 18vw, 280px)',
-          lineHeight: 0.85, letterSpacing: '-0.025em',
-          margin: 0, color: 'var(--ink)'
-        }}>Let's talk !</h2>
+        {/* Display heading — click opens a mail draft; hover hollows the type */}
+        <Reveal>
+          <h2 style={{
+            fontFamily: "'Big Shoulders Display', Helvetica, sans-serif",
+            fontWeight: 900,
+            fontSize: 'clamp(96px, 18vw, 280px)',
+            lineHeight: 0.85, letterSpacing: '-0.025em',
+            margin: 0
+          }}>
+            <a href="mailto:babalimao5244@gmail.com?subject=Hello%20Nicole" className="lets-talk">Let's talk !</a>
+          </h2>
+        </Reveal>
 
         {/* Single baseline row: capsules left, socials right */}
         <div style={{
@@ -2770,6 +4335,14 @@ const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
 } /*EDITMODE-END*/;
 
 const TWEAK_CSS = `
+/* Usage stepper — crossfade on frame change */
+.usage-frame-img { animation: faFrameFade 320ms ease; }
+@keyframes faFrameFade { from { opacity: 0 } to { opacity: 1 } }
+
+/* Findings grid — one column per finding, stacks on narrow screens */
+.findings-grid { grid-template-columns: repeat(var(--fcount, 3), minmax(0, 1fr)); }
+@media (max-width: 680px) { .findings-grid { grid-template-columns: 1fr; } }
+
 /* MOOD ─ palette presets ────────────────────────────── */
 html.tw-mood-cream { /* default — already in design system */ }
 html.tw-mood-noir {
@@ -2868,7 +4441,7 @@ html.tw-hover-magnetic nav a:hover {
 
 /* ---------- App ---------- */
 function Portfolio() {
-  const [dark, setDark] = useState(false);
+  const [dark, setDark] = useState(true); // dark is the default look (2026-07-18)
   const [t, setTweak] = useTweaks(TWEAK_DEFAULTS);
   const route = useRoute();
 
@@ -2901,7 +4474,7 @@ function Portfolio() {
     const project = PROJECTS.find((p) => p.slug === route.slug);
     return (
       <div>
-        <style>{TWEAK_CSS}</style>
+        <style>{TWEAK_CSS}</style><CustomCursor />
         <PortfolioNav dark={isNoir || dark} onToggleDark={() => setDark((d) => !d)} />
         {project
           ? <ProjectDetailView project={project} />
@@ -2919,13 +4492,14 @@ function Portfolio() {
   // ── Home view ──
   return (
     <div>
-      <style>{TWEAK_CSS}</style>
+      <style>{TWEAK_CSS}</style><CustomCursor />
       <PortfolioNav dark={isNoir || dark} onToggleDark={() => setDark((d) => !d)} />
       <ScrollIndicator />
       <main>
         <Hero />
         <WorkSection />
         <AboutSection />
+        <SkillsSection />
         <ContactSection />
       </main>
 

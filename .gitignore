@@ -5,3 +5,6 @@ node_modules/
 
 # Claude Code — local skills & config (project-scoped)
 .claude/
+
+# Local backups created before edits
+*.bak-*
