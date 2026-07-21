@@ -1456,6 +1456,7 @@ const PROJECTS = [
   problemLabel: 'Beauty shoppers do all the research — and still leave the shelf undecided.',
   problem: '"I already struggle to decide. For foundation especially, I end up checking reviews everywhere — half an hour\'s gone, crouched at the shelf."',
   problemImage: { src: 'assets/snapwear/journey.jpg', label: 'The in-store decision journey — shelf to Reddit to YouTube to Google and back' },
+  problemImageFull: true,
   methods: [
     'Survey (n=12, convenience sample)',
     'Journey mapping',
@@ -2857,20 +2858,45 @@ function ProjectDetailView({ project }) {
         {(project.problem || project.problemImage) && (
           <div style={{ marginBottom: 'clamp(80px, 13vw, 168px)' }}>
             <SectionLabel num="01">{project.problemLabel || 'The Problem'}</SectionLabel>
-            <div style={{
-              display: 'grid',
-              gridTemplateColumns: (narrow || !project.problemImage || !project.problem) ? '1fr' : 'minmax(0, 1fr) minmax(0, 0.78fr)',
-              gap: 'clamp(32px, 5vw, 72px)',
-              alignItems: 'center',
-            }}>
-              {project.problem && (
-                <p style={{ ...bodyText, fontSize: 'clamp(19px, 2.1vw, 27px)', lineHeight: 1.5, maxWidth: 600 }}>{project.problem}</p>
-              )}
-              {project.problemImage && (
-                <ImagePlaceholder src={project.problemImage.src} label={project.problemImage.label}
-                  height={project.problem ? 'clamp(320px, 38vw, 460px)' : 'clamp(360px, 44vw, 560px)'} />
-              )}
-            </div>
+            {project.problemImageFull ? (
+              /* Stacked: quote as an editorial lead, then the image full-width
+                 (natural height, no crop) so a wide/dense visual reads clearly. */
+              <>
+                {project.problem && (
+                  <p style={{
+                    ...bodyText,
+                    fontSize: 'clamp(20px, 2.2vw, 28px)', lineHeight: 1.45,
+                    color: 'var(--ink)', maxWidth: 820,
+                    margin: '0 0 clamp(36px, 5vw, 64px)',
+                    paddingLeft: 'clamp(16px, 2vw, 24px)',
+                    borderLeft: '3px solid var(--accent)',
+                  }}>{project.problem}</p>
+                )}
+                {project.problemImage && (
+                  <figure style={{ margin: 0 }}>
+                    <ImagePlaceholder src={project.problemImage.src} label={project.problemImage.label} />
+                    {project.problemImage.label && (
+                      <figcaption style={{ fontFamily: 'Archivo, sans-serif', fontSize: 12.5, lineHeight: 1.5, color: 'var(--fg-3)', marginTop: 12 }}>{project.problemImage.label}</figcaption>
+                    )}
+                  </figure>
+                )}
+              </>
+            ) : (
+              <div style={{
+                display: 'grid',
+                gridTemplateColumns: (narrow || !project.problemImage || !project.problem) ? '1fr' : 'minmax(0, 1fr) minmax(0, 0.78fr)',
+                gap: 'clamp(32px, 5vw, 72px)',
+                alignItems: 'center',
+              }}>
+                {project.problem && (
+                  <p style={{ ...bodyText, fontSize: 'clamp(19px, 2.1vw, 27px)', lineHeight: 1.5, maxWidth: 600 }}>{project.problem}</p>
+                )}
+                {project.problemImage && (
+                  <ImagePlaceholder src={project.problemImage.src} label={project.problemImage.label}
+                    height={project.problem ? 'clamp(320px, 38vw, 460px)' : 'clamp(360px, 44vw, 560px)'} />
+                )}
+              </div>
+            )}
             {project.objectiveQuestions && project.objectiveQuestions.length > 0 && (
               <div style={{ marginTop: 'clamp(32px, 4.5vw, 56px)', display: 'grid', gap: 0 }}>
                 {project.objectiveQuestions.map((q, i) => (
