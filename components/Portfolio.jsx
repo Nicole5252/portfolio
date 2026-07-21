@@ -1453,7 +1453,8 @@ const PROJECTS = [
   concept: {
     tagline: 'Snap it, match it, wear it.',
   },
-  problemLabel: '"I already struggle to decide. For foundation especially, I end up checking reviews everywhere — half an hour\'s gone, crouched at the shelf."',
+  problemLabel: 'Beauty shoppers do all the research — and still leave the shelf undecided.',
+  problem: '"I already struggle to decide. For foundation especially, I end up checking reviews everywhere — half an hour\'s gone, crouched at the shelf."',
   problemImage: { src: 'assets/snapwear/journey.jpg', label: 'The in-store decision journey — shelf to Reddit to YouTube to Google and back' },
   methods: [
     'Survey (n=12, convenience sample)',
