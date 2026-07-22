@@ -1628,7 +1628,7 @@ const PROJECTS = [
 
 /* Homepage order (2026-07-17): industry work leads, exploratory Speaking Shell closes.
    idx is renumbered from this sequence — edit the slugs here to reorder, nothing else. */
-const PROJECT_SEQUENCE = ['pangolin', 'mere', 'snapwear', 'texttune', 'focusanchor', 'paleo', 'voice-shell'];
+const PROJECT_SEQUENCE = ['pangolin', 'mere', 'texttune', 'focusanchor', 'paleo', 'snapwear', 'voice-shell'];
 PROJECTS.sort((a, b) => PROJECT_SEQUENCE.indexOf(a.slug) - PROJECT_SEQUENCE.indexOf(b.slug));
 PROJECTS.forEach((p, i) => { p.idx = String(i + 1).padStart(2, '0'); });
 
