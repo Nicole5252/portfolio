@@ -1534,11 +1534,101 @@ const PROJECTS = [
     },
   },
 },
+{
+  slug: 'paleo',
+  accent: '#1AA090',
+  doodle: 'tent',
+  period: '2025',
+  org: 'Industrial Design Project',
+  context: 'A camping knife that folds fire-starting and cutting into one pivoting tool.',
+  title: 'Paleo',
+  blurb: 'A camping knife that fuses fire starter and blade into one pivoting tool — so lighting a fire stays one continuous motion, and the tool glows itself visible after dark.',
+  tags: ['Industrial Design', '3D Modeling', 'Physical Prototype'],
+  insight: 'User observation · persona-driven · SubD 3D modeling + physical model',
+  thumb: 'assets/paleo/plcover02.jpg',
+  images: {
+    hero: {
+      label: 'Paleo — Illuminate Your Moment',
+      note: 'Product render.',
+      src: 'assets/paleo/plcover01.jpg',
+    },
+  },
+  // ── Case study detail ──
+  role: 'Two-person team — I owned the 3D modeling; my teammate and I shared the early-stage form ideation, user observation and analysis; my teammate led the packaging design.',
+  concept: {
+    tagline: 'Paleo — Illuminate Your Camping Moment.',
+  },
+  problemLabel: 'Modern fire-starters made ignition easy — and quietly drained the ritual out of it.',
+  problem: 'Fire-making is essential to camping. As the tools get more sophisticated, some campers still choose to shave a ferro rod and strike a spark by hand — not for efficiency, but for the immersion, the small sense of connecting with nature. Paleo starts from that tension: how do you make fire-making more convenient without sanding off the authenticity of the traditional experience?',
+  problemImage: { src: 'assets/paleo/pl-problem.jpg', label: 'The tension Paleo starts from — modern convenience against the ritual of making fire by hand.' },
+  methods: [
+    'User observation',
+    'Persona & journey mapping',
+  ],
+  researchMethodsIntro: 'The research was qualitative and deliberately small — field observation feeding a single, sharply-drawn persona. We treated it as direction-setting for the form, not a representative sample.',
+  researchMethods: [
+    {
+      name: 'Method 01',
+      title: 'User Observation',
+      meta: 'field research',
+      purpose: 'We watched campers move through the whole fire-making sequence to see where the traditional ritual and modern convenience actually collide — and where switching between tools broke the flow.',
+    },
+    {
+      name: 'Method 02',
+      title: 'Persona & Journey',
+      meta: 'synthesis',
+      purpose: 'We distilled the observations into Thomas, a persona whose gear habits and pain points set the design brief.',
+    },
+  ],
+  findingsChart: {
+    src: 'assets/paleo/paleofin-04.jpg',
+    label: 'Persona Thomas, his observed behaviours, and the design implication drawn from each.',
+    note: 'Persona → pain point → design implication.',
+  },
+  howMightWe: [
+    'fold fire-starting and cutting into one continuous motion — and let the tool make itself found in the dark?',
+  ],
+  product: {
+    concept: {
+      headline: 'One tool, one motion',
+      image: { src: 'assets/paleo/paleofin-06.jpg', label: 'Paleo pairs stone-textured and metallic surfaces.' },
+      imageCaption: 'The design pairs contrasting stone-pattern and metallic textures — the primitive and the modern intertwined — for a tool meant to reconnect its owner with nature.',
+    },
+    features: [
+      'Pivoting flint-and-glow mechanism',
+      'Friction fire starter, lighter-like motion',
+      'Glow-in-the-dark idle coating',
+    ],
+    narrativeImages: [
+      { src: 'assets/paleo/paleofin-07.jpg', label: 'Special pivot mechanism', caption: 'Spin the metal wheel on the side and the flint ignites through friction — the same motion as flicking a lighter, so fire-starting stays intuitive and never needs a tool swap. One face is the flintlock; the other, the phosphorescent coating.' },
+      { src: 'assets/paleo/paleofin-08.jpg', label: 'Fire starter + glow-in-the-dark', caption: 'One face throws sparks onto shaved tinder; the other emits a faint glow at night, so a knife set down on the ground in low light is easy to find again.' },
+    ],
+    images: [
+      { src: 'assets/paleo/paleofin-05.jpg', label: 'From sketch to model', caption: 'Form brainstorming and paper templates to confirm sizing, then SubD 3D modeling and post-processing — presented as posters, a physical model, and a video.' },
+    ],
+  },
+  gallery: {
+    intro: 'Reference, renders, and the finished physical model — photographed among stone, gravel and driftwood.',
+    images: [
+      { src: 'assets/paleo/paleofin-10.jpg', label: 'Product renders' },
+      { src: 'assets/paleo/paleofin-11.jpg', label: 'Physical model in context' },
+      { src: 'assets/paleo/paleofin-12.jpg', label: 'Shaving tinder by hand' },
+      { src: 'assets/paleo/paleofin-09.jpg', label: 'Stone Age reference' },
+    ],
+  },
+  methodReflection: {
+    intro: 'Paleo was where I learned to let user observation drive the form, not just the feature list.',
+    points: [
+      { title: 'Behaviour before feature', text: 'The glow coating and the fidget-friendly pivot both came from watching how Thomas actually handled his gear — not from a spec. Observation is what turned a generic multi-tool into a specific object with a point of view.' },
+      { title: 'Making it real', text: 'Carrying the form from paper templates through 3D modeling to a physical, photographed model taught me how much a decision changes the moment you can hold it in your hand.' },
+    ],
+  },
+},
 ];
 
 /* Homepage order (2026-07-17): industry work leads, exploratory Speaking Shell closes.
    idx is renumbered from this sequence — edit the slugs here to reorder, nothing else. */
-const PROJECT_SEQUENCE = ['pangolin', 'mere', 'snapwear', 'texttune', 'focusanchor', 'voice-shell'];
+const PROJECT_SEQUENCE = ['pangolin', 'mere', 'snapwear', 'texttune', 'focusanchor', 'paleo', 'voice-shell'];
 PROJECTS.sort((a, b) => PROJECT_SEQUENCE.indexOf(a.slug) - PROJECT_SEQUENCE.indexOf(b.slug));
 PROJECTS.forEach((p, i) => { p.idx = String(i + 1).padStart(2, '0'); });
 
@@ -3410,10 +3500,12 @@ function ProjectDetailView({ project }) {
                   )}
                 </div>
               )}
+              {project.product.text && (
               <p style={{ ...bodyText, whiteSpace: 'pre-line',
                 ...(project.product.images && project.product.images.some((im) => im.caption)
                   ? { fontSize: 'clamp(20px, 2vw, 24px)', lineHeight: 1.45, marginBottom: project.product.features ? 28 : 32 }
                   : { marginBottom: project.product.features ? 24 : 28 }) }}>{project.product.text}</p>
+              )}
               {project.product.features && project.product.features.length > 0 && (
                 <div style={{ display: 'flex', flexWrap: 'wrap', gap: 10, marginBottom: project.product.images ? (project.product.images.some((im) => im.caption) ? 'clamp(56px, 7vw, 88px)' : 36) : 0 }}>
                   {project.product.features.map((f) => (
@@ -3954,6 +4046,17 @@ function ProjectDetailView({ project }) {
                 </div>
               ))}
             </div>
+          </div>
+        )}
+
+        {/* ── Gallery carousel (project.gallery) — mere-style ProductGallery at the end ── */}
+        {project.gallery && project.gallery.images && project.gallery.images.filter((im) => im.src).length > 0 && (
+          <div style={{ marginBottom: 'clamp(48px, 8vw, 96px)' }}>
+            <SectionLabel>Gallery</SectionLabel>
+            {project.gallery.intro && (
+              <p style={{ ...bodyText, maxWidth: 760, marginBottom: 'clamp(28px, 4vw, 48px)' }}>{project.gallery.intro}</p>
+            )}
+            <ProductGallery images={project.gallery.images.filter((im) => im.src)} />
           </div>
         )}
 
