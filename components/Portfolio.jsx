@@ -4371,8 +4371,7 @@ function SkillsSection() {
 function ContactSection() {
   const socials = [
   { label: 'Email', value: 'babalimao5244@gmail.com', href: 'mailto:babalimao5244@gmail.com' },
-  { label: 'LinkedIn', value: 'linkedin.com/in/yu-ching-lin', href: '#' },
-  { label: 'Behance', value: 'behance.net/yu-ching-lin', href: '#' }];
+  { label: 'LinkedIn', value: 'linkedin.com/in/yu-ching-lin', href: 'https://www.linkedin.com/in/yu-ching-lin-10494428a/' }];
 
   return (
     <section id="contact" style={{
@@ -4419,7 +4418,10 @@ function ContactSection() {
           {/* Right: social links in a row */}
           <div style={{ display: 'flex', gap: 24, alignItems: 'center' }}>
             {socials.map((s) =>
-            <a key={s.label} href={s.href} style={{
+            <a key={s.label} href={s.href}
+              target={s.href.startsWith('http') ? '_blank' : undefined}
+              rel={s.href.startsWith('http') ? 'noopener noreferrer' : undefined}
+              style={{
               fontFamily: 'Archivo, sans-serif', fontSize: 11, fontWeight: 600,
               letterSpacing: '0.14em', textTransform: 'uppercase',
               color: 'var(--fg-3)', textDecoration: 'none',
