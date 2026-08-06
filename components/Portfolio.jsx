@@ -1213,18 +1213,20 @@ const PROJECTS = [
   ],
   // §3 Key Findings — findingsIntro only renders alongside project.findings (ring charts),
   // which texttune doesn't use, so the intro text and chart are carried by insightGroups
-  // instead (matches the group's intro/groups/chart shape used elsewhere, e.g. Speaking Shell);
-  // AI comparison is the second group.
+  // instead (matches the group's intro/groups/chart shape used elsewhere, e.g. Speaking Shell).
+  // Chart source 2026-08-06: "Reading Difficulty × Multi-Rater Comparison" report —
+  // per-rater curves plus the AI rater and the human consensus line.
   findingsChart: {
-    src: 'assets/texttune/difficulty-curve-multireader.png',
-    label: 'Difficulty curve — 3 readers, academic paper (20 paragraphs)',
-    note: 'Per-reader curves plus the cross-reader consensus line.',
+    src: 'assets/texttune/texttune-rater-comparison.jpg',
+    label: 'Per-paragraph difficulty — three readers, their consensus, and an AI rater (academic paper, 20 paragraphs)',
+    note: 'The AI line (red) sits above the human consensus (dashed) almost everywhere, and swings less than any single reader.',
   },
-  // §3 Insights — restructured 2026-07-16 to exactly three reader-facing findings,
-  // each a claim + 2–3 sentences of evidence. AI-overlay content was cut as a
-  // planned-not-run method note, not a finding.
+  // §3 Insights — restructured 2026-07-16 to reader-facing findings, each a claim
+  // + 2–3 sentences of evidence. A fourth insight was added 2026-08-06 once the
+  // AI-vs-human comparison had actually been run (numbers sourced from the
+  // multi-rater report, not estimated). Section label auto-counts → "Four Insights".
   insightGroups: {
-    intro: 'Three readers each scored the same 20-paragraph academic paper (Design Frictions on Social Media) on the five-dimension rubric, and a 15-paragraph magazine feature (The Guardian) was scored on the same rubric — comparing how difficulty behaves across two genres.',
+    intro: 'Three readers each scored the same 20-paragraph academic paper (Design Frictions on Social Media) on the five-dimension rubric, and a 15-paragraph magazine feature (The Guardian) was scored on the same rubric — comparing how difficulty behaves across two genres. The same paper was then re-scored by an AI rater on the identical rubric, to test whether the level could be decided automatically at all.',
     groups: [
       {
         label: 'What the readings taught us',
@@ -1240,6 +1242,10 @@ const PROJECTS = [
           {
             title: 'Readers distrust rewrites — they fear losing the real thing.',
             text: 'Early testing surfaced this directly: readers were wary of any rewrite because they worried it would quietly drop or distort the source. That fear, more than the difficulty data itself, is what shaped the interface — 100% had to stay a fixed, always-reachable anchor to the original text, not just one stop among many.',
+          },
+          {
+            title: 'An AI rater can’t stand in for a human one — it runs hot and flattens the peaks.',
+            text: 'Scoring the same 20 paragraphs with an AI rater on the same five-dimension rubric put it +1.77 points above the three-reader consensus on average (MAE 1.95), and it tracked the consensus only loosely (r = 0.494). The offset matters less than the shape: the AI’s scores varied far less than a typical reader’s (SD 0.79 vs 1.22), pushing everything toward "medium" and erasing exactly the peaks and valleys readers use to decide where to slow down. It was reasonable on the countable signals — lexical difficulty, syntactic complexity, propositional density — and close to guessing on background knowledge and argumentative transparency, the two dimensions that are properties of the reader rather than the text. That split is the case for keeping the dial in the reader’s hand: let a model handle vocabulary and sentence length, but never let it decide what counts as hard.',
           },
         ],
       },
@@ -1261,7 +1267,7 @@ const PROJECTS = [
       image: { src: 'assets/texttune/concept-overview.png', label: 'The tuning range — 5% mind-map, 100% original (anchored), 150% original plus notes' },
       points: [
         { title: 'Zoom like a map', text: 'The gesture teaches itself — the same pinch you already use every day.' },
-        { title: '13 discrete stops', text: 'From 5% to 150%, each a deliberate presentation of the same text.' },
+        { title: 'One continuous range', text: 'From 5% to 150% — every level a deliberate presentation of the same text.' },
         { title: '100% is the anchor', text: 'The original is always one stop away — never rewritten out of reach.' },
       ],
     },
