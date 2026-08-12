@@ -1586,10 +1586,11 @@ const PROJECTS = [
       purpose: 'We distilled the observations into Thomas, a persona whose gear habits and pain points set the design brief.',
     },
   ],
-  findingsChart: {
-    src: 'assets/paleo/paleofin-04.jpg',
-    label: 'Persona Thomas, his observed behaviours, and the design implication drawn from each.',
-    note: 'Persona → pain point → design implication.',
+  persona: {
+    intro: 'The field work centred on one persona — Thomas, 28, who carries his gear as much for identity as for use, and fidgets with it constantly. His habits set the design brief.',
+    src: 'assets/paleo/paleopersona.jpg',
+    label: 'Persona: Thomas, 28 — traits, observed pain points, and the design implication drawn from each.',
+    caption: 'Persona → pain point → design implication.',
   },
   howMightWe: [
     'fold fire-starting and cutting into one continuous motion — and let the tool make itself found in the dark?',
@@ -3303,6 +3304,20 @@ function ProjectDetailView({ project }) {
                 </div>
               ))}
             </div>
+          </div>
+        )}
+
+        {/* ── Persona — standalone (independent of insightGroups), before the product ── */}
+        {project.persona && project.persona.src && (
+          <div style={{ marginBottom: 'clamp(80px, 13vw, 168px)' }}>
+            <SectionLabel>Persona</SectionLabel>
+            {project.persona.intro && (
+              <p style={{ ...bodyText, fontSize: 17, maxWidth: 760, marginBottom: 'clamp(36px, 5vw, 64px)' }}>{project.persona.intro}</p>
+            )}
+            <ImagePlaceholder src={project.persona.src} label={project.persona.label} aspectRatio={'16 / 9'} />
+            {project.persona.caption && (
+              <div style={{ fontFamily: 'Archivo, sans-serif', fontSize: 12.5, color: 'var(--fg-3)', marginTop: 10 }}>{project.persona.caption}</div>
+            )}
           </div>
         )}
 
