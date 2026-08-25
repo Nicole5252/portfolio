@@ -814,7 +814,7 @@ const PROJECTS = [
   org: 'UX Research Internship · Pangolin',
   context: 'User research behind the next iteration of two convertible carry bags.',
   title: 'Pangolin',
-  blurb: 'Working solo, I designed, ran, and analysed 25 sample-feedback interviews — turning four-quadrant audience studies and region-by-region teardowns into prioritised recommendations for PM and designers.',
+  blurb: 'Working solo, I designed, ran, and analysed 25 sample-feedback interviews.',
   tags: ['UX Research', 'Mixed Methods', 'Industry'],
   insight: '25 interviews · 2 four-quadrant audience studies · validated → retired a product hypothesis',
   doodle: 'tent',
@@ -832,12 +832,37 @@ const PROJECTS = [
     tagline: 'Validate the audience before refining the product.',
   },
   problemLabel: 'Research Objective',
-  problem: 'Both carry products were entering a second iteration. Rather than redesigning parts, the brief was to interrogate the audience model and the product bets behind it — before any feature was touched. The findings changed real decisions: on the convertible bag, the interviews showed the secondary "toiletry-bag" positioning did not survive real use across almost every segment, and the team dropped it to refocus on the core small ↔ large convertible use case.',
+  problem: 'Both carry products were entering a second iteration. Rather than redesigning parts, the brief was to interrogate the audience model and the product bets behind it — before any feature was touched.',
   objectiveQuestions: [
     'Do the four hypothesised audience quadrants hold — and are their weighting and definitions right?',
     'What does each segment actually want — their goals, behaviours, pain points, and the words they use to describe them?',
     'Do the current product bets still match the segments they were built for?',
   ],
+  hypothesisTestsScope: 'Convertible bag \u00b7 9 interviews',
+  hypothesisTestsIntro: 'Three assumptions went into the second iteration \u2014 what the product is, who it is for, what they need. The interviews revised all three.',
+  hypothesisTests: [
+    {
+      layer: 'Positioning',
+      outcome: 'Retired',
+      assumed: 'The bag could double as a toiletry bag.',
+      found: 'Acceptance was low in almost every segment \u2014 people who already carry one wanted something simpler. The team dropped it and refocused on the small \u2194 large convertible core.',
+      note: 'Participants met the sample as an everyday carry first and only then heard the toiletry-bag framing \u2014 directional, not conclusive.',
+    },
+    {
+      layer: 'Audience',
+      outcome: 'Re-weighted',
+      assumed: 'Refined Men & Women were the biggest bet at 35%; Regular Overnighters the smallest at 20%.',
+      found: 'The biggest bet returned the lowest purchase intent of the four (5/10), while overnight use came up far more often than assumed. Re-cut to 30% and 35%.',
+    },
+    {
+      layer: 'Needs',
+      outcome: 'Redefined',
+      assumed: 'People choose on how small it packs down, trading one standout feature against many functions.',
+      found: 'They judged how flat and tidy it looks once packed, and how it carries \u2014 and a standout feature made them expect more functions, not fewer.',
+    },
+  ],
+  methodsColumns: 3,
+  methodsPipeline: true,
   researchMethods: [
     {
       name: 'Method 01',
@@ -865,26 +890,29 @@ const PROJECTS = [
       {
         title: 'Cluster what each segment cares about',
         detail: 'Consolidated every interview into each segment’s concerns, behaviours and needs, then wrote up one analysis sheet per segment.',
-        images: [
-          { label: 'Affinity board 1', src: 'assets/pangolin/affinity/1.jpg' },
-          { label: 'Affinity board 2', src: 'assets/pangolin/affinity/2.jpg' },
-          { label: 'Affinity board 3', src: 'assets/pangolin/affinity/3.jpg' },
-        ],
-        imagesCaption: 'Affinity boards from the interviews (original working notes).',
-        image: { label: 'Per-segment analysis (Regular Overnighter shown)', src: 'assets/pangolin/segments.jpg' },
-        caption: 'Per-segment analysis sheet · AI-translated to English.',
+        imagePair: {
+          from: {
+            label: 'Affinity board',
+            src: 'assets/pangolin/affinity/3.jpg',
+            ratio: 1.117, // native 1500 × 1343
+            caption: 'Affinity board from the interviews (original working notes).',
+          },
+          to: {
+            label: 'Per-segment analysis (Regular Overnighter shown)',
+            src: 'assets/pangolin/segments.jpg',
+            ratio: 1.912, // native 1700 × 889
+            caption: 'Per-segment analysis sheet · AI-translated to English.',
+          },
+        },
       },
       {
         title: 'Validate the audience quadrants & re-weight',
         detail: 'Tested whether the hypothesised segments held, then re-cut the weighting against what the interviews actually showed.',
         caption: 'Original audience-quadrant slide (V5) · AI-translated to English.',
         image: { label: 'Audience quadrant (V5)', src: 'assets/pangolin/quadrant.jpg' },
+        splitImage: true,
         bullets: [
-          'Multi-function and signature-feature aren’t opposites under the current definitions — revise this axis.',
           'Few people actually cared about “packed size”; reframe the axis around packing process / packed appearance / portability (name TBD).',
-          'Refined Men & Women scored notably low — define the segment more strictly and pre-screen interviewees.',
-          'Healthy Sporty Group came in below the expected count; the two valid samples both prioritised waterproofing for rain sports — define it more pointedly.',
-          'Daily Commuter overlaps Refined Men & Women (both cite everyday use); the real split is looks vs. practicality — redefine the segment.',
         ],
         weights: [
           { name: 'Refined Men & Women', before: 35, after: 30, reason: 'Lowest purchase intent of the four.' },
@@ -898,19 +926,19 @@ const PROJECTS = [
         detail: 'Linked each score band and each price band back to the qualitative reasons behind it.',
         bands: {
           score: {
-            metric: 'Weighted score', avg: '6.8',
+            metric: 'Weighted score', avg: '6.8', avgLabel: 'weighted avg',
             bands: [
-              { label: 'High', range: '≥ 7.9 — 3 people', reason: 'High everyday use, felt the capacity gain; waterproof, anti-theft and quick-access all landed.' },
-              { label: 'Mid', range: '7.1–7.8 — 4 people', reason: 'Core needs met, but first-use learning cost was high.' },
-              { label: 'Low', range: '≤ 7.0 — 2 people', reason: 'Looks felt unresolved, learning cost high, product positioning unclear.' },
+              { label: 'Low', range: '≤ 7.0', count: 2, reason: 'Looks felt unresolved, learning cost high, product positioning unclear.' },
+              { label: 'Mid', range: '7.1–7.8', count: 4, reason: 'Core needs met, but first-use learning cost was high.' },
+              { label: 'High', range: '≥ 7.9', count: 3, reason: 'High everyday use, felt the capacity gain; waterproof, anti-theft and quick-access all landed.' },
             ],
           },
           price: {
-            metric: 'Willingness to pay (NT$)', avg: '1,261',
+            metric: 'Willingness to pay (NT$)', avg: '1,261', avgLabel: 'avg',
             bands: [
-              { label: 'Low', range: '≤ 1,056 — 3 people', reason: 'Minimal needs; would only pay up for a hard pain like waterproofing.' },
-              { label: 'Mid', range: '1,056–1,427 — 3 people', reason: 'Value by CP / material / durability; pay for visible quality plus real use.' },
-              { label: 'High', range: '≥ 1,427 — 3 people', reason: 'Function + durability trust + looks → worth investing; one-bag-many-uses.' },
+              { label: 'Low', range: '≤ 1,056', count: 3, reason: 'Minimal needs; would only pay up for a hard pain like waterproofing.' },
+              { label: 'Mid', range: '1,056–1,427', count: 3, reason: 'Value by CP / material / durability; pay for visible quality plus real use.' },
+              { label: 'High', range: '≥ 1,427', count: 3, reason: 'Function + durability trust + looks → worth investing; one-bag-many-uses.' },
             ],
           },
         },
@@ -925,7 +953,7 @@ const PROJECTS = [
           { label: 'Functional zone 4', src: 'assets/pangolin/teardown/4.jpg' },
         ],
         imagesCaption: 'Each functional zone — front drawcord layer, mesh pocket, lower compartment, magnetic clasp & hook — scored and annotated with the weighted feedback. (Working drawings kept in the original Chinese.)',
-        imagesMinCol: 420,
+        imagesMinCol: 170,
         imagesAspect: '16 / 10',
       },
       {
@@ -949,9 +977,9 @@ const PROJECTS = [
       product: 'Convertible Bag',
       meta: 'n=9 · worked through above',
       findings: [
-        { title: 'Quadrants held, but the weighting needed re-cutting', description: 'One segment overlapped enough with another to question whether it should stay.', design: 'Re-ranked priority and flagged the commuter segment for possible removal.' },
-        { title: 'The “toiletry-bag” positioning was rejected', description: 'Across almost every segment, the secondary positioning did not survive real use.', design: 'Drop it; refocus on the small ↔ large convertible core.' },
-        { title: 'Operation was the biggest shared blocker (+8)', description: 'Carry method, drawcords and magnetic clasps all caused first-use friction.', design: 'Lower the learning curve and add a quick-start guide for the large mode.' },
+        { title: 'Operation was the biggest shared blocker (+8)', description: 'Carry method, drawcords and magnetic clasps all caused first-use friction — the only pain point every segment raised.', design: 'Lower the learning curve and add a quick-start guide for the large mode.' },
+        { title: 'Packing the large mode down was unintuitive (+6)', description: 'Three of the four segments hit the same wall folding the bag back down; several asked for instructions unprompted.', design: 'Rework the packing flow, and ship a written guide for the large mode.' },
+        { title: 'Carrying the large mode was uncomfortable (+6)', description: 'Straps too short, the load unbalanced when full, and the intended carry method never won people over.', design: 'Add a back-carry mode and lengthen / soften the straps.' },
       ],
       recommendation: 'P0: streamline the large-bag packing flow and cut the learning cost. Add a back-carry mode and waterproof, easy-clean material.',
     },
@@ -969,11 +997,9 @@ const PROJECTS = [
   methodReflection: {
     intro: 'Running the same analysis pipeline twice — across two different products — taught me as much about how to research as about the products themselves.',
     points: [
-      { title: 'Curation over completeness', text: 'The most-mentioned finding is not always the most important one. I learned to weigh each signal against brand positioning, development cost, and design potential before assigning priority — some low-frequency observations unlocked higher-value directions than majority opinions did.' },
-      { title: 'Cross-disciplinary judgment as a research tool', text: 'Carrying product design, development, and business lenses alongside UX let me evaluate each finding for feasibility and brand fit, not just user value. That cross-disciplinary view is what turned raw interview data into recommendations stakeholders could act on directly.' },
-      { title: 'AI collaboration requires a designed protocol', text: 'Unstructured AI use introduced two failure modes I had to design around: inconsistent extraction standards across team members, and AI stripping context to reach surface-level conclusions. I built a fixed extraction framework — defined criteria first, AI for aggregation, then my own review for context integrity. The second run was markedly faster because the protocol already existed.' },
-      { title: 'Precision is a communication skill', text: 'From a PM review after the first report, I learned that vague synthesis language creates ambiguity for anyone without full interview context. I moved to Must / Should / Nice-to-have ratings and colour-coded segments to make priority legible at a glance. Precise wording matters as much as precise findings — a single imprecise term can shift how a team interprets a recommendation.' },
-      { title: 'What I’d do differently', text: 'Both the extraction protocol and the Must / Should / Nice-to-have framework were built reactively — after the first product’s report exposed the gap. Next time I’d design the AI-extraction protocol and the priority-rating scale before round one, so the phone-carry study started with the same rigor the convertible bag only reached on its second pass.' },
+      { title: 'AI collaboration requires a designed protocol', text: 'Unstructured AI use failed twice over: extraction standards drifted between team members, and the model stripped context to reach surface-level conclusions. I fixed the criteria first, used AI only to aggregate, then reviewed context integrity myself — the second product ran markedly faster because the protocol already existed.' },
+      { title: 'Precision is a communication skill', text: 'A PM review of my first report showed me that vague synthesis language leaves anyone without full interview context guessing. I moved to Must / Should / Nice-to-have ratings with colour-coded segments, so priority reads at a glance.' },
+      { title: 'What I’d do differently', text: 'Both frameworks were built reactively, after the first report exposed the gap. Next time I would design the extraction protocol and the priority scale before round one — the phone-carry study never got the rigour the convertible bag only reached on its second pass.' },
     ],
   },
 },
@@ -2002,7 +2028,7 @@ function Lightbox({ item, onClose }) {
 }
 
 /* ---------- Image placeholder (dashed box w/ label) ---------- */
-function ImagePlaceholder({ label, note, src, aspectRatio = '4 / 3', height }) {
+function ImagePlaceholder({ label, note, src, aspectRatio = '4 / 3', height, fit, mat }) {
   const openLightbox = React.useContext(LightboxCtx);
   // Real image. With a height → cover banner (controlled). Without → natural full width.
   if (src) {
@@ -2010,7 +2036,11 @@ function ImagePlaceholder({ label, note, src, aspectRatio = '4 / 3', height }) {
       <img src={src} alt={label || ''} loading="lazy"
         onClick={openLightbox ? () => openLightbox({ src, label }) : undefined}
         style={{
-          width: '100%', height: height || 'auto', objectFit: height ? 'cover' : undefined,
+          width: '100%', height: height || 'auto', objectFit: height ? (fit || 'cover') : undefined,
+          /* mat: with objectFit:contain the element's own background fills the
+             letterbox, so a mat matching the artifact's paper removes the
+             "invisible frame" instead of leaving dead space around it. */
+          background: mat || undefined,
           display: 'block', borderRadius: 12,
           cursor: openLightbox ? 'zoom-in' : undefined,
         }} />
@@ -2208,7 +2238,9 @@ function WeightShift({ rows }) {
           }}>
             <span style={{ fontFamily: bF, fontWeight: 700, fontSize: 14.5, color: 'var(--fg-1)' }}>{r.name}</span>
             <span style={{ fontFamily: tF, fontWeight: 900, fontSize: 17, color: 'var(--ink)', whiteSpace: 'nowrap' }}>
-              {r.before}% <span style={{ color: same ? 'var(--fg-4)' : 'var(--accent)' }}>→</span> {r.after}%
+              {/* the unchanged row is marked by the absent ▲/▼, not by fading the
+                  arrow out of legibility (fg-4 on paper is ~2:1) */}
+              {r.before}% <span style={{ color: same ? 'var(--fg-2)' : 'var(--accent)' }}>→</span> {r.after}%
               {!same && <span style={{ fontFamily: bF, fontSize: 11, fontWeight: 700, color: 'var(--accent)', marginLeft: 5 }}>{up ? '▲' : '▼'}</span>}
             </span>
             <span style={{ fontFamily: bF, fontSize: 13, color: 'var(--fg-3)', lineHeight: 1.5 }}>{r.reason}</span>
@@ -2220,25 +2252,139 @@ function WeightShift({ rows }) {
 }
 
 /* ---------- Band breakdown: metric band → associated feedback ---------- */
+/* ---------- Analysis pipeline — serpentine flow with numbered nodes ----------
+   Row 1 reads left→right, the line loops round on the right, row 2 reads
+   right→left. The connector is drawn as one SVG path from measured node
+   centres, because the U-turn's geometry depends on where the nodes actually
+   land at the current width. ---------------------------------------------- */
+function PipelineFlow({ steps, narrow }) {
+  const COLS = 3;
+  const NODE = 34;
+  const wrapRef = useRef(null);
+  const nodeRefs = useRef([]);
+  const lastRef = useRef('');
+  const [geo, setGeo] = useState(null);
+
+  useEffect(() => {
+    if (narrow) { setGeo(null); return; }
+    const wrap = wrapRef.current;
+    if (!wrap) return;
+    const measure = () => {
+      const wb = wrap.getBoundingClientRect();
+      const pts = steps.map((_, i) => {
+        const n = nodeRefs.current[i];
+        if (!n) return null;
+        const b = n.getBoundingClientRect();
+        return { x: +(b.left - wb.left + b.width / 2).toFixed(1), y: +(b.top - wb.top + b.height / 2).toFixed(1) };
+      });
+      if (pts.some(pt => !pt)) return;
+      const next = { w: Math.round(wb.width), h: Math.round(wb.height), pts };
+      const key = JSON.stringify(next);
+      if (key === lastRef.current) return;   // guard: RO fires on every paint
+      lastRef.current = key;
+      setGeo(next);
+    };
+    measure();
+    const ro = new ResizeObserver(measure);
+    ro.observe(wrap);
+    return () => ro.disconnect();
+  }, [narrow, steps.length]);
+
+  // Only the 2×3 serpentine is drawn; any other count falls back to bare nodes.
+  const path = (() => {
+    if (!geo || geo.pts.length !== 6) return null;
+    const p = geo.pts, r = 20, XR = geo.w - 8;
+    const y1 = p[0].y, y2 = p[3].y;
+    return `M ${p[0].x} ${y1} H ${XR - r} Q ${XR} ${y1} ${XR} ${y1 + r} V ${y2 - r} Q ${XR} ${y2} ${XR - r} ${y2} H ${p[5].x}`;
+  })();
+
+  return (
+    <div ref={wrapRef} style={{ position: 'relative', paddingRight: narrow ? 0 : 56 }}>
+      {path && (
+        <svg width={geo.w} height={geo.h} viewBox={`0 0 ${geo.w} ${geo.h}`} aria-hidden="true"
+          style={{ position: 'absolute', left: 0, top: 0, pointerEvents: 'none' }}>
+          <path d={path} fill="none" stroke="var(--accent)" strokeOpacity="0.4" strokeWidth="2" strokeLinecap="round" />
+        </svg>
+      )}
+      <div style={{
+        display: 'grid',
+        gridTemplateColumns: narrow ? '1fr' : `repeat(${COLS}, minmax(0, 1fr))`,
+        columnGap: 'clamp(20px, 3vw, 44px)',
+        rowGap: narrow ? 'clamp(12px, 1.6vw, 18px)' : 'clamp(38px, 5vw, 58px)',
+      }}>
+        {steps.map((st, i) => {
+          const row = Math.floor(i / COLS);
+          const posInRow = i % COLS;
+          const reversed = row % 2 === 1;
+          return (
+            <div key={i} style={{
+              gridColumn: narrow ? 'auto' : (reversed ? COLS - posInRow : posInRow + 1),
+              gridRow: narrow ? 'auto' : row + 1,
+              display: narrow ? 'flex' : 'block',
+              alignItems: 'center', gap: 14,
+            }}>
+              <div ref={el => { nodeRefs.current[i] = el; }} style={{
+                width: NODE, height: NODE, borderRadius: '50%',
+                background: 'var(--accent)', color: 'var(--paper)',
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                fontFamily: "'Big Shoulders Display', Helvetica, sans-serif", fontWeight: 900, fontSize: 15,
+                flexShrink: 0, position: 'relative', zIndex: 1,
+              }}>{String(i + 1).padStart(2, '0')}</div>
+              {!narrow && (
+                <span aria-hidden="true" style={{
+                  display: 'block', width: 0, height: 14,
+                  borderLeft: '1px dashed var(--fg-3)', marginLeft: NODE / 2,
+                }} />
+              )}
+              <div style={{
+                fontFamily: 'Archivo, sans-serif', fontSize: 'clamp(13.5px, 1.3vw, 15px)',
+                color: 'var(--fg-1)', lineHeight: 1.4, marginTop: narrow ? 0 : 6,
+              }}>{st.title}</div>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
 function BandBreakdown({ data }) {
   const bF = 'Archivo, sans-serif';
   const tF = "'Big Shoulders Display', Helvetica, sans-serif";
+  // One row per band: bar length carries the headcount, and the qualitative
+  // reason sits on the same line — this step is about linking score to feedback,
+  // so the two should never be on separate layers.
+  const total = data.bands.reduce((n, b) => n + (b.count || 0), 0);
+  const max = Math.max(...data.bands.map(b => b.count || 0), 1);
   return (
     <div>
-      <div style={{ display: 'flex', alignItems: 'baseline', gap: 10, marginBottom: 16 }}>
-        <span style={{ fontFamily: bF, fontSize: 11, fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'var(--fg-3)' }}>{data.metric}</span>
-        <span style={{ fontFamily: tF, fontWeight: 900, fontSize: 24, color: 'var(--accent)' }}>{data.avg}</span>
-        <span style={{ fontFamily: bF, fontSize: 12, color: 'var(--fg-3)' }}>avg</span>
+      <div style={{ display: 'flex', alignItems: 'baseline', gap: 10, marginBottom: 'clamp(14px, 1.8vw, 20px)', flexWrap: 'wrap' }}>
+        <span style={{ fontFamily: bF, fontSize: 11, fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'var(--fg-2)' }}>{data.metric}</span>
+        <span style={{ fontFamily: tF, fontWeight: 900, fontSize: 'clamp(28px, 3.2vw, 40px)', color: 'var(--accent)', lineHeight: 1 }}>{data.avg}</span>
+        <span style={{ fontFamily: bF, fontSize: 12, color: 'var(--fg-2)' }}>{data.avgLabel || 'avg'}</span>
       </div>
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, minmax(0, 1fr))', columnGap: 'clamp(14px, 2.4vw, 28px)', rowGap: 10 }}>
+      <div style={{ display: 'grid', gap: 'clamp(10px, 1.2vw, 14px)' }}>
         {data.bands.map((b, i) => (
-          <div key={'l' + i} style={{ paddingTop: 12, borderTop: '2px solid var(--ink)', fontFamily: bF, fontWeight: 700, fontSize: 14, color: 'var(--fg-1)' }}>{b.label}</div>
-        ))}
-        {data.bands.map((b, i) => (
-          <div key={'r' + i} style={{ fontFamily: bF, fontSize: 11.5, color: 'var(--fg-4)' }}>{b.range}</div>
-        ))}
-        {data.bands.map((b, i) => (
-          <div key={'x' + i} style={{ fontFamily: bF, fontSize: 13, color: 'var(--fg-2)', lineHeight: 1.5 }}>{b.reason}</div>
+          <div key={i} style={{
+            display: 'grid',
+            gridTemplateColumns: 'minmax(72px, 0.5fr) minmax(0, 1fr) minmax(0, 1.3fr)',
+            gap: 'clamp(12px, 1.6vw, 18px)', alignItems: 'start',
+            paddingTop: 12, borderTop: '1px solid var(--hairline)',
+          }}>
+            <div>
+              <span style={{ display: 'block', fontFamily: bF, fontWeight: 700, fontSize: 14, color: 'var(--fg-1)' }}>{b.label}</span>
+              <span style={{ fontFamily: bF, fontSize: 11.5, color: 'var(--fg-2)' }}>{b.range}</span>
+            </div>
+            {/* Grid, not flex: a flex track shrinks the bar and quietly breaks the
+                proportion between length and headcount. */}
+            <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 1fr) auto', alignItems: 'center', gap: 10, paddingTop: 3 }}
+              title={`${b.count} of ${total} participants`}>
+              <div style={{ height: 12, borderRadius: '0 3px 3px 0', background: 'var(--accent)', width: `${(b.count / max) * 100}%`, minWidth: 4 }} />
+              <span style={{ fontFamily: tF, fontWeight: 900, fontSize: 19, color: 'var(--fg-1)', lineHeight: 1 }}>{b.count}</span>
+              <span style={{ position: 'absolute', width: 1, height: 1, overflow: 'hidden', clip: 'rect(0 0 0 0)' }}>{`${b.count} of ${total} participants`}</span>
+            </div>
+            <div style={{ fontFamily: bF, fontSize: 13, color: 'var(--fg-2)', lineHeight: 1.5 }}>{b.reason}</div>
+          </div>
         ))}
       </div>
     </div>
@@ -2954,7 +3100,7 @@ function ProjectDetailView({ project }) {
              quote label + supporting image — e.g. SnapWear. ── */}
         {(project.problem || project.problemImage) && (
           <div style={{ marginBottom: 'clamp(80px, 13vw, 168px)' }}>
-            <SectionLabel num="01">{project.problemLabel || 'The Problem'}</SectionLabel>
+            <SectionLabel>{project.problemLabel || 'The Problem'}</SectionLabel>
             {project.problemImageFull ? (
               /* Stacked: quote as an editorial lead, then the image full-width
                  (natural height, no crop) so a wide/dense visual reads clearly. */
@@ -3012,21 +3158,88 @@ function ProjectDetailView({ project }) {
           </div>
         )}
 
+        {/* ── Assumptions vs. Findings — the three levels the brief bet on
+             (positioning / audience / needs) and the verdict the interviews
+             returned on each. Sized to sit inside one viewport: column
+             headers render once, not per row. ── */}
+        {project.hypothesisTests && project.hypothesisTests.length > 0 && (
+          <div style={{ marginBottom: 'clamp(80px, 13vw, 168px)' }}>
+            <SectionLabel>{project.hypothesisTestsLabel || 'Assumptions vs. Findings'}</SectionLabel>
+            {project.hypothesisTestsScope && (
+              <div style={{ ...eyebrow, color: 'var(--accent)', marginTop: 'calc(-1 * clamp(16px, 2vw, 28px))', marginBottom: 'clamp(16px, 2vw, 24px)' }}>{project.hypothesisTestsScope}</div>
+            )}
+            {project.hypothesisTestsIntro && (
+              <p style={{ ...bodyText, fontSize: 'clamp(15px, 1.5vw, 18px)', maxWidth: 720, margin: '0 0 clamp(22px, 2.8vw, 34px)' }}>{project.hypothesisTestsIntro}</p>
+            )}
+            {(() => {
+              const cols = narrow ? '1fr' : 'minmax(0, 0.85fr) auto minmax(0, 1.15fr)';
+              const gap = narrow ? 'clamp(10px, 1.6vw, 14px)' : 'clamp(20px, 3vw, 40px)';
+              const miniLabel = { fontFamily: 'Archivo, sans-serif', fontSize: 11, fontWeight: 600, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'var(--fg-3)' };
+              return (
+                <div>
+                  {/* Column headers — stated once, then the pattern carries */}
+                  {!narrow && (
+                    <div style={{ display: 'grid', gridTemplateColumns: cols, gap, marginBottom: 10 }}>
+                      <div style={miniLabel}>We assumed</div>
+                      <div />
+                      <div style={{ ...miniLabel, color: 'var(--fg-2)' }}>The interviews showed</div>
+                    </div>
+                  )}
+                  {project.hypothesisTests.map((h, i) => (
+                    <div key={i} style={{
+                      padding: 'clamp(14px, 1.8vw, 22px) 0',
+                      borderTop: '1px solid var(--hairline)',
+                      borderBottom: i === project.hypothesisTests.length - 1 ? '1px solid var(--hairline)' : 'none',
+                    }}>
+                      {/* Ledger line — which level was on trial, and how it ended */}
+                      <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', gap: 12, marginBottom: 'clamp(8px, 1vw, 12px)' }}>
+                        <span style={{ ...eyebrow, color: 'var(--accent)', marginBottom: 0 }}>{h.layer}</span>
+                        {h.outcome && <span style={{ ...eyebrow, color: 'var(--fg-2)', marginBottom: 0 }}>{h.outcome}</span>}
+                      </div>
+                      <div style={{ display: 'grid', gridTemplateColumns: cols, gap, alignItems: 'start' }}>
+                        {narrow && <div style={{ ...miniLabel, marginBottom: 6 }}>We assumed</div>}
+                        <p style={{ fontFamily: 'Archivo, sans-serif', fontSize: 'clamp(14px, 1.3vw, 15.5px)', lineHeight: 1.5, color: 'var(--fg-2)', margin: 0 }}>{h.assumed}</p>
+                        <span aria-hidden="true" style={{
+                          fontFamily: 'Archivo, sans-serif', fontSize: 17, lineHeight: 1.35,
+                          color: 'var(--accent)', justifySelf: narrow ? 'start' : 'center',
+                        }}>{narrow ? '\u2193' : '\u2192'}</span>
+                        {narrow && <div style={{ ...miniLabel, color: 'var(--fg-2)', marginBottom: 6 }}>The interviews showed</div>}
+                        <div>
+                          <p style={{ fontFamily: 'Archivo, sans-serif', fontSize: 'clamp(15px, 1.45vw, 17px)', lineHeight: 1.5, color: 'var(--ink)', margin: 0 }}>{h.found}</p>
+                          {h.note && (
+                            <p style={{ fontFamily: 'Archivo, sans-serif', fontSize: 12.5, lineHeight: 1.5, color: 'var(--fg-2)', margin: '8px 0 0', paddingLeft: 10, borderLeft: '2px solid var(--hairline)' }}>{h.note}</p>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              );
+            })()}
+          </div>
+        )}
 
         {/* ── Research Methods — full page: title + two method boxes ── */}
         {project.researchMethods && project.researchMethods.length > 0 && (
           <div style={{ marginBottom: 'clamp(80px, 13vw, 168px)' }}>
-            <SectionLabel num="02">{project.methodsLabel || 'Research Methods'}</SectionLabel>
+            <SectionLabel>{project.methodsLabel || 'Research Methods'}</SectionLabel>
             {project.researchMethodsIntro && (
               <p style={{ ...bodyText, fontSize: 'clamp(17px, 1.8vw, 21px)', maxWidth: 780, marginBottom: 'clamp(32px, 4.5vw, 52px)' }}>{project.researchMethodsIntro}</p>
             )}
-            <div style={{ display: 'grid', gap: 'clamp(12px, 1.5vw, 20px)' }}>
+            <div style={{
+              display: 'grid', gap: 'clamp(12px, 1.5vw, 20px)',
+              /* methodsColumns: 3 packs text-only methods into one tidy row so the
+                 section reads as half a page instead of three stacked slabs. */
+              gridTemplateColumns: (project.methodsColumns === 3 && !narrow) ? 'repeat(3, minmax(0, 1fr))' : '1fr',
+              alignItems: 'stretch',
+            }}>
               {project.researchMethods.map((m, i) => {
                 const hasImgs = (m.images && m.images.length > 0) || m.image;
+                const compact = project.methodsColumns === 3;
                 return (
                   <div key={i} style={{
                     border: '1px solid var(--hairline)', borderRadius: 12,
-                    padding: 'clamp(26px, 3vw, 44px)',
+                    padding: compact ? 'clamp(22px, 2.2vw, 30px)' : 'clamp(26px, 3vw, 44px)',
                     display: 'grid',
                     gridTemplateColumns: (narrow || !hasImgs) ? '1fr' : 'minmax(0, 1fr) minmax(0, 1.2fr)',
                     gap: 'clamp(28px, 4vw, 60px)',
@@ -3038,8 +3251,8 @@ function ProjectDetailView({ project }) {
                         <span style={{ ...eyebrow, marginBottom: 0 }}>{m.name}</span>
                         {m.meta && <span style={{ fontFamily: "'Big Shoulders Display', Helvetica, sans-serif", fontWeight: 900, fontSize: 22, color: 'var(--accent)' }}>{m.meta}</span>}
                       </div>
-                      <div style={{ fontFamily: "'Big Shoulders Display', Helvetica, sans-serif", fontWeight: 800, fontSize: 'clamp(30px, 3.6vw, 44px)', color: 'var(--ink)', lineHeight: 1, letterSpacing: '-0.01em' }}>{m.title}</div>
-                      <p style={{ fontFamily: 'Archivo, sans-serif', fontSize: 15, lineHeight: 1.6, color: 'var(--fg-2)', margin: 0 }}>{m.purpose}</p>
+                      <div style={{ fontFamily: "'Big Shoulders Display', Helvetica, sans-serif", fontWeight: 800, fontSize: compact ? 'clamp(26px, 2.4vw, 32px)' : 'clamp(30px, 3.6vw, 44px)', color: 'var(--ink)', lineHeight: 1, letterSpacing: '-0.01em' }}>{m.title}</div>
+                      <p style={{ fontFamily: 'Archivo, sans-serif', fontSize: compact ? 14 : 15, lineHeight: 1.6, color: 'var(--fg-2)', margin: 0 }}>{m.purpose}</p>
                     </div>
                     {/* Right — images (2-column mini grid) */}
                     {m.images && m.images.length > 0 && (
@@ -3058,6 +3271,19 @@ function ProjectDetailView({ project }) {
                 );
               })}
             </div>
+
+            {/* ── Pipeline strip — bare step titles, filling the lower half of the
+                 Research Methods page. The same steps are walked through with
+                 their artifacts in the Analysis Process section below. ── */}
+            {project.methodsPipeline && project.analysisProcess && project.analysisProcess.steps && (
+              <div style={{ marginTop: 'clamp(48px, 7vw, 88px)' }}>
+                <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', gap: 16, flexWrap: 'wrap', paddingBottom: 'clamp(14px, 1.8vw, 22px)' }}>
+                  <span style={{ ...eyebrow, marginBottom: 0 }}>Analysis Process</span>
+                  <span style={{ fontFamily: 'Archivo, sans-serif', fontSize: 13, color: 'var(--fg-3)' }}>{project.analysisProcess.steps.length} steps · walked through in detail below</span>
+                </div>
+                <PipelineFlow steps={project.analysisProcess.steps} narrow={narrow} />
+              </div>
+            )}
           </div>
         )}
 
@@ -3073,54 +3299,146 @@ function ProjectDetailView({ project }) {
             )}
             <div style={{ display: 'grid', gap: 'clamp(48px, 7vw, 80px)' }}>
               {project.analysisProcess.steps.map((s, i) => {
-                const hasVisual = s.image || s.images || s.bullets || s.weights || s.bands || s.prefs;
+                const hasVisual = s.image || s.images || s.imagePair || s.bullets || s.weights || s.bands || s.prefs;
                 const capStyle = { fontFamily: 'Archivo, sans-serif', fontSize: 12.5, lineHeight: 1.5, color: 'var(--fg-3)', marginTop: 12 };
                 return (
-                  <div key={i} style={{ borderTop: '1px solid var(--hairline)', paddingTop: 'clamp(22px, 2.6vw, 34px)' }}>
-                    <div style={{
-                      display: 'grid', gridTemplateColumns: 'auto minmax(0, 1fr)',
-                      gap: 'clamp(16px, 3vw, 36px)', alignItems: 'baseline',
-                      marginBottom: hasVisual ? 'clamp(24px, 3vw, 38px)' : 0,
-                    }}>
-                      <span style={{ fontFamily: "'Big Shoulders Display', Helvetica, sans-serif", fontWeight: 900, fontSize: 'clamp(26px, 3.2vw, 44px)', color: 'var(--accent)', lineHeight: 1 }}>{String(i + 1).padStart(2, '0')}</span>
+                  <div key={i} style={{
+                    borderTop: '1px solid var(--hairline)', paddingTop: 'clamp(22px, 2.6vw, 34px)',
+                    /* The step number column runs the full height of the step and
+                       carries a hairline spine into the next one, so the six steps
+                       read as one workflow rather than six separate blocks. */
+                    /* fixed number column: "01" is narrower than "02", and an auto
+                       column would shift the whole rail a few px on the first step */
+                    display: 'grid', gridTemplateColumns: narrow ? '1fr' : 'clamp(34px, 4vw, 56px) 18px minmax(0, 1fr)',
+                    columnGap: narrow ? 0 : 'clamp(12px, 1.8vw, 22px)',
+                  }}>
+                    {!narrow && (
+                      <span style={{ fontFamily: "'Big Shoulders Display', Helvetica, sans-serif", fontWeight: 900, fontSize: 'clamp(26px, 3.2vw, 44px)', color: 'var(--accent)', lineHeight: 1, textAlign: 'right' }}>{String(i + 1).padStart(2, '0')}</span>
+                    )}
+                    {!narrow && (() => {
+                      /* Timeline rail: one continuous hairline with a node dot per
+                         step, so the six steps read as stations on one workflow.
+                         GAP/PAD mirror the step spacing so the line bleeds across it. */
+                      const DOT = 'calc(clamp(26px, 3.2vw, 44px) / 2)';
+                      const GAP = 'clamp(48px, 7vw, 80px)';
+                      const PAD = 'clamp(22px, 2.6vw, 34px)';
+                      const isFirst = i === 0;
+                      const isLast = i === project.analysisProcess.steps.length - 1;
+                      /* 2px + accent tint: a 1px hairline is indistinguishable from the
+                         horizontal section rules, so the spine stopped reading as a flow. */
+                      const line = { position: 'absolute', left: '50%', width: 2, marginLeft: -1, background: 'var(--accent)', opacity: 0.4 };
+                      return (
+                        <div aria-hidden="true" style={{ position: 'relative' }}>
+                          {!isFirst && <span style={{ ...line, top: `calc(-1 * (${GAP} + ${PAD}))`, height: `calc(${DOT} + ${GAP} + ${PAD})` }} />}
+                          {!isLast && <span style={{ ...line, top: DOT, bottom: `calc(-1 * ${GAP})` }} />}
+                          <span style={{
+                            position: 'absolute', left: '50%', top: DOT, transform: 'translate(-50%, -50%)',
+                            width: 9, height: 9, borderRadius: '50%', background: 'var(--accent)',
+                          }} />
+                        </div>
+                      );
+                    })()}
+                    <div style={{ display: 'grid', gap: hasVisual ? 'clamp(24px, 3vw, 38px)' : 0 }}>
                       <div>
+                        {narrow && (
+                          <div style={{ fontFamily: "'Big Shoulders Display', Helvetica, sans-serif", fontWeight: 900, fontSize: 'clamp(26px, 3.2vw, 44px)', color: 'var(--accent)', lineHeight: 1, marginBottom: 10 }}>{String(i + 1).padStart(2, '0')}</div>
+                        )}
                         <div style={{ fontFamily: 'Archivo, sans-serif', fontWeight: 700, fontSize: 'clamp(17px, 1.7vw, 21px)', color: 'var(--ink)', lineHeight: 1.25, marginBottom: 7 }}>{s.title}</div>
                         <div style={{ fontFamily: 'Archivo, sans-serif', fontSize: 15.5, color: 'var(--fg-2)', lineHeight: 1.55, maxWidth: 720 }}>{s.detail}</div>
                       </div>
-                    </div>
                     {hasVisual && (
-                      <div style={{ paddingLeft: 'clamp(0px, 5vw, 60px)', display: 'grid', gap: 'clamp(24px, 3vw, 36px)' }}>
+                      <div style={{ display: 'grid', gap: 'clamp(24px, 3vw, 36px)' }}>
                         {s.images && s.images.length > 0 && (
                           <figure style={{ margin: 0 }}>
                             <ImageGrid images={s.images} minCol={s.imagesMinCol || 200} aspectRatio={s.imagesAspect || '4 / 3'} maxWidth={s.imagesMaxWidth} />
                             {s.imagesCaption && <figcaption style={capStyle}>{s.imagesCaption}</figcaption>}
                           </figure>
                         )}
-                        {s.image && (
-                          <figure style={{ margin: 0 }}>
-                            <ImagePlaceholder label={s.image.label} src={s.image.src} aspectRatio={'16 / 9'} />
-                            {s.caption && <figcaption style={capStyle}>{s.caption}</figcaption>}
-                          </figure>
-                        )}
-                        {(s.bullets || s.weights) && (
-                          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: 'clamp(28px, 4vw, 52px)', alignItems: 'start' }}>
-                            {s.bullets && (
-                              <ul style={{ margin: 0, padding: 0, listStyle: 'none', display: 'grid', gap: 0 }}>
-                                {s.bullets.map((b, bi) => (
-                                  <li key={bi} style={{
-                                    display: 'flex', gap: 12, padding: '11px 0',
-                                    borderTop: '1px solid var(--hairline)',
-                                    borderBottom: bi === s.bullets.length - 1 ? '1px solid var(--hairline)' : 'none',
-                                    fontFamily: 'Archivo, sans-serif', fontSize: 14, lineHeight: 1.55, color: 'var(--fg-2)',
-                                  }}>
-                                    <span style={{ color: 'var(--accent)', fontWeight: 700, flexShrink: 0 }}>›</span>{b}
-                                  </li>
-                                ))}
-                              </ul>
-                            )}
-                            {s.weights && <WeightShift rows={s.weights} />}
+                        {/* imagePair: raw artifact → what it was turned into, joined
+                            by an arrow so the transformation reads as one move. */}
+                        {s.imagePair && (
+                          <div style={{
+                            display: 'grid',
+                            /* Columns weighted by each artifact's native w/h ratio, so both
+                               images land on exactly the same height with no letterbox —
+                               the wider artifact simply gets the wider column. */
+                            gridTemplateColumns: narrow ? '1fr'
+                              : `minmax(0, ${s.imagePair.from.ratio || 1}fr) auto minmax(0, ${s.imagePair.to.ratio || 1}fr)`,
+                            gap: narrow ? 'clamp(12px, 2vw, 18px)' : 'clamp(16px, 2.4vw, 30px)',
+                            /* Centred, not top-aligned: the two artifacts have very
+                               different aspect ratios, and a top-aligned arrow ends up
+                               pointing at whitespace beside the shorter one. */
+                            alignItems: narrow ? 'start' : 'center',
+                          }}>
+                            {[s.imagePair.from, s.imagePair.to].map((im, pi) => (
+                              <React.Fragment key={pi}>
+                                {pi === 1 && (
+                                  <span aria-hidden="true" style={{
+                                    fontFamily: 'Archivo, sans-serif', fontSize: 20, color: 'var(--accent)',
+                                    justifySelf: 'center', alignSelf: narrow ? 'start' : 'center',
+                                  }}>{narrow ? '\u2193' : '\u2192'}</span>
+                                )}
+                                <figure style={{ margin: 0 }}>
+                                  <ImagePlaceholder label={im.label} src={im.src} aspectRatio={'4 / 3'} />
+                                  {im.caption && <figcaption style={capStyle}>{im.caption}</figcaption>}
+                                </figure>
+                              </React.Fragment>
+                            ))}
                           </div>
                         )}
+                        {(() => {
+                          /* The read-out that belongs beside the artifact: the insight
+                             line plus the weighting call. Shared by both layouts. */
+                          const readout = (
+                            <>
+                              {s.bullets && (
+                                <ul style={{ margin: 0, padding: 0, listStyle: 'none', display: 'grid', gap: 0 }}>
+                                  {s.bullets.map((b, bi) => (
+                                    <li key={bi} style={{
+                                      display: 'flex', gap: 12, padding: '11px 0',
+                                      borderTop: '1px solid var(--hairline)',
+                                      borderBottom: bi === s.bullets.length - 1 ? '1px solid var(--hairline)' : 'none',
+                                      fontFamily: 'Archivo, sans-serif', fontSize: 14, lineHeight: 1.55, color: 'var(--fg-2)',
+                                    }}>
+                                      <span style={{ color: 'var(--accent)', fontWeight: 700, flexShrink: 0 }}>›</span>{b}
+                                    </li>
+                                  ))}
+                                </ul>
+                              )}
+                              {s.weights && <WeightShift rows={s.weights} />}
+                            </>
+                          );
+                          /* splitImage: artifact shrinks to the left, its read-out sits
+                             alongside on the right instead of stacking underneath. */
+                          if (s.splitImage && s.image) {
+                            return (
+                              <div style={{
+                                display: 'grid',
+                                gridTemplateColumns: narrow ? '1fr' : 'minmax(0, 0.95fr) minmax(0, 1.05fr)',
+                                gap: 'clamp(22px, 3.2vw, 44px)', alignItems: 'start',
+                              }}>
+                                <figure style={{ margin: 0 }}>
+                                  <ImagePlaceholder label={s.image.label} src={s.image.src} aspectRatio={'16 / 9'} />
+                                  {s.caption && <figcaption style={capStyle}>{s.caption}</figcaption>}
+                                </figure>
+                                <div style={{ display: 'grid', gap: 'clamp(18px, 2.4vw, 30px)', alignContent: 'start' }}>{readout}</div>
+                              </div>
+                            );
+                          }
+                          return (
+                            <>
+                              {s.image && (
+                                <figure style={{ margin: 0 }}>
+                                  <ImagePlaceholder label={s.image.label} src={s.image.src} aspectRatio={'16 / 9'} />
+                                  {s.caption && <figcaption style={capStyle}>{s.caption}</figcaption>}
+                                </figure>
+                              )}
+                              {(s.bullets || s.weights) && (
+                                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: 'clamp(28px, 4vw, 52px)', alignItems: 'start' }}>{readout}</div>
+                              )}
+                            </>
+                          );
+                        })()}
                         {s.bands && (
                           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 'clamp(28px, 4vw, 56px)' }}>
                             {s.bands.score && <BandBreakdown data={s.bands.score} />}
@@ -3139,6 +3457,7 @@ function ProjectDetailView({ project }) {
                         )}
                       </div>
                     )}
+                    </div>
                   </div>
                 );
               })}
@@ -3146,10 +3465,12 @@ function ProjectDetailView({ project }) {
           </div>
         )}
 
-        {/* ── Findings & Design Feedback — split per product ── */}
+        {/* ── Design Decisions — what each product changed, split per product.
+             Named apart from "Assumptions vs. Findings" above: that section carries
+             the audience/positioning calls, this one the product-level outcomes. ── */}
         {project.studies && project.studies.length > 0 && (
           <div style={{ marginBottom: 'clamp(80px, 13vw, 168px)' }}>
-            <SectionLabel>Findings &amp; Design Feedback</SectionLabel>
+            <SectionLabel>Design Decisions</SectionLabel>
             <div style={{ display: 'grid', gap: 'clamp(48px, 7vw, 88px)' }}>
               {project.studies.map((st, si) => (
                 <div key={si}>
@@ -3189,7 +3510,7 @@ function ProjectDetailView({ project }) {
         {/* ── Key Findings — ring charts ── */}
         {project.findings && project.findings.length > 0 && (
           <div style={{ marginBottom: 'clamp(80px, 13vw, 168px)' }}>
-            <SectionLabel num="03">Key Findings</SectionLabel>
+            <SectionLabel>Key Findings</SectionLabel>
             {project.findingsIntro && (
               <p style={{ ...bodyText, fontSize: 17, maxWidth: 760, marginBottom: 'clamp(44px, 6vw, 80px)' }}>{project.findingsIntro}</p>
             )}
@@ -3346,7 +3667,7 @@ function ProjectDetailView({ project }) {
         {/* ── Common Pain Points → How (qualitative matrix) ── */}
         {project.painMatrix && project.painMatrix.length > 0 && (
           <div style={{ marginBottom: 'clamp(48px, 8vw, 96px)' }}>
-            <SectionLabel num="04">Common Pain Points</SectionLabel>
+            <SectionLabel>Common Pain Points</SectionLabel>
             <div style={{
               display: 'grid',
               gridTemplateColumns: `repeat(${project.painMatrix.length}, minmax(0, 1fr))`,
@@ -3391,7 +3712,7 @@ function ProjectDetailView({ project }) {
         {project.designDirection && (
           <div>
             <div style={{ marginBottom: 80 }}>
-              <SectionLabel num="05">Design Direction</SectionLabel>
+              <SectionLabel>Design Direction</SectionLabel>
               {project.designDirection.intro && (
                 <p style={{ ...bodyText, marginBottom: 32 }}>{project.designDirection.intro}</p>
               )}
@@ -3492,7 +3813,7 @@ function ProjectDetailView({ project }) {
         {project.product && (
           <div>
             <div style={{ marginBottom: 80 }}>
-              <SectionLabel num="06">The Product</SectionLabel>
+              <SectionLabel>The Product</SectionLabel>
               {project.product.concept && (
                 <div style={{ marginBottom: 'clamp(48px, 6vw, 80px)' }}>
                   <h3 style={{
@@ -3755,7 +4076,7 @@ function ProjectDetailView({ project }) {
         {/* ── Details — big image + row ── */}
         {project.details && (
           <div style={{ marginBottom: 'clamp(48px, 8vw, 96px)' }}>
-            <SectionLabel num="08">Details</SectionLabel>
+            <SectionLabel>Details</SectionLabel>
             {project.details.hero && (
               <div style={{ marginBottom: 'clamp(12px, 1.5vw, 20px)' }}>
                 <img src={project.details.hero.src} alt={project.details.hero.label || ''} loading="lazy" style={{ width: '100%', height: 'auto', display: 'block', borderRadius: 12 }} />
@@ -3936,7 +4257,7 @@ function ProjectDetailView({ project }) {
         {/* ── The App (moved after usage for the Mère §6 order: gallery → pad → controller → usage → app) ── */}
         {project.app && (
           <div style={{ marginBottom: 'clamp(80px, 13vw, 168px)' }}>
-            <SectionLabel num="07">The App</SectionLabel>
+            <SectionLabel>The App</SectionLabel>
             {project.app.text && <p style={{ ...bodyText, maxWidth: 680, marginBottom: 'clamp(32px, 4vw, 56px)' }}>{project.app.text}</p>}
             {project.app.images && project.app.images.length > 0 && (
               <div style={{ display: 'grid', gridTemplateColumns: `repeat(${project.app.images.length}, minmax(0, 1fr))`, gap: 'clamp(12px, 1.5vw, 20px)' }}>

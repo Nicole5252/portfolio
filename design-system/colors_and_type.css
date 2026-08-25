@@ -95,7 +95,7 @@
   --paper-deep:      #1F1F1E;   /* slightly lighter surface */
   --ink:             #F7F7F5;   /* paper white */
   --ink-2:           #C2C2C0;
-  --ink-3:           #7E7E7C;
+  --ink-3:           #878785;   /* 5.03:1 on --paper (was #7E7E7C = 4.45, under AA) */
   --ink-4:           #4C4C4A;
   --hairline:        rgba(247, 247, 245, 0.14);
   --capsule-border:  rgba(247, 247, 245, 0.25);
