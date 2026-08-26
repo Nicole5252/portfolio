@@ -838,6 +838,26 @@ const PROJECTS = [
     'What does each segment actually want — their goals, behaviours, pain points, and the words they use to describe them?',
     'Do the current product bets still match the segments they were built for?',
   ],
+  versionCompare: {
+    label: 'V1 \u2192 V2',
+    scope: 'Convertible bag',
+    intro: 'V1 is the sample the interviews put in people\u2019s hands. V2 is the redesign they drove \u2014 four priorities where V1 had two.',
+    image: {
+      src: 'assets/pangolin/versions.jpg',
+      label: 'V1 and V2 construction drawings',
+      caption: 'Construction drawings \u00b7 V1 left, V2 right.',
+    },
+    left: {
+      name: 'V1',
+      note: 'the sample under test',
+      points: ['Positioned as a toiletry bag', 'Optimised for how small it packs down'],
+    },
+    right: {
+      name: 'V2',
+      note: 'the redesign it drove',
+      points: ['Small \u2194 large conversion as the core function', 'Ease of operation', 'Appearance \u2014 including unpacked', 'Quick-access storage'],
+    },
+  },
   hypothesisTestsScope: 'Convertible bag \u00b7 9 interviews',
   hypothesisTestsIntro: 'Three assumptions went into the second iteration \u2014 what the product is, who it is for, what they need. The interviews revised all three.',
   hypothesisTests: [
@@ -3155,6 +3175,60 @@ function ProjectDetailView({ project }) {
                 ))}
               </div>
             )}
+          </div>
+        )}
+
+        {/* ── V1 → V2 — the product either side of the study. Deliberately just
+             what each version optimises for; the reasoning belongs to the
+             Assumptions section directly below. ── */}
+        {project.versionCompare && (
+          <div style={{ marginBottom: 'clamp(80px, 13vw, 168px)' }}>
+            <SectionLabel>{project.versionCompare.label}</SectionLabel>
+            {project.versionCompare.scope && (
+              <div style={{ ...eyebrow, color: 'var(--accent)', marginTop: 'calc(-1 * clamp(16px, 2vw, 28px))', marginBottom: 'clamp(16px, 2vw, 24px)' }}>{project.versionCompare.scope}</div>
+            )}
+            {project.versionCompare.intro && (
+              <p style={{ ...bodyText, fontSize: 'clamp(15px, 1.5vw, 18px)', maxWidth: 760, margin: '0 0 clamp(24px, 3.2vw, 40px)' }}>{project.versionCompare.intro}</p>
+            )}
+            {(() => {
+              const vc = project.versionCompare;
+              /* The drawing carries the comparison, so it takes most of the width;
+                 the two lists are short and sit either side of it. */
+              const col = (v, align) => (
+                <div style={{ display: 'grid', gap: 10, alignContent: 'start', textAlign: align }}>
+                  <div style={{ display: 'flex', alignItems: 'baseline', gap: 8, justifyContent: align === 'right' ? 'flex-end' : 'flex-start', flexWrap: 'wrap' }}>
+                    <span style={{ fontFamily: "'Big Shoulders Display', Helvetica, sans-serif", fontWeight: 900, fontSize: 'clamp(24px, 2.6vw, 32px)', color: 'var(--accent)', lineHeight: 1 }}>{v.name}</span>
+                    <span style={{ fontFamily: 'Archivo, sans-serif', fontSize: 12, color: 'var(--fg-2)' }}>{v.note}</span>
+                  </div>
+                  {v.points.map((pt, pi) => (
+                    <div key={pi} style={{
+                      fontFamily: 'Archivo, sans-serif', fontSize: 'clamp(13px, 1.3vw, 14.5px)',
+                      lineHeight: 1.45, color: 'var(--fg-1)',
+                      paddingTop: 9, borderTop: '1px solid var(--hairline)',
+                    }}>{pt}</div>
+                  ))}
+                </div>
+              );
+              return (
+                <div style={{
+                  display: 'grid',
+                  gridTemplateColumns: narrow ? '1fr' : 'minmax(0, 0.8fr) minmax(0, 2.4fr) minmax(0, 0.8fr)',
+                  gap: narrow ? 'clamp(22px, 3vw, 30px)' : 'clamp(20px, 2.8vw, 40px)',
+                  /* top-aligned: the two lists have different lengths, and centring
+                     them left the shorter one floating against the drawing */
+                  alignItems: 'start',
+                }}>
+                  {col(vc.left, narrow ? 'left' : 'right')}
+                  <figure style={{ margin: 0, order: narrow ? -1 : 0 }}>
+                    <ImagePlaceholder label={vc.image.label} src={vc.image.src} aspectRatio={'16 / 9'} />
+                    {vc.image.caption && (
+                      <figcaption style={{ fontFamily: 'Archivo, sans-serif', fontSize: 12.5, lineHeight: 1.5, color: 'var(--fg-3)', marginTop: 12, textAlign: 'center' }}>{vc.image.caption}</figcaption>
+                    )}
+                  </figure>
+                  {col(vc.right, 'left')}
+                </div>
+              );
+            })()}
           </div>
         )}
 
