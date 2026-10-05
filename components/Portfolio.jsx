@@ -655,20 +655,9 @@ const PROJECTS = [
     'Usability Testing (n=3)',
     'Physical Prototyping',
   ],
-  researchMethods: [
-    {
-      name: 'Method 01',
-      title: 'Survey',
-      meta: 'n=18',
-      purpose: "To understand mothers' most pressing pain points and needs after birth, gather feedback on our initial feature concepts, and learn which features they'd want in the app — results quantified in the findings below.",
-    },
-    {
-      name: 'Method 02',
-      title: 'Interviews',
-      meta: 'n=5',
-      purpose: "After narrowing the focus to hot- and cold-compress therapy, to study mothers' habits and the friction points they hit throughout that routine — synthesised into the pain points below.",
-    },
-  ],
+  painLabel: 'Pain Points',
+  painMeta: 'Interviews · n=5',
+  painIntro: 'Once the survey had settled the direction — a modular heating and cooling module — I interviewed mothers about the breastfeeding routine itself, digging into their habits, the friction points they hit, and what they actually needed.',
   painMatrix: [
     {
       observed: 'Breastfeeding is often chaotic',
@@ -689,7 +678,8 @@ const PROJECTS = [
       src: 'assets/mere/pain-3.png',
     },
   ],
-  findingsIntro: 'Across the survey and interviews, mothers described the same physical and emotional strain. Engorgement pain was near-universal, and existing relief routines were slow, two-handed, and hard to manage alone with a newborn — every design decision below traces back to one of these three findings.',
+  findingsMeta: 'Survey · n=18',
+  findingsIntro: 'A first survey mapped the problems mothers run into most often after birth. A second round put our early feature concepts in front of them — EMS for stretch marks, EMS-driven automatic massage, guided massage, and hot- & cold-compress support — so we could narrow the list down to the features worth building.',
   findings: [
     {
       title: '13 of 18 suffer engorgement pain and poor milk flow — F1',
@@ -697,16 +687,19 @@ const PROJECTS = [
       design: 'F1 → Thermal therapy built into the garment — always on-hand, not a separate task.',
     },
     {
-      title: '10 of 18 want a smoother hot- & cold-compress routine — F2',
+      title: '10 of 18 want the hot- & cold-compress routine improved — F2',
       description: 'F2 — Existing tools are slow, messy, and two-handed — hard to use holding a newborn.',
       design: 'F2 → Heating e-textile in the bra makes the routine hands-free and self-operable.',
     },
     {
-      title: '14 of 18 want an easy-to-store, easy-to-use compress product — F3',
+      title: '14 of 18 backed the modular compress pad among the concepts shown — F3',
       description: 'F3 — Comfort and hygiene ranked alongside function — nothing stiff or hard to wash.',
       design: 'F3 → Skin-friendly e-textile with electronics that detach from a washable layer.',
     },
   ],
+  /* compactMedia caps the §6 media so each product section lands inside one
+     screen instead of scrolling past it. */
+  compactMedia: true,
   product: {
     text: 'Scoped to thermal care first. Mère is a complete set: the bra, thermal pads, and a clip-on controller — designed so a mother can run warm- or cold-compress therapy without separate tools, and without help.',
     features: [
@@ -732,12 +725,6 @@ const PROJECTS = [
   anatomy: {
     title: 'The heating / cooling pad',
     text: 'A modular thermal pad — woven heating thread over a hydrogel core — that clips into the bra pocket with skin-friendly velcro.',
-    parts: [
-      { name: 'Heating alloy thread', desc: 'Warms evenly across the pad surface.', icon: 'thread' },
-      { name: 'Hydrogel core', desc: 'Retains heat and chills for cold compress.', icon: 'drop' },
-      { name: 'Skin-friendly velcro', desc: 'Detaches cleanly for washing and swapping.', icon: 'velcro' },
-      { name: 'Soft textile layer', desc: 'Sits gently against sensitive skin.', icon: 'textile' },
-    ],
     images: [
       { src: 'assets/mere/intro-1.jpg', label: 'Pad construction — exploded view and in-bra detail' },
     ],
@@ -770,39 +757,6 @@ const PROJECTS = [
       'Temperature dial was over-sensitive — startling against already-sensitive skin',
       'Controller placement was not intuitive — required looking down to see the interface',
     ],
-  },
-  designDirection: {
-    intro: 'How might we turn engorgement relief into something a mother can do alone, on the spot, with both hands free? Mothers raised several needs — heating, cooling, and EMS massage — and time constraints meant choosing one.',
-    opportunities: [
-      {
-        title: 'Pressure Guidance',
-        signal: 'Incorrect massage force is a key cause of physical pain — textile pressure sensors could give real-time feedback.',
-        opportunity: 'Not pursued — added hardware complexity beyond project scope.',
-      },
-      {
-        title: 'Embodied Interaction',
-        signal: 'Care happens directly on the body — the bra itself can become the hands-free interface.',
-        opportunity: 'Chosen: built hot/cold thermal care into the garment.',
-      },
-      {
-        title: 'App Breastfeeding Tracking',
-        signal: 'Care is easy to lose track of, and inflammation escalates fast.',
-        opportunity: 'Chosen: an app logs sessions and flags abnormal temperature early.',
-      },
-    ],
-    focus: {
-      title: 'Final Decision',
-      reasons: [
-        {
-          title: 'Embodied Interaction',
-          text: 'Build hot/cold thermal care into the garment itself, so the bra becomes a hands-free interface during the care routine.',
-        },
-        {
-          title: 'App Breastfeeding Tracking',
-          text: 'Pair the garment with an app that tracks the breastfeeding routine and flags abnormal temperature early.',
-        },
-      ],
-    },
   },
 },
 {
@@ -2048,7 +2002,7 @@ function Lightbox({ item, onClose }) {
 }
 
 /* ---------- Image placeholder (dashed box w/ label) ---------- */
-function ImagePlaceholder({ label, note, src, aspectRatio = '4 / 3', height, fit, mat }) {
+function ImagePlaceholder({ label, note, src, aspectRatio = '4 / 3', height, fit, mat, maxHeight }) {
   const openLightbox = React.useContext(LightboxCtx);
   // Real image. With a height → cover banner (controlled). Without → natural full width.
   if (src) {
@@ -2056,7 +2010,11 @@ function ImagePlaceholder({ label, note, src, aspectRatio = '4 / 3', height, fit
       <img src={src} alt={label || ''} loading="lazy"
         onClick={openLightbox ? () => openLightbox({ src, label }) : undefined}
         style={{
-          width: '100%', height: height || 'auto', objectFit: height ? (fit || 'cover') : undefined,
+          width: '100%', height: height || 'auto',
+          /* maxHeight keeps the artwork at its natural aspect but stops it from
+             pushing the section past one screen. */
+          maxHeight: maxHeight || undefined,
+          objectFit: height ? (fit || 'cover') : (maxHeight ? 'contain' : undefined),
           /* mat: with objectFit:contain the element's own background fills the
              letterbox, so a mat matching the artifact's paper removes the
              "invisible frame" instead of leaving dead space around it. */
@@ -2105,7 +2063,7 @@ function ImagePlaceholder({ label, note, src, aspectRatio = '4 / 3', height, fit
 }
 
 /* ---------- Responsive grid of image placeholders ---------- */
-function ImageGrid({ images, minCol = 220, aspectRatio = '4 / 3', maxWidth }) {
+function ImageGrid({ images, minCol = 220, aspectRatio = '4 / 3', maxWidth, mediaHeight }) {
   if (!images || !images.length) return null;
   return (
     <div style={{
@@ -2115,7 +2073,10 @@ function ImageGrid({ images, minCol = 220, aspectRatio = '4 / 3', maxWidth }) {
       maxWidth: maxWidth || undefined
     }}>
       {images.map((im, i) => (
-        <ImagePlaceholder key={i} label={im.label} note={im.note} src={im.src} aspectRatio={aspectRatio} />
+        /* mediaHeight caps a wide artifact board so its section still fits one
+           screen; contain keeps the diagram intact instead of cropping it. */
+        <ImagePlaceholder key={i} label={im.label} note={im.note} src={im.src} aspectRatio={aspectRatio}
+          maxHeight={mediaHeight} />
       ))}
     </div>
   );
@@ -2154,7 +2115,7 @@ function UsageStepper({ frames }) {
 }
 
 /* ---------- Product gallery: big image + thumbnail strip, autoplay + manual ---------- */
-function ProductGallery({ images }) {
+function ProductGallery({ images, maxHeight }) {
   const openLightbox = React.useContext(LightboxCtx);
   const [active, setActive] = useState(0);
   const [paused, setPaused] = useState(false);
@@ -2187,7 +2148,12 @@ function ProductGallery({ images }) {
           loading="lazy"
           onClick={openLightbox ? () => openLightbox({ src: im.src, label: im.label }) : undefined}
           style={{
-            width: '100%', aspectRatio: '16 / 9', objectFit: 'cover',
+            width: '100%',
+            /* maxHeight keeps the gallery inside one screen; contain shows the
+               whole frame rather than a cropped 16/9 slice. */
+            ...(maxHeight
+              ? { height: 'auto', maxHeight, objectFit: 'contain' }
+              : { aspectRatio: '16 / 9', objectFit: 'cover' }),
             display: 'block', borderRadius: 12,
             cursor: openLightbox ? 'zoom-in' : undefined,
           }}
@@ -2214,7 +2180,9 @@ function ProductGallery({ images }) {
                 loading="lazy"
                 onClick={() => setActive(i)}
                 style={{
-                  width: '100%', aspectRatio: '4 / 3', objectFit: 'cover', display: 'block', borderRadius: 12,
+                  width: '100%',
+                  ...(maxHeight ? { height: 'clamp(44px, 7vh, 72px)' } : { aspectRatio: '4 / 3' }),
+                  objectFit: 'cover', display: 'block', borderRadius: 12,
                   cursor: 'pointer',
                   border: i === active ? '1px solid var(--ink)' : '1px solid var(--hairline)',
                   opacity: i === active ? 1 : 0.62,
@@ -2914,6 +2882,28 @@ function ProjectDetailView({ project }) {
   // Click-to-zoom lightbox for case-study images
   const [lightbox, setLightbox] = useState(null);
   const narrow = useIsNarrow();
+  /* compactMedia: §6 keeps its prose at a readable measure and caps the media
+     height, so each product section reads as one screen rather than a long scroll. */
+  const compactMedia = !!project.compactMedia && !narrow;
+  const mediaCap = compactMedia ? 'min(74vh, 700px)' : undefined;     // board artwork, full width
+  const galleryCap = compactMedia ? 'min(52vh, 540px)' : undefined;   // gallery, whole image visible
+  /* Label, then prose, then any tags — all anchored to the same left margin as
+     the rest of the page, with the measure held near 62ch so the line length
+     stays in the readable band. */
+  const mediaHeader = (label, text, aside) => (
+    <div style={{ marginBottom: 'clamp(22px, 2.8vw, 34px)' }}>
+      {label}
+      {text && (
+        <p style={{
+          fontFamily: 'Archivo, sans-serif',
+          fontSize: 'clamp(15px, 1.25vw, 17px)', lineHeight: 1.62,
+          color: 'var(--fg-2)', maxWidth: '62ch',
+          margin: label ? 'clamp(10px, 1.2vw, 14px) 0 0' : 0,
+        }}>{text}</p>
+      )}
+      {aside && <div style={{ marginTop: 'clamp(14px, 1.8vw, 20px)' }}>{aside}</div>}
+    </div>
+  );
 
   // Shared style helpers (matching the design system)
   const eyebrow = {
@@ -2955,13 +2945,23 @@ function ProjectDetailView({ project }) {
     outcome:   <svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"><path d="M3.5 14 V2 H12 L10 5 L12 8 H3.5"/></svg>,
   };
 
-  const SectionLabel = ({ children }) => (
+  /* meta carries the sample size next to the title. */
+  const SectionLabel = ({ children, meta }) => (
     <div style={{ marginBottom: 'clamp(28px, 3.2vw, 48px)' }}>
-      <h2 style={{
-        fontFamily: "'Big Shoulders Display', Helvetica, sans-serif",
-        fontWeight: 800, fontSize: 'clamp(30px, 4vw, 46px)',
-        color: 'var(--ink)', lineHeight: 1, letterSpacing: '-0.02em', margin: 0,
-      }}>{children}</h2>
+      <div style={{ display: 'flex', alignItems: 'baseline', gap: 'clamp(10px, 1.4vw, 18px)', flexWrap: 'wrap' }}>
+        <h2 style={{
+          fontFamily: "'Big Shoulders Display', Helvetica, sans-serif",
+          fontWeight: 800, fontSize: 'clamp(30px, 4vw, 46px)',
+          color: 'var(--ink)', lineHeight: 1, letterSpacing: '-0.02em', margin: 0,
+        }}>{children}</h2>
+        {meta && (
+          <span style={{
+            fontFamily: 'Archivo, sans-serif', fontWeight: 700,
+            fontSize: 12, letterSpacing: '0.12em', textTransform: 'uppercase',
+            color: 'var(--fg-3)',
+          }}>{meta}</span>
+        )}
+      </div>
       <div style={{ height: 1, background: 'var(--hairline)', marginTop: 'clamp(16px, 2vw, 22px)' }} />
     </div>
   );
@@ -3584,7 +3584,7 @@ function ProjectDetailView({ project }) {
         {/* ── Key Findings — ring charts ── */}
         {project.findings && project.findings.length > 0 && (
           <div style={{ marginBottom: 'clamp(80px, 13vw, 168px)' }}>
-            <SectionLabel>Key Findings</SectionLabel>
+            <SectionLabel meta={project.findingsMeta}>Key Findings</SectionLabel>
             {project.findingsIntro && (
               <p style={{ ...bodyText, fontSize: 17, maxWidth: 760, marginBottom: 'clamp(44px, 6vw, 80px)' }}>{project.findingsIntro}</p>
             )}
@@ -3741,7 +3741,10 @@ function ProjectDetailView({ project }) {
         {/* ── Common Pain Points → How (qualitative matrix) ── */}
         {project.painMatrix && project.painMatrix.length > 0 && (
           <div style={{ marginBottom: 'clamp(48px, 8vw, 96px)' }}>
-            <SectionLabel>Common Pain Points</SectionLabel>
+            <SectionLabel meta={project.painMeta}>{project.painLabel || 'Common Pain Points'}</SectionLabel>
+            {project.painIntro && (
+              <p style={{ ...bodyText, fontSize: 17, maxWidth: 760, marginBottom: 'clamp(32px, 4.5vw, 56px)' }}>{project.painIntro}</p>
+            )}
             <div style={{
               display: 'grid',
               gridTemplateColumns: `repeat(${project.painMatrix.length}, minmax(0, 1fr))`,
@@ -3749,7 +3752,7 @@ function ProjectDetailView({ project }) {
               rowGap: 'clamp(16px, 1.8vw, 24px)',
             }}>
               {project.painMatrix.map((row, i) => (
-                <div key={'img' + i} style={{ alignSelf: 'end' }}>
+                <div key={'img' + i} className="pain-img" style={{ alignSelf: 'end', padding: 'clamp(6px, 1vw, 12px)', borderRadius: 6 }}>
                   {row.src && <img src={row.src} alt={row.observed} loading="lazy" style={{ width: '100%', height: 'auto', display: 'block' }} />}
                 </div>
               ))}
@@ -3916,19 +3919,33 @@ function ProjectDetailView({ project }) {
                   )}
                 </div>
               )}
-              {project.product.text && (
-              <p style={{ ...bodyText, whiteSpace: 'pre-line',
-                ...(project.product.images && project.product.images.some((im) => im.caption)
-                  ? { fontSize: 'clamp(20px, 2vw, 24px)', lineHeight: 1.45, marginBottom: project.product.features ? 28 : 32 }
-                  : { marginBottom: project.product.features ? 24 : 28 }) }}>{project.product.text}</p>
-              )}
-              {project.product.features && project.product.features.length > 0 && (
-                <div style={{ display: 'flex', flexWrap: 'wrap', gap: 10, marginBottom: project.product.images ? (project.product.images.some((im) => im.caption) ? 'clamp(56px, 7vw, 88px)' : 36) : 0 }}>
-                  {project.product.features.map((f) => (
-                    <span key={f} className="tag">{f}</span>
-                  ))}
-                </div>
-              )}
+              {compactMedia
+                /* Tags left, prose right — the same header row as the sections
+                   below, so the gallery keeps its height. */
+                ? mediaHeader(
+                    null,
+                    project.product.text,
+                    project.product.features && project.product.features.length > 0 ? (
+                      <div style={{ display: 'flex', flexWrap: 'wrap', gap: 10 }}>
+                        {project.product.features.map((f) => (<span key={f} className="tag">{f}</span>))}
+                      </div>
+                    ) : null,
+                  )
+                : (<>
+                    {project.product.text && (
+                    <p style={{ ...bodyText, whiteSpace: 'pre-line',
+                      ...(project.product.images && project.product.images.some((im) => im.caption)
+                        ? { fontSize: 'clamp(20px, 2vw, 24px)', lineHeight: 1.45, marginBottom: project.product.features ? 28 : 32 }
+                        : { marginBottom: project.product.features ? 24 : 28 }) }}>{project.product.text}</p>
+                    )}
+                    {project.product.features && project.product.features.length > 0 && (
+                      <div style={{ display: 'flex', flexWrap: 'wrap', gap: 10, marginBottom: project.product.images ? (project.product.images.some((im) => im.caption) ? 'clamp(56px, 7vw, 88px)' : 36) : 0 }}>
+                        {project.product.features.map((f) => (
+                          <span key={f} className="tag">{f}</span>
+                        ))}
+                      </div>
+                    )}
+                  </>)}
               {/* Large narrative images with captions — replaces the old usage
                   stepper's step-by-step story for SnapWear. */}
               {project.product.narrativeImages && project.product.narrativeImages.length > 0 && (
@@ -3999,7 +4016,7 @@ function ProjectDetailView({ project }) {
               {project.slug === 'texttune' ? (
                 <TextTuneDial />
               ) : project.slug === 'mere' && project.product.images && project.product.images.length > 1 ? (
-                <ProductGallery images={project.product.images.filter((im) => im.src)} />
+                <ProductGallery images={project.product.images.filter((im) => im.src)} maxHeight={galleryCap} />
               ) : project.slug === 'snapwear' && project.product.images && project.product.images.length > 0 ? (
                 // Two explicit grid rows (captions, then images) so both images
                 // share one top edge and one bottom edge, regardless of caption
@@ -4169,9 +4186,13 @@ function ProjectDetailView({ project }) {
         {/* ── Anatomy: heating / cooling pad ── */}
         {project.anatomy && (
           <div>
-            <div style={{ marginBottom: 80 }}>
-              <div style={eyebrow}>{project.anatomy.title || 'Anatomy'}</div>
-              <p style={{ ...bodyText, marginBottom: 36 }}>{project.anatomy.text}</p>
+            <div style={{ marginBottom: project.compactMedia ? 'clamp(48px, 6vw, 72px)' : 80 }}>
+              {compactMedia
+                ? mediaHeader(<div style={{ ...eyebrow, marginBottom: 0 }}>{project.anatomy.title || 'Anatomy'}</div>, project.anatomy.text)
+                : (<>
+                    <div style={eyebrow}>{project.anatomy.title || 'Anatomy'}</div>
+                    <p style={{ ...bodyText, marginBottom: 36 }}>{project.anatomy.text}</p>
+                  </>)}
               {project.anatomy.parts && project.anatomy.parts.length > 0 && (
                 <div style={{ marginBottom: project.anatomy.images ? 36 : 0 }}>
                   {project.anatomy.parts.map((p, i) => (
@@ -4204,7 +4225,7 @@ function ProjectDetailView({ project }) {
                 </div>
               )}
               {project.anatomy.images && project.anatomy.images.length > 0 && (
-                <ImageGrid images={project.anatomy.images} minCol={240} aspectRatio={'4 / 3'} />
+                <ImageGrid images={project.anatomy.images} minCol={240} aspectRatio={'4 / 3'} mediaHeight={mediaCap} />
               )}
             </div>
               </div>
@@ -4213,18 +4234,30 @@ function ProjectDetailView({ project }) {
         {/* ── Controller ── */}
         {project.controller && (
           <div>
-            <div style={{ marginBottom: 80 }}>
-              <div style={eyebrow}>The Controller</div>
-              <p style={{ ...bodyText, marginBottom: project.controller.features ? 24 : 28 }}>{project.controller.text}</p>
-              {project.controller.features && project.controller.features.length > 0 && (
-                <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, marginBottom: project.controller.images ? 36 : 0 }}>
-                  {project.controller.features.map((f) => (
-                    <span key={f} className="tag">{f}</span>
-                  ))}
-                </div>
-              )}
+            <div style={{ marginBottom: project.compactMedia ? 'clamp(48px, 6vw, 72px)' : 80 }}>
+              {compactMedia
+                ? mediaHeader(
+                    <div style={{ ...eyebrow, marginBottom: 0 }}>The Controller</div>,
+                    project.controller.text,
+                    project.controller.features && project.controller.features.length > 0 ? (
+                      <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, marginTop: 16 }}>
+                        {project.controller.features.map((f) => (<span key={f} className="tag">{f}</span>))}
+                      </div>
+                    ) : null,
+                  )
+                : (<>
+                    <div style={eyebrow}>The Controller</div>
+                    <p style={{ ...bodyText, marginBottom: project.controller.features ? 24 : 28 }}>{project.controller.text}</p>
+                    {project.controller.features && project.controller.features.length > 0 && (
+                      <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, marginBottom: project.controller.images ? 36 : 0 }}>
+                        {project.controller.features.map((f) => (
+                          <span key={f} className="tag">{f}</span>
+                        ))}
+                      </div>
+                    )}
+                  </>)}
               {project.controller.images && project.controller.images.length > 0 && (
-                <ImageGrid images={project.controller.images} minCol={240} aspectRatio={'4 / 3'} />
+                <ImageGrid images={project.controller.images} minCol={240} aspectRatio={'4 / 3'} mediaHeight={mediaCap} />
               )}
             </div>
               </div>
@@ -4233,11 +4266,15 @@ function ProjectDetailView({ project }) {
         {/* ── How It Works ── */}
         {project.usage && (
           <div>
-            <div style={{ marginBottom: 80 }}>
-              <div style={eyebrow}>How It Works</div>
-              {project.usage.text && (
-                <p style={{ ...bodyText, marginBottom: 32 }}>{project.usage.text}</p>
-              )}
+            <div style={{ marginBottom: project.compactMedia ? 'clamp(48px, 6vw, 72px)' : 80 }}>
+              {compactMedia
+                ? mediaHeader(<div style={{ ...eyebrow, marginBottom: 0 }}>How It Works</div>, project.usage.text)
+                : (<>
+                    <div style={eyebrow}>How It Works</div>
+                    {project.usage.text && (
+                      <p style={{ ...bodyText, marginBottom: 32 }}>{project.usage.text}</p>
+                    )}
+                  </>)}
               {project.usage.video && (
                 <div style={{ maxWidth: 860, margin: '0 auto', marginBottom: 'clamp(44px, 6vw, 72px)' }}>
                   <video controls playsInline preload="metadata"
@@ -4315,6 +4352,7 @@ function ProjectDetailView({ project }) {
                 <ImagePlaceholder
                   src={project.usage.image.src}
                   label={project.usage.image.label}
+                  maxHeight={mediaCap}
                 />
               )}
               {project.usage.diagram && (
@@ -4336,7 +4374,8 @@ function ProjectDetailView({ project }) {
             {project.app.images && project.app.images.length > 0 && (
               <div style={{ display: 'grid', gridTemplateColumns: `repeat(${project.app.images.length}, minmax(0, 1fr))`, gap: 'clamp(12px, 1.5vw, 20px)' }}>
                 {project.app.images.map((im, i) => (
-                  <img key={i} src={im.src} alt={im.label || ''} loading="lazy" style={{ width: '100%', height: 'auto', display: 'block', borderRadius: 12 }} />
+                  <img key={i} src={im.src} alt={im.label || ''} loading="lazy"
+                    style={{ width: '100%', height: 'auto', maxHeight: mediaCap || undefined, objectFit: mediaCap ? 'contain' : undefined, display: 'block', borderRadius: 12 }} />
                 ))}
               </div>
             )}
@@ -4359,7 +4398,7 @@ function ProjectDetailView({ project }) {
         {/* ── User Testing ── */}
         {project.userTesting && (
           <div>
-            <div style={{ marginBottom: 80 }}>
+            <div style={{ marginBottom: project.compactMedia ? 'clamp(48px, 6vw, 72px)' : 80 }}>
               <SectionLabel>Validation</SectionLabel>
               {/* Method + RQs strip */}
               {(project.userTesting.method || project.userTesting.rqs) && (
@@ -4390,46 +4429,52 @@ function ProjectDetailView({ project }) {
               {project.userTesting.setup && (
                 <p style={{ ...bodyText, marginBottom: 32 }}>{project.userTesting.setup}</p>
               )}
-              {/* What Worked — full-width key-insight row */}
-              {project.userTesting.positives && project.userTesting.positives.length > 0 && (
-                <div style={{ marginBottom: 'clamp(40px, 5vw, 64px)' }}>
-                  <div style={{ ...eyebrow, color: 'var(--accent)', marginBottom: 'clamp(18px, 2.5vw, 28px)' }}>What Worked</div>
-                  <div style={{ display: 'grid', gap: 0 }}>
-                    {project.userTesting.positives.map((item, i) => (
-                      <div key={i} style={{
-                        display: 'flex', alignItems: 'baseline', gap: 'clamp(16px, 2.5vw, 32px)',
-                        padding: 'clamp(18px, 2.2vw, 28px) 0',
-                        borderTop: '1px solid var(--hairline)',
-                        borderBottom: i === project.userTesting.positives.length - 1 ? '1px solid var(--hairline)' : 'none',
-                      }}>
-                        <span style={{ fontFamily: "'Big Shoulders Display', Helvetica, sans-serif", fontWeight: 900, fontSize: 'clamp(28px, 3.2vw, 44px)', color: 'var(--accent)', lineHeight: 1, flexShrink: 0 }}>+</span>
-                        <span style={{ fontFamily: 'Archivo, sans-serif', fontWeight: 600, fontSize: 'clamp(16px, 1.5vw, 19px)', color: 'var(--fg-1)', lineHeight: 1.45 }}>{item}</span>
-                      </div>
-                    ))}
+              {/* What Worked / What to Improve — read side by side so the whole
+                  validation section lands in one screen. */}
+              {((project.userTesting.positives && project.userTesting.positives.length > 0) ||
+                (project.userTesting.negatives && project.userTesting.negatives.length > 0)) && (() => {
+                const both = project.userTesting.positives && project.userTesting.positives.length > 0
+                  && project.userTesting.negatives && project.userTesting.negatives.length > 0;
+                /* Side by side (and a notch smaller) only where the page opts in;
+                   every other case page keeps the original full-width rows. */
+                const side = both && !narrow && !!project.compactMedia;
+                const column = (title, items, marker, markerColor) => (
+                  <div>
+                    <div style={{ ...eyebrow, color: markerColor, marginBottom: side ? 'clamp(12px, 1.6vw, 18px)' : 'clamp(18px, 2.5vw, 28px)' }}>{title}</div>
+                    <div style={{ display: 'grid', gap: 0 }}>
+                      {items.map((item, i) => (
+                        <div key={i} style={{
+                          display: 'flex', alignItems: 'baseline',
+                          gap: side ? 'clamp(12px, 1.6vw, 20px)' : 'clamp(16px, 2.5vw, 32px)',
+                          padding: side ? 'clamp(11px, 1.3vw, 16px) 0' : 'clamp(18px, 2.2vw, 28px) 0',
+                          borderTop: '1px solid var(--hairline)',
+                          borderBottom: i === items.length - 1 ? '1px solid var(--hairline)' : 'none',
+                        }}>
+                          <span style={{ fontFamily: "'Big Shoulders Display', Helvetica, sans-serif", fontWeight: 900, fontSize: side ? 'clamp(20px, 2vw, 28px)' : 'clamp(28px, 3.2vw, 44px)', color: markerColor, lineHeight: 1, flexShrink: 0 }}>{marker}</span>
+                          <span style={{ fontFamily: 'Archivo, sans-serif', fontWeight: 600, fontSize: side ? 'clamp(14px, 1.15vw, 16px)' : 'clamp(16px, 1.5vw, 19px)', color: 'var(--fg-1)', lineHeight: side ? 1.4 : 1.45 }}>{item}</span>
+                        </div>
+                      ))}
+                    </div>
                   </div>
-                </div>
-              )}
-              {/* What to Improve — full-width key-insight row */}
-              {project.userTesting.negatives && project.userTesting.negatives.length > 0 && (
-                <div style={{ marginBottom: 'clamp(40px, 5vw, 64px)' }}>
-                  <div style={{ ...eyebrow, marginBottom: 'clamp(18px, 2.5vw, 28px)' }}>What to Improve</div>
-                  <div style={{ display: 'grid', gap: 0 }}>
-                    {project.userTesting.negatives.map((item, i) => (
-                      <div key={i} style={{
-                        display: 'flex', alignItems: 'baseline', gap: 'clamp(16px, 2.5vw, 32px)',
-                        padding: 'clamp(18px, 2.2vw, 28px) 0',
-                        borderTop: '1px solid var(--hairline)',
-                        borderBottom: i === project.userTesting.negatives.length - 1 ? '1px solid var(--hairline)' : 'none',
-                      }}>
-                        <span style={{ fontFamily: "'Big Shoulders Display', Helvetica, sans-serif", fontWeight: 900, fontSize: 'clamp(28px, 3.2vw, 44px)', color: 'var(--fg-3)', lineHeight: 1, flexShrink: 0 }}>→</span>
-                        <span style={{ fontFamily: 'Archivo, sans-serif', fontWeight: 600, fontSize: 'clamp(16px, 1.5vw, 19px)', color: 'var(--fg-1)', lineHeight: 1.45 }}>{item}</span>
-                      </div>
-                    ))}
+                );
+                return (
+                  <div style={{
+                    display: 'grid',
+                    gridTemplateColumns: side ? 'repeat(2, minmax(0, 1fr))' : '1fr',
+                    columnGap: 'clamp(28px, 4vw, 64px)',
+                    rowGap: 'clamp(28px, 4vw, 48px)',
+                    alignItems: 'start',
+                    marginBottom: 'clamp(32px, 4vw, 52px)',
+                  }}>
+                    {project.userTesting.positives && project.userTesting.positives.length > 0 &&
+                      column('What Worked', project.userTesting.positives, '+', 'var(--accent)')}
+                    {project.userTesting.negatives && project.userTesting.negatives.length > 0 &&
+                      column('What to Improve', project.userTesting.negatives, '→', 'var(--fg-3)')}
                   </div>
-                </div>
-              )}
+                );
+              })()}
               {project.userTesting.photos && project.userTesting.photos.length > 0 && (
-                <ImageGrid images={project.userTesting.photos} minCol={220} aspectRatio={'4 / 3'} />
+                <ImageGrid images={project.userTesting.photos} minCol={220} aspectRatio={'4 / 3'} mediaHeight={mediaCap} />
               )}
             </div>
               </div>
@@ -4886,6 +4931,10 @@ const TWEAK_CSS = `
 /* Usage stepper — crossfade on frame change */
 .usage-frame-img { animation: faFrameFade 320ms ease; }
 @keyframes faFrameFade { from { opacity: 0 } to { opacity: 1 } }
+
+/* Pain-point PNGs are dark line drawings on transparency — they vanish against
+   the dark palette, so they get a white card only in dark mode. */
+[data-theme="dark"] .pain-img { background: #fff; }
 
 /* Findings grid — one column per finding, stacks on narrow screens */
 .findings-grid { grid-template-columns: repeat(var(--fcount, 3), minmax(0, 1fr)); }
