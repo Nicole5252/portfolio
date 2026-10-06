@@ -1222,30 +1222,28 @@ const PROJECTS = [
     note: 'The AI line (red) sits above the human consensus (dashed) almost everywhere, and swings less than any single reader.',
   },
   // §3 Insights — restructured 2026-07-16 to reader-facing findings, each a claim
-  // + 2–3 sentences of evidence. A fourth insight was added 2026-08-06 once the
-  // AI-vs-human comparison had actually been run (numbers sourced from the
-  // multi-rater report, not estimated). Section label auto-counts → "Four Insights".
+  // + 2–3 sentences of evidence. Cut back 2026-10-05 (user-decided) to three
+  // claim-only lines, matching the "What we found" slide: the AI-vs-human insight
+  // was removed and every item's `text` body was dropped — the page now carries the
+  // claims alone, with the evidence living in findingsChart above (chart + note)
+  // and the intro. `text` is optional in ProjectDetailView (guarded), so other
+  // projects' insight bodies are unaffected. Section label auto-counts → "Three Insights".
   insightGroups: {
-    intro: 'Three readers each scored the same 20-paragraph academic paper (Design Frictions on Social Media) on the five-dimension rubric, and a 15-paragraph magazine feature (The Guardian) was scored on the same rubric — comparing how difficulty behaves across two genres. The same paper was then re-scored by an AI rater on the identical rubric, to test whether the level could be decided automatically at all.',
+    // Trimmed to one sentence 2026-10-05 — still names the two genres and the AI
+    // re-scoring, because the chart below is read against both.
+    intro: 'Three readers scored the same 20-paragraph academic paper and a 15-paragraph magazine feature on the five-dimension rubric; the paper was then re-scored by an AI rater on the same rubric.',
     groups: [
       {
         label: 'What the readings taught us',
         items: [
           {
             title: 'Readers bump into hard patches and easy patches within the same text — over and over.',
-            text: 'The paper’s difficulty is a mountain concentrated in its technical core (Methods/Results); the magazine’s is a flat floor with three isolated spikes tied to attribution and cultural background, not vocabulary. The one peak all three readers agreed on — the statistics/methods paragraphs (p12, p14) — also had the smallest disagreement of the whole text (SD as low as 0.42), the closest thing to text-intrinsic difficulty.',
           },
           {
             title: 'What makes a passage hard differs per reader — it hides in five different dimensions of the writing.',
-            text: 'Several early paragraphs looked easy on average (~3/10) but had high disagreement between readers (SD 1.1–1.4) — one reader was climbing alone through the introduction while another’s flat low scores cancelled it out in the mean. Disagreement (SD), not the mean, is the signal for personal difficulty — and the five-dimension rubric (Lexical, Syntactic/Stance, Propositional/Quantitative, Background knowledge, Argumentative transparency) is what lets a peak be traced to a specific cause instead of a vague "this is hard."',
           },
           {
             title: 'Readers distrust rewrites — they fear losing the real thing.',
-            text: 'Early testing surfaced this directly: readers were wary of any rewrite because they worried it would quietly drop or distort the source. That fear, more than the difficulty data itself, is what shaped the interface — 100% had to stay a fixed, always-reachable anchor to the original text, not just one stop among many.',
-          },
-          {
-            title: 'An AI rater can’t stand in for a human one — it runs hot and flattens the peaks.',
-            text: 'Scoring the same 20 paragraphs with an AI rater on the same five-dimension rubric put it +1.77 points above the three-reader consensus on average (MAE 1.95), and it tracked the consensus only loosely (r = 0.494). The offset matters less than the shape: the AI’s scores varied far less than a typical reader’s (SD 0.79 vs 1.22), pushing everything toward "medium" and erasing exactly the peaks and valleys readers use to decide where to slow down. It was reasonable on the countable signals — lexical difficulty, syntactic complexity, propositional density — and close to guessing on background knowledge and argumentative transparency, the two dimensions that are properties of the reader rather than the text. That split is the case for keeping the dial in the reader’s hand: let a model handle vocabulary and sentence length, but never let it decide what counts as hard.',
           },
         ],
       },
@@ -3691,8 +3689,10 @@ function ProjectDetailView({ project }) {
                         padding: '16px 0', borderTop: '1px solid var(--hairline)',
                         borderBottom: ii === g.items.length - 1 ? '1px solid var(--hairline)' : 'none',
                       }}>
-                        <div style={{ fontFamily: 'Archivo, sans-serif', fontWeight: 700, fontSize: 16, color: 'var(--fg-1)', lineHeight: 1.3, marginBottom: 6 }}>{it.title}</div>
-                        <div style={{ fontFamily: 'Archivo, sans-serif', fontSize: 14.5, lineHeight: 1.55, color: 'var(--fg-2)' }}>{it.text}</div>
+                        <div style={{ fontFamily: 'Archivo, sans-serif', fontWeight: 700, fontSize: 16, color: 'var(--fg-1)', lineHeight: 1.3, marginBottom: it.text ? 6 : 0 }}>{it.title}</div>
+                        {it.text && (
+                          <div style={{ fontFamily: 'Archivo, sans-serif', fontSize: 14.5, lineHeight: 1.55, color: 'var(--fg-2)' }}>{it.text}</div>
+                        )}
                       </div>
                     ))}
                   </div>
