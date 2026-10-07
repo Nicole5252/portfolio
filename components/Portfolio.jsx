@@ -1488,6 +1488,7 @@ const PROJECTS = [
     },
   ],
   statRings: {
+    meta: 'Survey · n=12',
     intro: 'The survey was built around three questions — where friction lives, where information breaks down, and whether a "people like me" comparison is trusted. Only one of the three carries a number that means what it looks like; the other two are read qualitatively.',
     items: [
       {
@@ -1764,118 +1765,6 @@ function Doodle({ kind }) {
   return null;
 }
 
-/* ---------- Project Card ---------- */
-function ProjectCard({ p, rotate, onOpen }) {
-  const [hover, setHover] = React.useState(false);
-  return (
-    <article
-      onClick={() => onOpen && onOpen(p.slug)}
-      onMouseEnter={() => setHover(true)}
-      onMouseLeave={() => setHover(false)}
-      onFocus={() => setHover(true)}
-      onBlur={() => setHover(false)}
-      tabIndex={0}
-      role="button"
-      onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') onOpen && onOpen(p.slug); }}
-      style={{
-        position: 'relative',
-        background: 'var(--paper)',
-        border: 'none',
-        borderRadius: 0,
-        aspectRatio: '1 / 1',
-        overflow: 'hidden',
-        cursor: 'pointer',
-        transition: 'background 240ms ease',
-      }}>
-
-      {/* Resting state — thumbnail image (or doodle fallback) */}
-      <div style={{
-        position: 'absolute', inset: 0,
-        display: 'flex', alignItems: 'center', justifyContent: 'center',
-        transition: 'opacity 260ms ease',
-        opacity: hover ? 0 : 1,
-        pointerEvents: hover ? 'none' : 'auto'
-      }}>
-        {p.thumb ? (
-          <img src={p.thumb} alt={p.title} loading="lazy" style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
-        ) : (
-          <div style={{ width: '42%' }}>
-            <Doodle kind={p.doodle} />
-          </div>
-        )}
-      </div>
-
-      {/* Hover state — info panel */}
-      <div style={{
-        position: 'absolute', inset: 0,
-        background: 'var(--ink)',
-        color: 'var(--paper)',
-        padding: '24px 26px',
-        display: 'flex', flexDirection: 'column',
-        transition: 'opacity 240ms ease, transform 480ms cubic-bezier(.22,1,.36,1)',
-        opacity: hover ? 1 : 0,
-        transform: hover ? 'translateY(0)' : 'translateY(8%)',
-        pointerEvents: hover ? 'auto' : 'none'
-      }}>
-        {/* Top meta */}
-        <div style={{
-          display: 'flex', justifyContent: 'space-between',
-          fontFamily: 'Archivo, sans-serif', fontSize: 10.5, fontWeight: 600,
-          letterSpacing: '0.16em', textTransform: 'uppercase',
-          color: 'rgba(255,255,255,0.5)', marginBottom: 14
-        }}>
-          <span>{p.context || p.org}</span>
-          <span>{p.period}</span>
-        </div>
-
-        {/* Title */}
-        <h3 style={{
-          fontFamily: "Archivo, sans-serif",
-          fontStyle: 'italic', fontWeight: 600,
-          fontSize: 'clamp(22px, 2.4vw, 28px)',
-          lineHeight: 1.1, letterSpacing: '-0.012em',
-          margin: '0 0 12px 0', color: 'var(--paper)'
-        }}>{p.title}</h3>
-
-        {/* Blurb */}
-        <p style={{
-          fontFamily: "Archivo, sans-serif",
-          fontSize: 14.5, lineHeight: 1.5,
-          color: 'rgba(255,255,255,0.8)',
-          margin: '0 0 14px 0'
-        }}>{p.blurb}</p>
-
-        {/* Tags */}
-        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, marginBottom: 14 }}>
-          {p.tags.map((t) =>
-          <span key={t} style={{
-            padding: '4px 10px',
-            border: '1px solid rgba(255,255,255,0.3)',
-            borderRadius: 9999,
-            fontFamily: 'Archivo, sans-serif',
-            fontSize: 10.5, fontWeight: 500,
-            letterSpacing: '0.04em',
-            color: 'rgba(255,255,255,0.9)',
-            whiteSpace: 'nowrap'
-          }}>{t}</span>
-          )}
-        </div>
-
-        {/* Insight pinned to bottom */}
-        <div style={{
-          marginTop: 'auto', paddingTop: 14,
-          borderTop: '1px solid rgba(255,255,255,0.2)',
-          display: 'flex', justifyContent: 'space-between', alignItems: 'baseline',
-          fontFamily: 'Archivo, sans-serif',
-          fontSize: 11, fontWeight: 600, letterSpacing: '0.08em',
-          color: 'rgba(255,255,255,0.7)', textTransform: 'uppercase'
-        }}>
-          <span style={{ fontSize: 14, marginLeft: 'auto' }}>View case study ↗</span>
-        </div>
-      </div>
-    </article>);
-}
-
 /* ---------- Project row (home list layout — one project per horizontal row) ---------- */
 function ProjectRow({ p, onOpen, last }) {
   const [hover, setHover] = React.useState(false);
@@ -1918,12 +1807,13 @@ function ProjectRow({ p, onOpen, last }) {
       </div>
       {/* Text */}
       <div>
+        {/* Eyebrow is the period alone — the one-line description that used to sit
+            beside it has been promoted to the body copy under the title. */}
         <div style={{
-          display: 'flex', justifyContent: 'space-between', gap: 16,
+          display: 'flex', justifyContent: 'flex-end', gap: 16,
           fontFamily: 'Archivo, sans-serif', fontSize: 11, fontWeight: 600,
           letterSpacing: '0.14em', textTransform: 'uppercase', color: 'var(--fg-3)', marginBottom: 16,
         }}>
-          <span>{p.context || p.org}</span>
           <span style={{ whiteSpace: 'nowrap' }}>{p.period}</span>
         </div>
         <h3 style={{
@@ -1934,10 +1824,7 @@ function ProjectRow({ p, onOpen, last }) {
         <p style={{
           fontFamily: 'Archivo, sans-serif', fontSize: 'clamp(14px, 1.4vw, 16px)', lineHeight: 1.55,
           color: 'var(--fg-2)', margin: '0 0 18px 0', maxWidth: 560,
-        }}>{p.blurb}</p>
-        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 7, marginBottom: 20 }}>
-          {p.tags.map((t) => <span key={t} className="tag">{t}</span>)}
-        </div>
+        }}>{p.context || p.org}</p>
         <div style={{
           display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', gap: 16,
           paddingTop: 16, borderTop: '1px solid var(--hairline)',
@@ -3626,7 +3513,7 @@ function ProjectDetailView({ project }) {
              visual language as the Key Findings rings above). SnapWear only. ── */}
         {project.statRings && project.statRings.items && project.statRings.items.length > 0 && (
           <div style={{ marginBottom: 'clamp(80px, 13vw, 168px)' }}>
-            <SectionLabel>{(() => {
+            <SectionLabel meta={project.statRings.meta}>{(() => {
               const n = project.statRings.items.length;
               const words = ['Zero', 'One', 'Two', 'Three', 'Four', 'Five', 'Six'];
               return `${words[n] || n} Insights`;
