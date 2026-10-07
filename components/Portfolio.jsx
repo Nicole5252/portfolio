@@ -4574,7 +4574,8 @@ function AboutSection() {
               <strong style={{ color: "var(--fg-1)", fontWeight: 700 }}>HCI master's student</strong> at TH Augsburg
               with a background in <strong style={{ color: "var(--fg-1)", fontWeight: 700 }}>industrial design</strong>, currently a{' '}
               <strong style={{ color: "var(--fg-1)", fontWeight: 700 }}>product design researcher</strong> at{' '}
-              <strong style={{ color: "var(--fg-1)", fontWeight: 700 }}>Sungrow</strong>.
+              <strong style={{ color: "var(--fg-1)", fontWeight: 700 }}>Sungrow</strong>, responsible for the
+              UX design stage of new hardware product development.
               Previously I interned at <strong style={{ color: "var(--fg-1)", fontWeight: 700 }}>Logitech</strong> on the
               mechanical engineering team, and worked as a <strong style={{ color: "var(--fg-1)", fontWeight: 700 }}>UX researcher</strong> at
               an outdoor gear startup — designing interview protocols, analyzing qualitative data, and
