@@ -657,6 +657,9 @@ const PROJECTS = [
   ],
   painLabel: 'Pain Points',
   painMeta: 'Interviews · n=5',
+  /* One merged How-Might-We instead of three — it reads on from the section
+     title, so it stays lower-case and ends with the question mark. */
+  painHmw: 'let a mother run the whole compress routine on the spot — with less setup and cleanup, and nothing hard pressed against sore skin?',
   painIntro: 'Once the survey had settled the direction — a modular heating and cooling module — I interviewed mothers about the breastfeeding routine itself, digging into their habits, the friction points they hit, and what they actually needed.',
   painMatrix: [
     {
@@ -3635,6 +3638,15 @@ function ProjectDetailView({ project }) {
         {project.painMatrix && project.painMatrix.length > 0 && (
           <div style={{ marginBottom: 'clamp(80px, 13vw, 168px)' }}>
             <SectionLabel>How Might We…</SectionLabel>
+            {project.painHmw ? (
+              /* The three row-level questions collapsed into the one that
+                 actually drove the design. */
+              <p style={{
+                fontFamily: "'Big Shoulders Display', Helvetica, sans-serif", fontWeight: 700,
+                fontSize: 'clamp(26px, 3.4vw, 46px)', lineHeight: 1.12, letterSpacing: '-0.01em',
+                color: 'var(--accent)', maxWidth: 940, margin: 'clamp(4px, 1vw, 12px) 0 0',
+              }}>{project.painHmw}</p>
+            ) : (
             <div style={{ display: 'grid', gap: 0 }}>
               {project.painMatrix.map((row, i) => (
                 <div key={i} style={{
@@ -3647,6 +3659,7 @@ function ProjectDetailView({ project }) {
                 </div>
               ))}
             </div>
+            )}
           </div>
         )}
 
