@@ -781,10 +781,6 @@ const PROJECTS = [
   },
   // ── Case study detail ──
   role: 'Solo UX Research intern (2025.03 – 2026.02). For both products I designed the interview guide, ran the interviews, analysed the results, and reported insights to the PM and designers; on the convertible bag I also contributed part of the design drawings.',
-  concept: {
-    // Thesis line only — no formula chips (keeps the dark band a single statement).
-    tagline: 'Validate the audience before refining the product.',
-  },
   problemLabel: 'Research Objective',
   problem: 'Both carry products were entering a second iteration. Rather than redesigning parts, the brief was to interrogate the audience model and the product bets behind it — before any feature was touched.',
   objectiveQuestions: [
@@ -813,26 +809,25 @@ const PROJECTS = [
     },
   },
   hypothesisTestsScope: 'Convertible bag \u00b7 9 interviews',
-  hypothesisTestsIntro: 'Three assumptions went into the second iteration \u2014 what the product is, who it is for, what they need. The interviews revised all three.',
+  hypothesisTestsIntro: 'Three things were taken for granted before the second version: what the bag was for, who would buy it, and what they wanted. The interviews changed all three.',
   hypothesisTests: [
     {
       layer: 'Positioning',
       outcome: 'Retired',
       assumed: 'The bag could double as a toiletry bag.',
-      found: 'Acceptance was low in almost every segment \u2014 people who already carry one wanted something simpler. The team dropped it and refocused on the small \u2194 large convertible core.',
-      note: 'Participants met the sample as an everyday carry first and only then heard the toiletry-bag framing \u2014 directional, not conclusive.',
+      found: 'Acceptance was low; interest centred on switching between its small and large sizes.',
     },
     {
       layer: 'Audience',
       outcome: 'Re-weighted',
-      assumed: 'Refined Men & Women were the biggest bet at 35%; Regular Overnighters the smallest at 20%.',
-      found: 'The biggest bet returned the lowest purchase intent of the four (5/10), while overnight use came up far more often than assumed. Re-cut to 30% and 35%.',
+      assumed: 'Men & Women were 35%; Regular Overnighters 20%.',
+      found: 'Men & Women was cut \u2014 the lowest purchase intent of the four. Overnighters was raised \u2014 they used it far more often.',
     },
     {
       layer: 'Needs',
       outcome: 'Redefined',
-      assumed: 'People choose on how small it packs down, trading one standout feature against many functions.',
-      found: 'They judged how flat and tidy it looks once packed, and how it carries \u2014 and a standout feature made them expect more functions, not fewer.',
+      assumed: 'People would choose on packed size alone.',
+      found: 'Appearance and added functions mattered more than packed size.',
     },
   ],
   methodsColumns: 3,
@@ -949,33 +944,32 @@ const PROJECTS = [
   studies: [
     {
       product: 'Convertible Bag',
-      meta: 'n=9 · worked through above',
+      meta: 'n=9',
       findings: [
-        { title: 'Operation was the biggest shared blocker (+8)', description: 'Carry method, drawcords and magnetic clasps all caused first-use friction — the only pain point every segment raised.', design: 'Lower the learning curve and add a quick-start guide for the large mode.' },
-        { title: 'Packing the large mode down was unintuitive (+6)', description: 'Three of the four segments hit the same wall folding the bag back down; several asked for instructions unprompted.', design: 'Rework the packing flow, and ship a written guide for the large mode.' },
-        { title: 'Carrying the large mode was uncomfortable (+6)', description: 'Straps too short, the load unbalanced when full, and the intended carry method never won people over.', design: 'Add a back-carry mode and lengthen / soften the straps.' },
+        { title: 'At its larger size the bag defeated people at every step \u2014 they could not operate it correctly (8 of 9)', design: 'Lower the learning curve and build in step-by-step guidance.' },
+        { title: 'Packing it away blocked people repeatedly (6 of 9)', design: 'Redesign the packing sequence.' },
+        { title: 'Designed to be worn across the body, but people favoured back-carry \u2014 on appearance, on how intuitive it felt, and on load (6 of 9)', design: 'Switch the primary carry to back-carry.' },
       ],
-      recommendation: 'P0: streamline the large-bag packing flow and cut the learning cost. Add a back-carry mode and waterproof, easy-clean material.',
     },
     {
       product: 'Phone Carry',
-      meta: 'n=16 · same method',
+      meta: 'n=16',
       findings: [
-        { title: 'All four quadrants held; light-travel led at 35%', description: 'The hypothesised segmentation was validated, with the light-travel segment the largest.', design: 'Kept the model and carried the weighting into the next build.' },
-        { title: 'The bottom compartment was a cross-segment P0', description: 'Low usage traced back to one structural cause shared across segments.', design: 'Re-estimate the core storage volume; swap the upper / lower layers and lift the quick-access layer.' },
-        { title: 'One card clasp, three failure modes', description: 'Hard to use, too shallow, and barely used — three problems behind one label.', design: 'Split into three scoped changes for the designers.' },
+        { title: 'The four customer groups we had assumed turned out to be right', design: 'Kept the model and carried it into the next version.' },
+        { title: 'The internal layout did not match what people needed', design: 'Replan it \u2014 main-compartment capacity, and which compartment sits on top.' },
+        { title: 'The card holder was hard to operate, too shallow, and rarely used', design: 'Redesign it as three scoped changes.' },
       ],
-      recommendation: 'P0: rework the core storage and the card layer. The body read too long — segments preferred a wider form — and several asked for a back-carry option.',
     },
   ],
   methodReflection: {
-    intro: 'Running the same analysis pipeline twice — across two different products — taught me as much about how to research as about the products themselves.',
     points: [
-      { title: 'AI collaboration requires a designed protocol', text: 'Unstructured AI use failed twice over: extraction standards drifted between team members, and the model stripped context to reach surface-level conclusions. I fixed the criteria first, used AI only to aggregate, then reviewed context integrity myself — the second product ran markedly faster because the protocol already existed.' },
-      { title: 'Precision is a communication skill', text: 'A PM review of my first report showed me that vague synthesis language leaves anyone without full interview context guessing. I moved to Must / Should / Nice-to-have ratings with colour-coded segments, so priority reads at a glance.' },
-      { title: 'What I’d do differently', text: 'Both frameworks were built reactively, after the first report exposed the gap. Next time I would design the extraction protocol and the priority scale before round one — the phone-carry study never got the rigour the convertible bag only reached on its second pass.' },
+      { title: 'AI integrated into my workflow.' },
+      { title: 'Precision of wording is essential \u2014 in UX reports and across teams.' },
+      { title: 'The interview and analysis process, optimised end to end.' },
     ],
   },
+
+
 },
 {
   idx: '03',
@@ -1001,9 +995,6 @@ const PROJECTS = [
   // ── Case study detail ──
   role: 'Four-person team (2026.03 – 2026.04). I led the design and interview analysis, concept ideation, the web prototype, and defining the interaction model.',
   overview: 'Speaking Shell is a physical interaction for museums: a set of glowing shells set on the floor in front of an artwork, each holding one anonymous visitor’s spoken reaction to that same piece. You pick a shell up, hold it to your ear to hear a stranger, then open one to leave your own voice for whoever comes next. It turns looking — normally silent and one-directional — into an anonymous, asynchronous exchange between visitors.',
-  concept: {
-    tagline: 'Pick one up, listen, and leave yours.',
-  },
   problemLabel: 'Visitors never hear each other',
   problem: 'In a gallery, people have rich, private reactions to what they see — and almost no way to share them, or to hear anyone else’s. The experience stays one-directional: visitor and artwork, never visitor and visitor. The most interesting layer of a show — how other people read the same painting — vanishes silently the moment they walk away.',
   problemImage: { src: 'assets/voice-shell/problem.jpg', label: 'Visitors viewing alone — reactions stay private' },
@@ -1178,9 +1169,6 @@ const PROJECTS = [
   },
   // ── Case study detail ──
   role: 'Three-person HCI research team. I designed the difficulty instrument, analysed the multi-reader results, and built and tested the prototype.',
-  concept: {
-    tagline: 'Tune the text, not the reader.',
-  },
   // ── Opening hero beats — the one deliberate exception to standard-field rendering
   //    (user-decided Option B, 2026-07-15): two large-type beats + the product
   //    definition line, shown right after the hero image, before the standard sections.
@@ -1320,9 +1308,6 @@ const PROJECTS = [
   // ── Case study detail ──
   role: 'Two-person team-taught venture project (2026). I owned part of the business analysis — the Kano study and market positioning — ran the user testing, and refined the extension; my teammate built and shipped the core.',
   overview: "FocusAnchor is a calm Chrome extension for ADHD brains: it breaks any task into laughably small steps and gently redirects wandering tabs — never blocking, never punishing. The two of us ran it as a class venture project, and the interesting part isn't the extension itself — it's the argument underneath it: mainstream productivity tools' \"engagement features\" are, for this audience, actively harmful.",
-  concept: {
-    tagline: 'The only browser extension that works with your ADHD brain — not against it.',
-  },
   problemLabel: '"I just need to look up a word. Then in thirty minutes I\'m watching a video on how Norwegians build wooden cabins."',
   problem: 'That\'s not laziness; it\'s a measurable executive-function deficit (Barkley). An estimated 366M adults worldwide live with ADHD — 6.76% adult prevalence (Song et al., 2021) — and almost every productivity tool on the market was built for neurotypical brains. We went to find out why they fail.',
   problemImage: { src: 'assets/focusanchor/problem-procrastination.png', label: 'Knowing the task, not starting — executive-function paralysis' },
@@ -1454,9 +1439,6 @@ const PROJECTS = [
   // ── Case study detail ──
   role: 'Solo project — research, UI design, and design system, start to finish.',
   overview: 'SnapWear is a product-centric beauty-review app: point your camera at a product on a store shelf — or search it — and get one cited Advice Card, a suitability score tied to your own skin profile, instead of a feed of mixed opinions to scroll through.',
-  concept: {
-    tagline: 'Snap it, match it, wear it.',
-  },
   problemLabel: 'Beauty shoppers do all the research — and still leave the shelf undecided.',
   problem: '"I already struggle to decide. For foundation especially, I end up checking reviews everywhere — half an hour\'s gone, crouched at the shelf."',
   problemImage: { src: 'assets/snapwear/journey.jpg', label: 'The in-store decision journey — shelf to Reddit to YouTube to Google and back' },
@@ -1560,9 +1542,6 @@ const PROJECTS = [
   },
   // ── Case study detail ──
   role: 'Two-person team — I owned the 3D modeling; my teammate and I shared the early-stage form ideation, user observation and analysis; my teammate led the packaging design.',
-  concept: {
-    tagline: 'Paleo — Illuminate Your Camping Moment.',
-  },
   problemLabel: 'Modern fire-starters made ignition easy — and quietly drained the ritual out of it.',
   problem: 'Fire-making is essential to camping. As the tools get more sophisticated, some campers still choose to shave a ferro rod and strike a spark by hand — not for efficiency, but for the immersion, the small sense of connecting with nature. Paleo starts from that tension: how do you make fire-making more convenient without sanding off the authenticity of the traditional experience?',
   problemImage: { src: 'assets/paleo/pl-problem.jpg', label: 'The tension Paleo starts from — modern convenience against the ritual of making fire by hand.' },
@@ -2864,56 +2843,58 @@ function ProjectDetailView({ project }) {
           color: 'var(--fg-3)', textDecoration: 'none', marginBottom: 28
         }}>← Selected Work</a>
 
-        {/* ── Hero visual (full-bleed) ── */}
-        <div style={{ width: '100vw', marginLeft: 'calc(50% - 50vw)', marginBottom: 'clamp(36px, 5vw, 64px)' }}>
-          <ImagePlaceholder
-            label={(project.images && project.images.hero && project.images.hero.label) || project.title}
-            note={(project.images && project.images.hero && project.images.hero.note) || ''}
-            src={project.images && project.images.hero && project.images.hero.src}
-            height={'clamp(340px, 52vw, 660px)'}
-          />
-        </div>
-
-        {/* ── Hero: meta sidebar + title + blurb ── */}
+        {/* ── Hero: text left, image right, sized to land inside one screen ── */}
         <div style={{
           display: 'grid',
-          gridTemplateColumns: narrow ? '1fr' : 'minmax(0, 0.72fr) minmax(0, 1.7fr)',
-          gap: 'clamp(28px, 5vw, 72px)',
-          alignItems: 'end',
-          marginBottom: 'clamp(40px, 5vw, 72px)',
+          gridTemplateColumns: narrow ? '1fr' : 'minmax(0, 1fr) minmax(0, 1.05fr)',
+          gap: 'clamp(28px, 4vw, 56px)',
+          alignItems: 'center',
+          marginBottom: 'clamp(56px, 8vw, 104px)',
         }}>
-          <div style={{ display: 'grid', gap: 22 }}>
-            <div>
-              <div style={{ ...eyebrow, marginBottom: 6 }}>Timeline</div>
-              <div style={{ fontFamily: 'Archivo, sans-serif', fontSize: 15, color: 'var(--fg-1)' }}>{project.period}</div>
-            </div>
-            <div>
-              <div style={{ ...eyebrow, marginBottom: 6 }}>Context</div>
-              <div style={{ fontFamily: 'Archivo, sans-serif', fontSize: 15, color: 'var(--fg-1)', lineHeight: 1.4 }}>{project.org}</div>
-            </div>
-            {project.role && (
-              <div>
-                <div style={{ ...eyebrow, marginBottom: 6 }}>Role</div>
-                <div style={{ fontFamily: 'Archivo, sans-serif', fontSize: 15, color: 'var(--fg-1)', lineHeight: 1.5 }}>{project.role}</div>
-              </div>
-            )}
-          </div>
-          <div>
+          <div style={{ order: narrow ? 1 : 0 }}>
             <h1 style={{
               fontFamily: "'Big Shoulders Display', Helvetica, sans-serif",
               fontWeight: 900,
-              fontSize: 'clamp(56px, 9vw, 132px)',
+              fontSize: 'clamp(48px, 6vw, 92px)',
               lineHeight: 0.9, letterSpacing: '-0.025em',
-              margin: '0 0 22px 0', color: 'var(--ink)'
+              margin: '0 0 18px 0', color: 'var(--ink)'
             }}>{project.title}</h1>
             {project.blurb && (
-              <p style={{ ...bodyText, fontSize: 20, lineHeight: 1.5, marginBottom: 24, maxWidth: 640 }}>{project.blurb}</p>
+              <p style={{ ...bodyText, fontSize: 'clamp(16px, 1.6vw, 19px)', lineHeight: 1.5, margin: '0 0 18px', maxWidth: 560 }}>{project.blurb}</p>
             )}
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, marginBottom: 'clamp(20px, 2.6vw, 30px)' }}>
               {project.tags.map((tag) => (
                 <span key={tag} className="tag">{tag}</span>
               ))}
             </div>
+            <div style={{ display: 'grid', gap: 14, paddingTop: 'clamp(16px, 2vw, 22px)', borderTop: '1px solid var(--hairline)' }}>
+              <div style={{ display: 'grid', gridTemplateColumns: narrow ? '1fr' : 'minmax(0, 1fr) minmax(0, 1fr)', gap: 14 }}>
+                <div>
+                  <div style={{ ...eyebrow, marginBottom: 5 }}>Timeline</div>
+                  <div style={{ fontFamily: 'Archivo, sans-serif', fontSize: 14, color: 'var(--fg-1)' }}>{project.period}</div>
+                </div>
+                <div>
+                  <div style={{ ...eyebrow, marginBottom: 5 }}>Context</div>
+                  <div style={{ fontFamily: 'Archivo, sans-serif', fontSize: 14, color: 'var(--fg-1)', lineHeight: 1.4 }}>{project.org}</div>
+                </div>
+              </div>
+              {project.role && (
+                <div>
+                  <div style={{ ...eyebrow, marginBottom: 5 }}>Role</div>
+                  <div style={{ fontFamily: 'Archivo, sans-serif', fontSize: 14, color: 'var(--fg-2)', lineHeight: 1.5 }}>{project.role}</div>
+                </div>
+              )}
+            </div>
+          </div>
+          <div style={{ order: narrow ? 0 : 1 }}>
+            {/* No fixed height: a height here would mean object-fit cover, which
+                crops. The hero ratios differ per project (16:9, 2.29:1 …), so the
+                image sets its own. */}
+            <ImagePlaceholder
+              label={(project.images && project.images.hero && project.images.hero.label) || project.title}
+              note={(project.images && project.images.hero && project.images.hero.note) || ''}
+              src={project.images && project.images.hero && project.images.hero.src}
+            />
           </div>
         </div>
 
@@ -3243,6 +3224,7 @@ function ProjectDetailView({ project }) {
                 <PipelineFlow steps={project.analysisProcess.steps} narrow={narrow} />
               </div>
             )}
+
           </div>
         )}
 
@@ -3437,28 +3419,24 @@ function ProjectDetailView({ project }) {
                     <h3 style={{ fontFamily: "'Big Shoulders Display', Helvetica, sans-serif", fontWeight: 800, fontSize: 'clamp(24px, 3vw, 38px)', color: 'var(--ink)', margin: 0, lineHeight: 1, letterSpacing: '-0.01em' }}>{st.product}</h3>
                     {st.meta && <span style={{ fontFamily: 'Archivo, sans-serif', fontWeight: 600, fontSize: 13, letterSpacing: '0.08em', color: 'var(--fg-3)' }}>{st.meta}</span>}
                   </div>
+                  {/* Two layers only: the finding, and what it changed. The
+                      descriptions that used to sit between them mostly restated
+                      the finding, so the useful half-sentences moved into it. */}
+                  {st.headline && (
+                    <p style={{ fontFamily: 'Archivo, sans-serif', fontWeight: 700, fontSize: 'clamp(16px, 1.7vw, 19px)', color: 'var(--ink)', lineHeight: 1.4, margin: '0 0 clamp(20px, 2.4vw, 30px)', maxWidth: 760 }}>{st.headline}</p>
+                  )}
                   <div style={{
                     display: 'grid',
                     gridTemplateColumns: `repeat(${st.findings.length}, minmax(0, 1fr))`,
-                    columnGap: 'clamp(24px, 4vw, 48px)', rowGap: 'clamp(12px, 1.4vw, 18px)',
-                    marginBottom: st.recommendation ? 'clamp(24px, 3vw, 36px)' : 0,
+                    columnGap: 'clamp(24px, 4vw, 48px)', rowGap: 'clamp(10px, 1.2vw, 14px)',
                   }}>
                     {st.findings.map((f, fi) => (
-                      <div key={'t' + fi} style={{ paddingTop: 18, borderTop: '1px solid var(--hairline)', fontFamily: 'Archivo, sans-serif', fontWeight: 700, fontSize: 15.5, color: 'var(--fg-1)', lineHeight: 1.35 }}>{f.title}</div>
-                    ))}
-                    {st.findings.map((f, fi) => (
-                      <div key={'d' + fi} style={{ fontFamily: 'Archivo, sans-serif', fontSize: 14, color: 'var(--fg-3)', lineHeight: 1.5 }}>{f.description}</div>
+                      <div key={'t' + fi} style={{ paddingTop: 16, borderTop: '1px solid var(--hairline)', fontFamily: 'Archivo, sans-serif', fontWeight: 700, fontSize: 15, color: 'var(--fg-1)', lineHeight: 1.35 }}>{f.title}</div>
                     ))}
                     {st.findings.map((f, fi) => (
                       <div key={'g' + fi} style={{ fontFamily: 'Archivo, sans-serif', fontSize: 14, color: 'var(--fg-2)', lineHeight: 1.5 }}>→ {f.design}</div>
                     ))}
                   </div>
-                  {st.recommendation && (
-                    <div style={{ display: 'grid', gridTemplateColumns: '160px 1fr', gap: 40, alignItems: 'start', paddingTop: 4 }}>
-                      <div style={{ fontFamily: 'Archivo, sans-serif', fontWeight: 700, fontSize: 11, letterSpacing: '0.14em', textTransform: 'uppercase', color: 'var(--ink)', paddingTop: 3 }}>Recommendation</div>
-                      <p style={{ fontFamily: 'Archivo, sans-serif', fontSize: 15, lineHeight: 1.6, color: 'var(--fg-2)', margin: 0, maxWidth: 640 }}>{st.recommendation}</p>
-                    </div>
-                  )}
                 </div>
               ))}
             </div>
@@ -4388,9 +4366,11 @@ function ProjectDetailView({ project }) {
             )}
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: 'clamp(20px, 3vw, 40px)' }}>
               {project.methodReflection.points.map((p, i) => (
-                <div key={i}>
-                  <div style={{ fontFamily: 'Archivo, sans-serif', fontWeight: 700, fontSize: 15, color: 'var(--fg-1)', marginBottom: 8 }}>{p.title}</div>
-                  <div style={{ fontFamily: 'Archivo, sans-serif', fontSize: 14, lineHeight: 1.6, color: 'var(--fg-2)' }}>{p.text}</div>
+                <div key={i} style={{ paddingTop: 14, borderTop: '1px solid var(--hairline)' }}>
+                  <div style={{ fontFamily: 'Archivo, sans-serif', fontWeight: 700, fontSize: 'clamp(15px, 1.5vw, 17px)', lineHeight: 1.4, color: 'var(--fg-1)', marginBottom: p.text ? 8 : 0 }}>{p.title}</div>
+                  {p.text && (
+                    <div style={{ fontFamily: 'Archivo, sans-serif', fontSize: 14, lineHeight: 1.6, color: 'var(--fg-2)' }}>{p.text}</div>
+                  )}
                 </div>
               ))}
             </div>
