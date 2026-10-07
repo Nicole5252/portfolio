@@ -4519,6 +4519,7 @@ function SectionHeader({ eyebrow, title, caption }) {
 
 /* ---------- About ---------- */
 const EXPERIENCE = [
+{ company: 'Sungrow', role: 'Product Design Researcher', period: '2026.10 – Now' },
 { company: 'Pangolin', role: 'UX Researcher Intern', period: '2025.03 – 2026.02' },
 { company: 'Logitech', role: 'Industrial Design Intern', period: '2024.03 – 2024.07' }];
 
@@ -4571,8 +4572,10 @@ function AboutSection() {
               maxWidth: 540, margin: '0 0 20px 0'
             }}>
               <strong style={{ color: "var(--fg-1)", fontWeight: 700 }}>HCI master's student</strong> at TH Augsburg
-              with a background in <strong style={{ color: "var(--fg-1)", fontWeight: 700 }}>industrial design</strong>.
-              I've interned at <strong style={{ color: "var(--fg-1)", fontWeight: 700 }}>Logitech</strong> on the
+              with a background in <strong style={{ color: "var(--fg-1)", fontWeight: 700 }}>industrial design</strong>, currently a{' '}
+              <strong style={{ color: "var(--fg-1)", fontWeight: 700 }}>product design researcher</strong> at{' '}
+              <strong style={{ color: "var(--fg-1)", fontWeight: 700 }}>Sungrow</strong>.
+              Previously I interned at <strong style={{ color: "var(--fg-1)", fontWeight: 700 }}>Logitech</strong> on the
               mechanical engineering team, and worked as a <strong style={{ color: "var(--fg-1)", fontWeight: 700 }}>UX researcher</strong> at
               an outdoor gear startup — designing interview protocols, analyzing qualitative data, and
               translating findings into actionable insights for designers and PMs.
