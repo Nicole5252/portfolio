@@ -557,7 +557,7 @@ function Hero() {
           fontFamily: "'Big Shoulders Display', Helvetica, sans-serif", fontWeight: 800,
           fontSize: 'clamp(72px, 12vw, 190px)', lineHeight: 0.88, letterSpacing: '-0.02em',
           margin: 0, color: 'var(--ink)', maxWidth: '68%', minWidth: 300
-        }}>UX &amp; Product<br />Design</h1>
+        }}>UX Research<br />&amp; Design</h1>
 
         {/* Masthead baseline row */}
         <div style={{
@@ -570,7 +570,7 @@ function Hero() {
             margin: 0, maxWidth: 360,
             fontFamily: 'Archivo, sans-serif', fontSize: 17, lineHeight: 1.5,
             color: 'var(--fg-2)', letterSpacing: '-0.005em'
-          }}>Research-led design across wearables, interfaces, and the physical products in between.</p>
+          }}>From user interviews to working prototypes — research that ends in a next step.</p>
           {/* Right: location, plain text */}
           <span style={{
             fontFamily: 'Archivo, sans-serif', fontSize: 11, fontWeight: 600,
@@ -627,7 +627,7 @@ const PROJECTS = [
   title: 'Mere',
   blurb: 'Integrated heating/cooling e-textile lets breastfeeding mothers manage engorgement on their own terms — and every design decision traces back to a specific finding, from an 18-person survey, 5 interviews, and a 3-user test.',
   tags: ['UX Research', 'Product Design', 'Wearable'],
-  insight: 'n=18 survey · n=5 interviews · every decision evidence-traced',
+  insight: '18-person survey · 5 interviews · 3-user test · each decision traced to a finding',
   doodle: 'textile',
   images: {
     hero: {
@@ -773,7 +773,7 @@ const PROJECTS = [
   title: 'Pangolin',
   blurb: 'Working solo, I designed, ran, and analysed 25 sample-feedback interviews.',
   tags: ['UX Research', 'Mixed Methods', 'Industry'],
-  insight: '25 interviews · 2 four-quadrant audience studies · validated → retired a product hypothesis',
+  insight: '25 interviews, solo · the analysis retired one product assumption and drove the V2 redesign',
   doodle: 'tent',
   images: {
     hero: {
@@ -966,7 +966,7 @@ const PROJECTS = [
   ],
   methodReflection: {
     points: [
-      { title: 'AI integrated into my workflow.' },
+      { title: 'AI in my workflow — drafting the interview-report framework, then organising and categorising the transcripts.' },
       { title: 'Precision of wording is essential \u2014 in UX reports and across teams.' },
       { title: 'The interview and analysis process, optimised end to end.' },
     ],
@@ -1160,7 +1160,7 @@ const PROJECTS = [
   title: 'TextTune',
   blurb: 'Text is flat, but reading never is. TextTune zooms a text like a map — from 5% mind-map to 150% original with margin notes — tuning each paragraph to how difficult it feels, on a difficulty instrument I built.',
   tags: ['UX Research', 'Prototyping', 'HCI'],
-  insight: '5-dimension rubric · 3 readers × 2 genres · consensus vs. personal difficulty',
+  insight: 'Built the difficulty rubric · 3 readers × 2 texts · working prototype, co-built using Claude',
   doodle: 'textile',
   thumb: 'assets/texttune/texttune-cover-01b.jpg',
   images: {
@@ -1171,7 +1171,7 @@ const PROJECTS = [
     },
   },
   // ── Case study detail ──
-  role: 'Three-person HCI research team. I designed the difficulty instrument, analysed the multi-reader results, and built and tested the prototype.',
+  role: 'Three-person HCI research team. I designed the difficulty instrument, analysed the multi-reader results, and co-built the prototype with a teammate, using Claude.',
   // ── Opening hero beats — the one deliberate exception to standard-field rendering
   //    (user-decided Option B, 2026-07-15): two large-type beats + the product
   //    definition line, shown right after the hero image, before the standard sections.
@@ -1183,23 +1183,27 @@ const PROJECTS = [
       '— different background, different day, different paragraph.',
     ],
     productLine: "TextTune adapts a text's presentation paragraph by paragraph — from 5% to 150% — based on how difficult each paragraph actually feels.",
+    // First-screen proof (2026-11-16): how it was built + the live link, so a
+    // reader can try it without scrolling to the product section.
+    build: 'A working prototype — co-built with a teammate, using Claude.',
+    link: 'https://tyler25-blip.github.io/TextTune/',
   },
   // The Problem section is retired (2026-07-16 polish pass) — its intro text now
   // opens Building the Instrument via the generic researchMethodsIntro field
   // (new, renderer-supported below; unset on every other project so they're unaffected).
   // methodsLabel keeps the instrument-design framing for the section heading.
   methodsLabel: 'Building the Instrument',
-  researchMethodsIntro: 'Before any interface, the text had to become measurable. I built a five-dimension rubric — Lexical, Syntactic/Stance, Propositional/Quantitative, Background knowledge, and Argumentative transparency — and used it to score a text paragraph by paragraph, 1–10 per dimension, with a free-text note explaining each score. An instrument is only as good as the data it produces — so we read.',
+  researchMethodsIntro: 'Before any interface, the text had to become measurable. I built a five-dimension rubric and used it to score a text paragraph by paragraph — 1–10 per dimension, with a note explaining each score.',
   researchMethods: [
     {
       name: 'Decision 01',
       title: 'Why five dimensions, not one score',
-      purpose: 'A single "hard/easy" rating conflates distinct sources of friction — a paragraph can be lexically simple but argumentatively opaque, or dense with numbers but easy to follow. Splitting the rubric surfaces which kind of difficulty is driving each spike, because different causes need different fixes.',
+      purpose: 'One hard/easy rating hides the cause. Five dimensions show which kind of difficulty drives each spike — and different causes need different fixes.',
     },
     {
       name: 'Decision 02',
       title: 'Why per-paragraph, 1–10, plus notes',
-      purpose: 'A whole-text score (a Flesch-Kincaid grade level) can’t show where a reader hits a hard patch inside an otherwise easy text. Scoring every paragraph — and asking readers to explain the score in their own words — turns "this text is hard" into a curve with named causes at each peak.',
+      purpose: 'A whole-text grade can’t show where a reader stalls. Scoring every paragraph, with a note, turns "this text is hard" into a curve with a named cause at each peak.',
     },
   ],
   // §3 Key Findings — findingsIntro only renders alongside project.findings (ring charts),
@@ -1260,16 +1264,8 @@ const PROJECTS = [
         { title: '100% is the anchor', text: 'The original is always one stop away — never rewritten out of reach.' },
       ],
     },
-    text: 'The interface gives the reader a dial, not a single "simplify" toggle — driven by pinch-zoom: a continuous range from 5% (mind-map-level compression) to 100% (the original text, anchored) to 150% (the original text plus margin notes), moving across five rewrite dimensions — Vocabulary, Sentence length, Number, Tone, and Concreteness. 100% always anchors to the original.',
-    gesture: {
-      items: [
-        { title: 'Zoom out', text: 'The text recedes — through plainer language down to its mind map.' },
-        { title: 'Pinch to tune', text: 'Settle anywhere on the range; each paragraph re-renders at that level.' },
-        { title: 'Zoom in', text: 'Back to the original — and past it, into margin notes.' },
-      ],
-      note: 'The dial has no buttons — the gesture is the interface. The same pinch you already use on a map, repurposed for meaning.',
-      hint: 'On a trackpad: pinch, or Ctrl + scroll.',
-    },
+    // product.text and product.gesture removed 2026-11-16 — they restated concept.points above;
+    // the interactive dial below demonstrates the gesture itself. Recoverable from git / .bak-20261116.
     video: {
       src: 'assets/texttune/texttune-demo.mp4',
       poster: 'assets/texttune/texttune-demo-poster.jpg',
@@ -1299,7 +1295,7 @@ const PROJECTS = [
   title: 'FocusAnchor',
   blurb: 'Research said the industry playbook — streaks, blocking, guilt — was harming the very users it claimed to help. So we shipped the opposite.',
   tags: ['UX Research', 'Product Strategy', 'Shipped'],
-  insight: '5/5-pattern interviews (n=5) · Kano reverse requirements · live Chrome extension (Claude API)',
+  insight: '5 interviews · Kano analysis · live Chrome extension, co-built using Claude',
   thumb: 'assets/focusanchor/cover-thumb.jpg',
   images: {
     hero: {
@@ -1309,7 +1305,7 @@ const PROJECTS = [
     },
   },
   // ── Case study detail ──
-  role: 'Two-person team-taught venture project (2026). I owned part of the business analysis — the Kano study and market positioning — ran the user testing, and refined the extension; my teammate built and shipped the core.',
+  role: 'Two-person venture project (2026). My teammate and I built the extension together, using Claude; I also ran the Kano study, the market positioning, and the user testing.',
   overview: "FocusAnchor is a calm Chrome extension for ADHD brains: it breaks any task into laughably small steps and gently redirects wandering tabs — never blocking, never punishing. The two of us ran it as a class venture project, and the interesting part isn't the extension itself — it's the argument underneath it: mainstream productivity tools' \"engagement features\" are, for this audience, actively harmful.",
   problemLabel: '"I just need to look up a word. Then in thirty minutes I\'m watching a video on how Norwegians build wooden cabins."',
   problem: 'That\'s not laziness; it\'s a measurable executive-function deficit (Barkley). An estimated 366M adults worldwide live with ADHD — 6.76% adult prevalence (Song et al., 2021) — and almost every productivity tool on the market was built for neurotypical brains. We went to find out why they fail.',
@@ -1430,7 +1426,7 @@ const PROJECTS = [
   title: 'SnapWear',
   blurb: 'An end-to-end Figma UI built on a defined design system — designed to collapse a 26-minute in-store platform hop into one cited Advice Card.',
   tags: ['UI Design', 'Figma', 'Journey Mapping'],
-  insight: 'Survey (n=12) · journey mapping · competitive analysis · end-to-end Figma prototype',
+  insight: 'Solo · end-to-end Figma UI on my own design system · clickable prototype',
   thumb: 'assets/snapwear/cover-card.jpg',
   images: {
     hero: {
@@ -1534,7 +1530,7 @@ const PROJECTS = [
   title: 'Paleo',
   blurb: 'A camping knife that fuses fire starter and blade into one pivoting tool — so lighting a fire stays one continuous motion, and the tool glows itself visible after dark.',
   tags: ['Industrial Design', '3D Modeling', 'Physical Prototype'],
-  insight: 'User observation · persona-driven · SubD 3D modeling + physical model',
+  insight: 'User observation · 3D modeling · physical model',
   thumb: 'assets/paleo/plcover02.jpg',
   images: {
     hero: {
@@ -1614,9 +1610,16 @@ const PROJECTS = [
 },
 ];
 
-/* Homepage order (2026-07-17): industry work leads, exploratory Speaking Shell closes.
+/* Homepage order (2026-11-16, job-hunt pass): each case leads with the capability it
+   proves — interviews & analysis (Pangolin), AI-built prototypes (TextTune, FocusAnchor),
+   research-to-product (Mère), Figma (SnapWear). A project whose slug is NOT listed here
+   is hidden from the site but its data stays above — Speaking Shell (voice-shell) is
+   hidden this way; add the slug back to restore it.
    idx is renumbered from this sequence — edit the slugs here to reorder, nothing else. */
-const PROJECT_SEQUENCE = ['pangolin', 'mere', 'texttune', 'focusanchor', 'paleo', 'snapwear', 'voice-shell'];
+const PROJECT_SEQUENCE = ['pangolin', 'texttune', 'mere', 'focusanchor', 'snapwear', 'paleo'];
+for (let i = PROJECTS.length - 1; i >= 0; i--) {
+  if (!PROJECT_SEQUENCE.includes(PROJECTS[i].slug)) PROJECTS.splice(i, 1);
+}
 PROJECTS.sort((a, b) => PROJECT_SEQUENCE.indexOf(a.slug) - PROJECT_SEQUENCE.indexOf(b.slug));
 PROJECTS.forEach((p, i) => { p.idx = String(i + 1).padStart(2, '0'); });
 
@@ -1805,8 +1808,15 @@ function ProjectRow({ p, onOpen, last }) {
         }}>{p.title}</h3>
         <p style={{
           fontFamily: 'Archivo, sans-serif', fontSize: 'clamp(14px, 1.4vw, 16px)', lineHeight: 1.55,
-          color: 'var(--fg-2)', margin: '0 0 18px 0', maxWidth: 560,
+          color: 'var(--fg-2)', margin: p.insight ? '0 0 10px 0' : '0 0 18px 0', maxWidth: 560,
         }}>{p.context || p.org}</p>
+        {/* Evidence line — what I did, in one line (2026-11-16). */}
+        {p.insight && (
+          <p style={{
+            fontFamily: 'Archivo, sans-serif', fontSize: 13, lineHeight: 1.5, fontWeight: 500,
+            color: 'var(--fg-3)', margin: '0 0 18px 0', maxWidth: 560,
+          }}>{p.insight}</p>
+        )}
         <div style={{
           display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', gap: 16,
           paddingTop: 16, borderTop: '1px solid var(--hairline)',
@@ -2980,6 +2990,19 @@ function ProjectDetailView({ project }) {
             </div>
             <div style={{ borderTop: '1px solid var(--hairline)', paddingTop: 'clamp(20px, 2.6vw, 32px)' }}>
               <p style={{ ...bodyText, fontSize: 'clamp(17px, 1.7vw, 20px)', maxWidth: 680 }}>{project.texttuneOpening.productLine}</p>
+              {(project.texttuneOpening.build || project.texttuneOpening.link) && (
+                <div style={{ display: 'flex', alignItems: 'baseline', flexWrap: 'wrap', gap: '10px 24px', marginTop: 'clamp(16px, 2vw, 24px)' }}>
+                  {project.texttuneOpening.build && (
+                    <span style={{ fontFamily: 'Archivo, sans-serif', fontSize: 15, lineHeight: 1.5, color: 'var(--fg-2)' }}>{project.texttuneOpening.build}</span>
+                  )}
+                  {project.texttuneOpening.link && (
+                    <a href={project.texttuneOpening.link} target="_blank" rel="noreferrer" style={{
+                      fontFamily: 'Archivo, sans-serif', fontWeight: 700, fontSize: 12,
+                      letterSpacing: '0.12em', textTransform: 'uppercase', color: 'var(--accent)',
+                    }}>Open the prototype →</a>
+                  )}
+                </div>
+              )}
             </div>
           </div>
         )}
@@ -4454,6 +4477,57 @@ function ProjectDetailView({ project }) {
   );
 }
 
+/* ---------- Capabilities — four claims, each linked to the case that proves it ---------- */
+const CAPABILITIES = [
+  { label: 'Interviews, end to end', text: 'I designed the guide and ran 25 interviews solo during my internship at Pangolin.', slug: 'pangolin', to: 'Pangolin' },
+  { label: 'From findings to next steps', text: 'The analysis retired one product assumption and set the priorities for the V2 redesign.', slug: 'pangolin', to: 'Pangolin' },
+  { label: 'Prototyping with AI', text: 'A reading tool and a Chrome extension — both working, both co-built with a teammate using Claude.', slug: 'texttune', to: 'TextTune' },
+  { label: 'Figma', text: 'An end-to-end app UI on a design system I built, with a clickable prototype.', slug: 'snapwear', to: 'SnapWear' },
+];
+
+function CapabilitySection() {
+  const narrow = useIsNarrow();
+  return (
+    <section style={{
+      paddingLeft: 'var(--gutter)', paddingRight: 'var(--gutter)',
+      marginTop: 'clamp(72px, 10vh, 120px)'
+    }}>
+      <div style={{ maxWidth: 'var(--maxw)', margin: '0 auto' }}>
+        <div style={{
+          fontFamily: 'Archivo, sans-serif', fontSize: 11, fontWeight: 600,
+          letterSpacing: '0.14em', textTransform: 'uppercase',
+          color: 'var(--fg-3)', marginBottom: 24
+        }}>What I do</div>
+        <div style={{
+          display: 'grid',
+          gridTemplateColumns: narrow ? '1fr' : 'repeat(4, minmax(0, 1fr))',
+          columnGap: 'clamp(20px, 3vw, 40px)', rowGap: 28,
+        }}>
+          {CAPABILITIES.map((c) => (
+            <a key={c.label} href={`#work/${c.slug}`} style={{
+              display: 'block', textDecoration: 'none',
+              paddingTop: 18, borderTop: '1px solid var(--ink)',
+            }}>
+              <div style={{
+                fontFamily: "'Big Shoulders Display', Helvetica, sans-serif", fontWeight: 800,
+                fontSize: 'clamp(22px, 2.2vw, 28px)', lineHeight: 1.05, letterSpacing: '-0.01em',
+                color: 'var(--ink)', marginBottom: 12,
+              }}>{c.label}</div>
+              <div style={{
+                fontFamily: 'Archivo, sans-serif', fontSize: 15, lineHeight: 1.55,
+                color: 'var(--fg-2)', marginBottom: 14,
+              }}>{c.text}</div>
+              <div style={{
+                fontFamily: 'Archivo, sans-serif', fontSize: 11, fontWeight: 700,
+                letterSpacing: '0.12em', textTransform: 'uppercase', color: 'var(--accent)',
+              }}>{c.to} →</div>
+            </a>
+          ))}
+        </div>
+      </div>
+    </section>);
+}
+
 /* ---------- Work section ---------- */
 function WorkSection() {
   const onOpen = (slug) => { window.location.hash = `work/${slug}`; };
@@ -4978,6 +5052,7 @@ function Portfolio() {
       <ScrollIndicator />
       <main>
         <Hero />
+        <CapabilitySection />
         <WorkSection />
         <AboutSection />
         <SkillsSection />
