@@ -4479,10 +4479,10 @@ function ProjectDetailView({ project }) {
 
 /* ---------- Capabilities — four claims, each linked to the case that proves it ---------- */
 const CAPABILITIES = [
-  { label: 'From interviews to next steps', text: 'I designed and ran 25 interviews solo at Pangolin; the analysis retired one product assumption and set the V2 priorities.', slug: 'pangolin', to: 'Pangolin' },
-  { label: 'Figma', text: 'An end-to-end app UI on a design system I built, with a clickable prototype.', slug: 'snapwear', to: 'SnapWear' },
   { label: 'Prototyping with AI', text: 'I build working prototypes with Claude, deploy them on GitHub, maintain them through pull requests, and move designs back and forth with Figma.', slug: 'texttune', to: 'TextTune' },
   { label: 'Driving tools through MCP', text: 'I connect Claude to tools through MCP — Remotion to animate the FocusAnchor promo, Chrome to build and test the extension.', slug: 'focusanchor', to: 'FocusAnchor' },
+  { label: 'Interviews, end to end', text: 'I ran 25 interviews solo at Pangolin and built an AI workflow to analyse them — sorting and categorising the transcripts, then drafting the report framework.', slug: 'pangolin', to: 'Pangolin' },
+  { label: 'Figma', text: 'An end-to-end app UI on a design system I built, with a clickable prototype.', slug: 'snapwear', to: 'SnapWear' },
 ];
 
 function CapabilitySection() {
