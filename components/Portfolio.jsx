@@ -1305,7 +1305,7 @@ const PROJECTS = [
     },
   },
   // ── Case study detail ──
-  role: 'Two-person venture project (2026). My teammate and I built the extension together, using Claude; I also ran the Kano study, the market positioning, and the user testing.',
+  role: 'Two-person venture project (2026). My teammate and I built the extension together, using Claude, with Chrome driven through MCP for building and testing; I also ran the Kano study, the market positioning, and the user testing.',
   overview: "FocusAnchor is a calm Chrome extension for ADHD brains: it breaks any task into laughably small steps and gently redirects wandering tabs — never blocking, never punishing. The two of us ran it as a class venture project, and the interesting part isn't the extension itself — it's the argument underneath it: mainstream productivity tools' \"engagement features\" are, for this audience, actively harmful.",
   problemLabel: '"I just need to look up a word. Then in thirty minutes I\'m watching a video on how Norwegians build wooden cabins."',
   problem: 'That\'s not laziness; it\'s a measurable executive-function deficit (Barkley). An estimated 366M adults worldwide live with ADHD — 6.76% adult prevalence (Song et al., 2021) — and almost every productivity tool on the market was built for neurotypical brains. We went to find out why they fail.',
@@ -1395,7 +1395,7 @@ const PROJECTS = [
   },
   usage: {
     video: 'assets/focusanchor/promo.mp4',
-    videoCaption: 'Promo — the full flow in 52 seconds. Sound on optional.',
+    videoCaption: 'Promo — the full flow in 52 seconds, animated in Remotion with Claude driving it through MCP. Sound on optional.',
     frames: [
       { src: 'assets/focusanchor/flow-01-goal.png', caption: 'The report is due tomorrow. You type the goal — that\'s all FocusAnchor needs.' },
       { src: 'assets/focusanchor/flow-02-steps.png', caption: 'Claude breaks it into five tiny steps. The first is laughably small — starting is the hard part.' },
@@ -4479,10 +4479,10 @@ function ProjectDetailView({ project }) {
 
 /* ---------- Capabilities — four claims, each linked to the case that proves it ---------- */
 const CAPABILITIES = [
-  { label: 'Interviews, end to end', text: 'I designed the guide and ran 25 interviews solo during my internship at Pangolin.', slug: 'pangolin', to: 'Pangolin' },
-  { label: 'From findings to next steps', text: 'The analysis retired one product assumption and set the priorities for the V2 redesign.', slug: 'pangolin', to: 'Pangolin' },
-  { label: 'Prototyping with AI', text: 'A reading tool and a Chrome extension — both working, both co-built with a teammate using Claude.', slug: 'texttune', to: 'TextTune' },
+  { label: 'From interviews to next steps', text: 'I designed and ran 25 interviews solo at Pangolin; the analysis retired one product assumption and set the V2 priorities.', slug: 'pangolin', to: 'Pangolin' },
   { label: 'Figma', text: 'An end-to-end app UI on a design system I built, with a clickable prototype.', slug: 'snapwear', to: 'SnapWear' },
+  { label: 'Prototyping with AI', text: 'I build working prototypes with Claude, deploy them on GitHub, maintain them through pull requests, and move designs back and forth with Figma.', slug: 'texttune', to: 'TextTune' },
+  { label: 'Driving tools through MCP', text: 'I connect Claude to tools through MCP — Remotion to animate the FocusAnchor promo, Chrome to build and test the extension.', slug: 'focusanchor', to: 'FocusAnchor' },
 ];
 
 function CapabilitySection() {
